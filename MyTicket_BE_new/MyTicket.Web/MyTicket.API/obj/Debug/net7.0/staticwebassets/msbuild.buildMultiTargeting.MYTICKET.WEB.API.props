@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\MYTICKET.WEB.API.props" />
+</Project>

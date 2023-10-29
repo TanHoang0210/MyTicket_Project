@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+	<texts>
+		<!--Định nghĩa các lỗi-->
+		<text name="error_System">Hệ thống lỗi</text>
+		<text name="error_UsernameOrPasswordIn Correct">Tên người dùng hoặc mật khẩu không chính xác</text>
+		<text name="error_UserNotFound">Không tìm thấy người dùng</text>
+		<text name="error_UserOldPasswordIn Correct">Mật khẩu cũ không chính xác</text>
+
+		<text name="error_RoleNotFound">Không tìm thấy vai trò</text>
+		<text name="error_UserIsDeactive">Người dùng đã bị khóa</text>
+		<text name="error_BusinessCustomerNotFound">Không tìm thấy khách hàng doanh nghiệp</text>
+		<text name="error_RestaurantNotFound">Không tìm thấy nhà hàng</text>
+		<text name="error_DeliveryAddressNotFound">Không tìm thấy địa chỉ giao hàng</text>
+		<text name="error_GroupCustomerNotFound">Không tìm thấy nhóm</text>
+		<text name="error_ProductCategoryNotFound">Không tìm thấy danh mục sản phẩm</text>
+		<text name="error_ParentProductCategoryNotFound">Không tìm thấy danh mục sản phẩm gốc</text>
+		<text name="error_ProductNotFound">Không tìm thấy sản phẩm</text>
+		<text name="error_ProductCategoryIsBeingUsedByProduct">Danh mục sản phẩm đang được sử dụng bởi một sản phẩm khác</text>
+		<text name="error_ProductCategoryIsBeingUsedAsParent">Danh mục sản phẩm đang được sử dụng làm cấp độ gốc</text>
+		<text name="error_ProductPriceNotFound">Không tìm thấy giá sản phẩm</text>
+		<text name="error_OrderNotFound">Không tìm thấy đơn hàng</text>
+		<text name="error_OrderDetailNotFound">Không tìm thấy chi tiết đơn hàng</text>
+		<text name="error_OrderDetailIsNotEmpty">Chi tiết đơn hàng không được để trống</text>
+		<text name="error_CalculationUnitNotFound">Không tìm thấy đơn vị tính toán</text>
+		<text name="error_ShippingProviderNotFound">Không tìm thấy nhà cung cấp dịch vụ vận chuyển</text>
+		<text name="error_ShippingProviderIsExists">Nhà cung cấp dịch vụ vận chuyển đã tồn tại</text>
+		<text name="error_OrderCannotCancel">Không thể hủy đơn hàng</text>
+		<text name="error_OrderCannotOnDayOff">Không thể đặt hàng vào ngày nghỉ</text>
+		<text name="error_OrderCannotDelete">Chỉ có thể xóa các đơn hàng mới được tạo hoặc bị hủy</text>
+		<text name="error_OrderDateCannotNull">Vui lòng chọn ngày đặt hàng</text>
+
+		<!--Tài liệu lỗi-->
+		<text name="error_DocumentNotFound">Không tìm thấy tài liệu</text>
+
+		<!--Lỗi phân quyền -->
+		<text name="error_UserNotHavePermission">Tài khoản không có quyền</text>
+
+
+		<!--Trường xác thực lỗi-->
+		<text name="error_validation_field_Required">Trường bắt buộc</text>
+		<text name="error_validation_field_MaxLength">Không được vượt quá {0} ký tự</text>
+
+		<!--mô hình xác thực-->
+		<text name="error_validation_IntegerRange">Chọn một trong các giá trị sau: {0}</text>
+		<text name="error_validation_StringRange">Chọn một trong các giá trị sau: {0}</text>
+		<text name="error_validation_FileExtention">Chỉ cho phép các tệp ở các định dạng sau: {0}</text>
+		<text name="error_validation_FileMaxLength">Kích thước tệp phải nhỏ hơn hoặc bằng {0} MB</text>
+
+		<!--Định nghĩa các quyền-->
+		<text name="permission_Dashboard">Trang tổng quan</text>
+		<!--SystemModule-->
+		<text name="permission_SystemModule">Trình quản lý hệ thống</text>
+
+		<!--vai trò-->
+		<text name="permission_RoleMenu">Menu vai trò</text>
+		<text name="permission_RoleTable">Bảng vai trò</text>
+		<text name="permission_RoleCreate">Tạo vai trò</text>
+		<text name="permission_RoleUpdate">Cập nhật vai trò</text>
+		<text name="permission_RoleDelete">Xóa vai trò</text>
+
+		<!--tài khoản-->
+		<text name="permission_UserMenu">Menu người dùng</text>
+		<text name="permission_UserTable">Bảng người dùng</text>
+		<text name="permission_UserCreate">Tạo người dùng</text>
+		<text name="permission_UserUpdate">Cập nhật người dùng</text>
+		<text name="permission_UserDelete">Xóa người dùng</text>
+		<text name="permission_UserChangeStatus">Thay đổi trạng thái người dùng</text>
+
+		<!--lịch-->
+		<text name="permission_CalendarMenu">Menu Lịch</text>
+		<text name="permission_CalendarTable">Bảng lịch</text>
+		<text name="permission_CalendarUpdate">Cập nhật lịch</text>
+
+		<!--BusinessCustomerModule-->
+		<text name="permission_BusinessCustomerModule">Trình quản lý khách hàng doanh nghiệp</text>
+
+		<text name="permission_BusinessCustomerMenu">Menu khách hàng doanh nghiệp</text>
+		<text name="permission_BusinessCustomerTable">Bảng khách hàng doanh nghiệp</text>
+		<text name="permission_BusinessCustomerCreate">Tạo khách hàng doanh nghiệp</text>
+		<text name="permission_BusinessCustomerUpdate">Cập nhật khách hàng doanh nghiệp</text>
+		<text name="permission_BusinessCustomerDelete">Xóa khách hàng doanh nghiệp</text>
+		<text name="permission_BusinessCustomerIsBeingUsed">Khách hàng doanh nghiệp đang được sử dụng ở đâu đó</text>
+
+		<text name="permission_ProductpriceMenu">Menu giá sản phẩm</text>
+		<text name="permission_ProductPriceTable">Bảng giá sản phẩm</text>
+		<text name="permission_ProductPriceCreate">Tạo giá sản phẩm</text>
+		<text name="permission_ProductpriceUpdate">Cập nhật giá sản phẩm</text>
+		<text name="permission_ProductPriceDelete">Xóa người định giá sản phẩm</text>
+
+		<text name="permission_BusinessCustomerAccountMenu">Menu tài khoản khách hàng doanh nghiệp</text>
+	</texts>
+</localizationDictionary>

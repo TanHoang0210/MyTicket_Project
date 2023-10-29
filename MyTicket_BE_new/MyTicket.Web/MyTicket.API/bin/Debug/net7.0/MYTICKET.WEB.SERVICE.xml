@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MYTICKET.WEB.SERVICE</name>
+    </assembly>
+    <members>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.IUserService.FindById(System.Int32)">
+            <summary>
+            Tìm kiếm User theo Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.IUserService.ValidateUser(System.String,System.String)">
+            <summary>
+            Validate user
+            </summary>
+            <param name="username"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.IUserService.FindAll(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.FilterUserDto)">
+            <summary>
+            Xem danh sách User
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.IUserService.CreateUser(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateUserDto)">
+            <summary>
+            Thêm user
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.IUserService.Update(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.UpdateUserDto)">
+            <summary>
+            Cập nhật thông tin tài khoản
+            </summary>
+            <param name="input"></param>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.IUserService.ChangeStatus(System.Int32)">
+            <summary>
+            Cập nhật trạng thái tài khoản
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.IUserService.SetPassword(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.SetPasswordUserDto)">
+            <summary>
+            Set password cho user
+            </summary>
+            <param name="input"></param>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.IUserService.ChangePassword(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.ChangePasswordDto)">
+            <summary>
+            Thay đổi mật khẩu
+            </summary>
+            <param name="input"></param>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.PermissionDto.PermissionDetailDto.Key">
+            <summary>
+            PermissionKey
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.RoleDto.RoleDto.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.RoleDto.RoleDto.Name">
+            <summary>
+            Tên Role
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.RoleDto.RoleDto.UserType">
+            <summary>
+            <see cref="!:UserTypes"/>
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.RoleDto.RoleDto.Description">
+            <summary>
+            Mô tả
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateUserDto._username">
+            <summary>
+            Tên đăng nhập
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateUserDto._password">
+            <summary>
+            Mật khẩu
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateUserDto._email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateUserDto._phone">
+            <summary>
+            Số điện thoại
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateUserDto._fullName">
+            <summary>
+            Tên người dùng
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateUserDto.UserType">
+            <summary>
+            Loại tài khoản
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.SetPasswordUserDto._password">
+            <summary>
+            Mật khẩu
+            </summary>
+        </member>
+        <member name="T:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.UserByDto">
+            <summary>
+            Tài khoản thực hiện việc nào đó
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.UserDto.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.UserDto.Username">
+            <summary>
+            Tên đăng nhập
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.UserDto.Password">
+            <summary>
+            Mật khẩu
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.UserDto.Email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.UserDto.Phone">
+            <summary>
+            Số điện thoại
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.UserDto.FullName">
+            <summary>
+            Tên người dùng
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.UserDto.Status">
+            <summary>
+            Trạng thái tài khoản
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.UserDto.UserType">
+            <summary>
+            Loại tài khoản
+            </summary>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.FileModule.Implements.FileService.GetFile(System.String,System.String,MYTICKET.WEB.SERVICE.FileModule.Dtos.Setting.FileConfig)">
+            <summary>
+            Đọc file ra dạng byte
+            </summary>
+            <param name="folder"></param>
+            <param name="fileName"></param>
+            <param name="config"></param>
+            <returns></returns>
+            <exception cref="T:MYTICKET.UTILS.CustomException.UserFriendlyException"></exception>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.FileModule.Implements.FileService.GetFilePath(System.String,System.String,MYTICKET.WEB.SERVICE.FileModule.Dtos.Setting.FileConfig)">
+            <summary>
+            Lấy full đường dẫn vật lý
+            </summary>
+            <param name="folder"></param>
+            <param name="fileName"></param>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

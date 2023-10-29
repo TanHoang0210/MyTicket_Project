@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MYTICKET.WEB.DOMAIN</name>
+    </assembly>
+    <members>
+        <member name="T:MYTICKET.WEB.DOMAIN.Entities.Customer">
+            <summary>
+            Customer
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.FullName">
+            <summary>
+            Tên đầy đủ
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.ShortName">
+            <summary>
+            Tên viết tắt
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.Phone">
+            <summary>
+            Số điện thoại
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.Email">
+            <summary>
+            Địa chỉ email
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Role.UserType">
+            <summary>
+            <see cref="!:UserTypes"/>
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.RolePermission.PermissionKey">
+            <summary>
+            Tên permission <br/>
+            <see cref="!:PermissionConfig"/>
+            </summary>
+        </member>
+        <member name="T:MYTICKET.WEB.DOMAIN.Entities.Suppiler">
+            <summary>
+            Suppiler
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Suppiler.FullName">
+            <summary>
+            Tên đầy đủ
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Suppiler.ShortName">
+            <summary>
+            Tên viết tắt
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Suppiler.Phone">
+            <summary>
+            Số điện thoại
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Suppiler.Email">
+            <summary>
+            Địa chỉ email
+            </summary>
+        </member>
+        <member name="T:MYTICKET.WEB.DOMAIN.Entities.User">
+            <summary>
+            User
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.User.UserType">
+            <summary>
+            Loại user <see cref="T:MYTICKET.UTILS.ConstantVariables.User.UserTypes"/>
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.User.Status">
+            <summary>
+            Trạng thái user <see cref="T:MYTICKET.UTILS.ConstantVariables.User.UserStatus"/>
+            </summary>
+        </member>
+    </members>
+</doc>

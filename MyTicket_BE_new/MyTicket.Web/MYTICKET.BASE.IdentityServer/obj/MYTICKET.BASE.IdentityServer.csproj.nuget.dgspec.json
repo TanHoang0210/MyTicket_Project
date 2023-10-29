@@ -1,0 +1,158 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.BASE.IdentityServer\\MYTICKET.BASE.IdentityServer.csproj": {}
+  },
+  "projects": {
+    "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.BASE.IdentityServer\\MYTICKET.BASE.IdentityServer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.BASE.IdentityServer\\MYTICKET.BASE.IdentityServer.csproj",
+        "projectName": "MYTICKET.BASE.IdentityServer",
+        "projectPath": "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.BASE.IdentityServer\\MYTICKET.BASE.IdentityServer.csproj",
+        "packagesPath": "C:\\Users\\tanmu\\.nuget\\packages\\",
+        "outputPath": "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.BASE.IdentityServer\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\tanmu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.UTILS\\MYTICKET.UTILS.csproj": {
+                "projectPath": "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.UTILS\\MYTICKET.UTILS.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "OpenIddict.AspNetCore": {
+              "target": "Package",
+              "version": "[4.9.0, )"
+            },
+            "OpenIddict.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[4.9.0, )"
+            },
+            "Portable.BouncyCastle": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.UTILS\\MYTICKET.UTILS.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.UTILS\\MYTICKET.UTILS.csproj",
+        "projectName": "MYTICKET.UTILS",
+        "projectPath": "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.UTILS\\MYTICKET.UTILS.csproj",
+        "packagesPath": "C:\\Users\\tanmu\\.nuget\\packages\\",
+        "outputPath": "D:\\Do AN Tot Nghiep\\MyTicket\\src\\MyTicket_BE_new\\MyTicket.Web\\MYTICKET.UTILS\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\tanmu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Mvc.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[6.25.1, )"
+            },
+            "Portable.BouncyCastle": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
+            "SixLabors.ImageSharp": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
