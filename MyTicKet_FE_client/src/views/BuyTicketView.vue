@@ -17,7 +17,7 @@
                                     <div class="progress-step active">
                                         Chọn chỗ
                                     </div>
-                                    <div class="progress-step">
+                                    <div class="progress-step active">
                                         Xác minh
                                     </div>
                                     <div class="progress-step">
@@ -143,15 +143,15 @@ export default {
     z-index: 1;
 }
 .progress-step.active::before{
-    font-family: "FontAwesome";
-    content: "v";
+    font-family: "Glyphicons Halflings";
+    content: "\f095";
     display: flex;
     margin: 0 auto;
     margin-bottom: 10px;
     width: 30px;
     height: 30px;
-    background: #C56BFF;
-    background-image: linear-gradient(90deg, #026CDF, #C56BFF);
+    background: var(--primary-color-bold);
+    background-image: linear-gradient(90deg, var(--primary-color-hover-bold), var(--primary-color-bold));
     border: none;
     border-radius: 100%;
     color: #fff;
@@ -184,6 +184,19 @@ export default {
     transition: width 1s ease-in;
     height: 5px;
     background: #c8c8c8;
+    z-index: -1;
+    width: 100%;
+}
+.progress-step:not(:last-of-type).active::after{
+    content: "";
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    width: 0%;
+    transition: width 1s ease-in;
+    height: 5px;
+    background: var(--primary-color-bold);
+    background-image: linear-gradient(90deg, var(--primary-color-hover-bold), var(--primary-color-bold));
     z-index: -1;
     width: 100%;
 }

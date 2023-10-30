@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import VueSmoothScroll from 'vue2-smooth-scroll'
 
 /* add icons to the library */
 library.add(faUserSecret)
@@ -24,6 +25,7 @@ Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
+Vue.use(VueSmoothScroll)
 Vue.use(IconsPlugin)
 new Vue({
   router,

@@ -46,6 +46,7 @@
                          v-for="(item,index) in eventActions"
                          class="event-nav-item">
                           <a
+                          v-smooth-scroll="{duration: 1000, offset:-50}"
                           :id="index"
                           :key="item"
                           v-on:click="myChoice(index)"
@@ -62,6 +63,7 @@
                 style="display: flex;"
                  class="col-lg-3 col-md-3 col-sm-3 col-xs-12 col-12 pt-3 py-sm-2">
                   <a class="btn btn-primary btn-block btn-findTickets nav-ticket"
+                  v-smooth-scroll="{duration: 1000, offset:-60}"
                   v-on:click="gotoBuy()"
                    href="#ticketList">Chọn Hạng Vé</a>
                 </div>
