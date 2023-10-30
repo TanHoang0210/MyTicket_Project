@@ -381,8 +381,9 @@ export default {
   },
   methods: {
         myChoice: function (index) {
-            this.currentAction = index;
-            // some code to filter users
+            setTimeout(() => {
+              this.currentAction = index;
+            }, 1000);
         },
         gotoBuy: function () {
             this.currentAction = 4;

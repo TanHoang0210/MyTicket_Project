@@ -36,7 +36,9 @@
                                                                         <b-button
                                                                             v-if="ticket.status == 'active' && ticket.quantity > 0"
                                                                             variant="primary" class="button-event ">
-                                                                            <router-link class="buy-btn" to="/ticket/area" style="color: #fff; !important">
+                                                                            <router-link class="buy-btn"
+                                                                            :to="{ path: '/ticket/area', query: { id: currentEvent.id } }"
+                                                                              style="color: #fff; !important">
                                                                                 Mua
                                                                                 vé
                                                                             </router-link>

@@ -1,8 +1,8 @@
 <template>
-    <div id="#">
+    <div>
         <div>
             <Header />
-        </div >
+        </div>
         <div style="display: block; height: 50px; background-color: var(--primary-color-bold); margin-bottom:20px ;">
             <b-breadcrumb class="event-breadcrumb black-breadcrumb" :items="breadItems"></b-breadcrumb>
         </div>
@@ -14,21 +14,23 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
                                 <div class="purchaseProgress">
                                     <div class="progress-track"></div>
-                                    <div class="progress-step active">
+                                    <div class="progress-step done">
                                         Chọn chỗ
                                     </div>
-                                    <div class="progress-step active">
+                                    <div class="progress-step done">
                                         Xác minh
                                     </div>
-                                    <div class="progress-step">
+                                    <div class="progress-step done">
                                         Thanh toán
                                     </div>
-                                    <div class="progress-step">
+                                    <div class="progress-step active">
                                         Nhận vé
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <select-seat :currentEvent="currentEvent"
+                         :listTickets="listTickets"></select-seat>
                     </div>
                 </div>
             </div>
@@ -42,10 +44,11 @@
 <script>
 import Header from '@/components/Header.vue'
 import HomeFooter from '@/components/Home/HomeFooter.vue'
+import SelectSeat from '@/components/Home/BuyTicketComponent/SelectSeat.vue'
 export default {
     name: 'BuyTicketView',
     components: {
-        Header, HomeFooter
+        Header, HomeFooter, SelectSeat
     },
     data() {
         return {
@@ -96,7 +99,27 @@ export default {
                 date: '22/10/2023',
                 type: 'Theater',
                 venue: 'Sân vận động QK7',
-            }
+            },
+            listTickets: [
+                {
+                    id: 1,
+                    date: "22/10/2023",
+                    quantity: 10,
+                    status: "deactive"
+                },
+                {
+                    id: 2,
+                    date: "23/10/2023",
+                    quantity: 0,
+                    status: "active"
+                },
+                {
+                    id: 3,
+                    date: "24/10/2023",
+                    quantity: 10,
+                    status: "active"
+                }
+            ],
         }
     },
     mounted() {
@@ -109,16 +132,23 @@ export default {
 </script>
 
 <style>
-.black-breadcrumb a{
+.main {
+    background-color: #fff;
+}
+
+.black-breadcrumb a {
     color: var(--text-color) !important;
 }
-.black-breadcrumb span{
+
+.black-breadcrumb span {
     color: var(--text-color) !important;
 }
-.mobileWizard{
+
+.mobileWizard {
     margin-top: 24px;
 }
-.purchaseProgress{
+
+.purchaseProgress {
     position: relative;
     display: flex;
     color: #000000;
@@ -126,31 +156,33 @@ export default {
     background: transparent;
     border: none;
     box-shadow: none;
-    margin-bottom: 20px;   
+    margin-bottom: 20px;
 }
-.progress-track{
+
+.progress-track {
     position: absolute;
     top: 9px;
     width: 100%;
     height: 8px;
     z-index: 0;
 }
-.progress-step{
+
+.progress-step {
     font-size: 16px;
     position: relative;
     width: 100%;
     text-align: center;
     z-index: 1;
 }
-.progress-step.active::before{
-    font-family: "Glyphicons Halflings";
-    content: "\f095";
+
+.progress-step.active::before {
+    font-family: "FontAwesome";
+    content: "\f00c";
     display: flex;
     margin: 0 auto;
     margin-bottom: 10px;
     width: 30px;
     height: 30px;
-    background: var(--primary-color-bold);
     background-image: linear-gradient(90deg, var(--primary-color-hover-bold), var(--primary-color-bold));
     border: none;
     border-radius: 100%;
@@ -159,7 +191,25 @@ export default {
     text-align: center;
     justify-content: center;
 }
-.progress-step::before{
+
+.progress-step.done::before {
+    font-family: "FontAwesome";
+    content: "\f00c";
+    display: flex;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    width: 30px;
+    height: 30px;
+    background: var(--primary-color-hover-bold);
+    border: none;
+    border-radius: 100%;
+    color: #fff;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.progress-step::before {
     font-family: "FontAwesome";
     content: " ";
     display: flex;
@@ -175,7 +225,8 @@ export default {
     text-align: center;
     justify-content: center;
 }
-.progress-step:not(:last-of-type)::after{
+
+.progress-step:not(:last-of-type)::after {
     content: "";
     position: absolute;
     top: 12px;
@@ -187,7 +238,8 @@ export default {
     z-index: -1;
     width: 100%;
 }
-.progress-step:not(:last-of-type).active::after{
+
+.progress-step:not(:last-of-type).done::after {
     content: "";
     position: absolute;
     top: 12px;
@@ -195,9 +247,7 @@ export default {
     width: 0%;
     transition: width 1s ease-in;
     height: 5px;
-    background: var(--primary-color-bold);
-    background-image: linear-gradient(90deg, var(--primary-color-hover-bold), var(--primary-color-bold));
+    background: var(--primary-color-hover-bold);
     z-index: -1;
     width: 100%;
-}
-</style>
+}</style>
