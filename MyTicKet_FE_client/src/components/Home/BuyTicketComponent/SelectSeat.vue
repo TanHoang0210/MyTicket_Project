@@ -17,36 +17,134 @@
                     </div>
                 </div>
             </div>
-            <div id="promoBox"
-                class="alert alert-section text-center col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12 mgb-16">
-                <div id="promoDescription" class="inline-block">
-                    <div class="mgt-12" id="promo_1321">
-                        <div class="text-info promoTitle"> </div>
-                        <div class="promoContent"> </div>
-                    </div>
-                </div>
-                <div class="mgt-24 row row-cols-lg-auto g-3 align-items-center align-items-center">
-                    <div class="col-lg-12 col-md-12 col-xs-12 col-12">
-                        <div class="input-group justify-content-center align-items-center">
-                            <div class="form-group promoLabel">Please enter your promo code (if applicable)</div>
-                            <div class="form-group promoInput"><input type="text" id="checkCode" class="promoCodeInput"
-                                    name="checkCode"
-                                    onkeypress="if (event.keyCode == 13) {$(&quot;.check-discount&quot;).trigger(&quot;click&quot;);}">
-                                <button type="button" class="btn btn-primary btn-sm check-discount">Submit</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="discountCode" class="mgt-16 mgb-16">
-                </div>
-            </div>
+            {{ time }}
             <div class="panel-heading">
                 <div class="step"></div>
-                <span>Choose Your Tickets</span>
+                <span>Chọn hạng vé của bạn</span>
             </div>
             <div class="row" id="step1">
-
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
+                    <img class="img-seatmap"
+                        src="https://static.ticketmaster.sg/images/activity/field/23_euphony2023_dd028f21b48dced710f997c10541d4c0.jpg"
+                        alt="">
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
+                    <form action="" class="form-ticket-ticket">
+                        <input type="hidden" name="_csrf"
+                            value="U8hsPodpZMCBzx_wnz8ZE3Bjxw9H1nbsaN6JLp4OqRM9nB9s0lww9NiiV576DUpcElaiYyyFHtsZnfxornjiVw==">
+                        <!-- start: Buy Ticket List -->
+                        <table id="ticketPriceList" class="table table-bordered col-xs-12 mgt-10 text-center">
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-3">Hạng Vé</th>
+                                    <th class="col-sm-2">Giá</th>
+                                    <th class="col-sm-2">Số lượng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="pt-001">
+                                    <td class="text-bold ticketpricetext">
+                                        CAT 1 - SITTING</td>
+                                    <td>
+                                        1.000.000 vnđ </td>
+                                    <td>
+                                        <select id="TicketForm_ticketPrice_001" class="w100 form-select"
+                                            name="TicketForm[ticketPrice][001]">
+                                            <option value="0">Chọn số lượng</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select> <input type="hidden" id="TicketForm_priceSize_001"
+                                            name="TicketForm[priceSize][001]" value="1">
+                                    </td>
+                                </tr>
+                                <tr id="pt-003">
+                                    <td class="text-bold ticketpricetext">
+                                        CAT 2 - STANDING</td>
+                                    <td>
+                                        800.000 vnđ</td>
+                                    <td>
+                                        <select id="TicketForm_ticketPrice_003" class="w100 form-select"
+                                            name="TicketForm[ticketPrice][003]">
+                                            <option value="0">Chọn số lượng</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select> <input type="hidden" id="TicketForm_priceSize_003"
+                                            name="TicketForm[priceSize][003]" value="1">
+                                    </td>
+                                </tr>
+                                <tr id="pt-004">
+                                    <td class="text-bold ticketpricetext">
+                                        CAT 3 - SITTING </td>
+                                    <td>
+                                        600.000 </td>
+                                    <td>
+                                        <select id="TicketForm_ticketPrice_004" class="w100 form-select"
+                                            name="TicketForm[ticketPrice][004]">
+                                            <option value="0">Chọn số lượng</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select> <input type="hidden" id="TicketForm_priceSize_004"
+                                            name="TicketForm[priceSize][004]" value="1">
+                                    </td>
+                                </tr>
+                                <tr id="pt-005">
+                                    <td class="text-bold ticketpricetext">
+                                        CAT 4 - STANDING</td>
+                                    <td>
+                                        500.000 vnđ</td>
+                                    <td>
+                                        <select id="TicketForm_ticketPrice_005" class="w100 form-select"
+                                            name="TicketForm[ticketPrice][005]">
+                                            <option value="0">Chọn số lượng</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select> <input type="hidden" id="TicketForm_priceSize_005"
+                                            name="TicketForm[priceSize][005]" value="1">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-8">
+                            </div>
+                            <button id="md-viewMap" class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
+                                Thanh Toán
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="row" id="step1">
 
@@ -58,6 +156,21 @@
 <script>
 export default {
     props: ['currentEvent', 'listTickets'],
+    data() {
+        return {
+            date: moment(60 * 10 * 1000)
+        }
+    },
+    computed:{
+        time: function(){
+      return this.date.format('mm:ss');
+    }
+    },
+    mounted: function(){   
+    setInterval(() => {
+      this.date = moment(this.date.subtract(1, 'seconds'))
+    }, 1000);
+  }
 }
 </script>
 
@@ -86,7 +199,6 @@ export default {
     line-height: 1.5;
     color: #212529;
     background-color: #fff;
-    background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e);
     background-repeat: no-repeat;
     background-position: right 0.75rem center;
     background-size: 16px 12px;
@@ -96,21 +208,25 @@ export default {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e);
 }
-.panel-heading .step{
+
+.panel-heading .step {
     position: absolute;
-    margin-top: -16px;
-    border-top: 27px inset transparent;
-    border-bottom: 27px inset transparent;
-    border-left: 15px solid #026CDF;
+    margin-top: -10px;
+    border-top: 23px inset transparent;
+    border-bottom: 25px inset transparent;
+    border-left: 15px solid var(--primary-color-bold);
 }
-.panel-heading span{
+
+.panel-heading span {
     display: inline-block;
     padding-left: 25px;
     cursor: text;
 }
-.panel-heading{
-    padding: 15px;
+
+.panel-heading {
+    padding: 10px;
     padding-left: 0px;
     text-align: left;
     font-weight: 600;
@@ -120,4 +236,16 @@ export default {
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
 }
-</style>
+
+#step1 {
+    margin-top: 20px;
+
+}
+
+.img-seatmap {
+    width: 100%;
+}
+
+.payment-btn {
+    right: 0;
+}</style>

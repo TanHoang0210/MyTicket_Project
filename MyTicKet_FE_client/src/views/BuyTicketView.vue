@@ -14,23 +14,45 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
                                 <div class="purchaseProgress">
                                     <div class="progress-track"></div>
-                                    <div class="progress-step done">
+                                    <div
+                                     :class="{
+                                        'active': isSelect,
+                                        '': !isSelect,
+                                        'done':isComfirm || isComplete || isPaying
+                                        }"
+                                     class="progress-step">
                                         Chọn chỗ
                                     </div>
-                                    <div class="progress-step done">
+                                    <div 
+                                    :class="{
+                                        'active': isComfirm,
+                                        '': !isComfirm,
+                                        'done':isPaying || isComplete
+                                        }"
+                                    class="progress-step">
                                         Xác minh
                                     </div>
-                                    <div class="progress-step done">
+                                    <div 
+                                    :class="{
+                                        'active': isPaying,
+                                        '': !isPaying,
+                                        'done':isComplete
+                                        }"
+                                    class="progress-step">
                                         Thanh toán
                                     </div>
-                                    <div class="progress-step active">
+                                    <div
+                                    :class="{
+                                        'active': isComplete,
+                                        '': !isComplete,
+                                        }"
+                                     class="progress-step">
                                         Nhận vé
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <select-seat :currentEvent="currentEvent"
-                         :listTickets="listTickets"></select-seat>
+                        <select-seat v-if="isSelect" :currentEvent="currentEvent" :listTickets="listTickets"></select-seat>
                     </div>
                 </div>
             </div>
@@ -52,6 +74,10 @@ export default {
     },
     data() {
         return {
+            isSelect: true,
+            isComfirm: true,
+            isPaying: true,
+            isComplete: true,
             categories: [
                 {
                     id: 1,
@@ -207,8 +233,24 @@ export default {
     align-items: center;
     text-align: center;
     justify-content: center;
+    transition: all 1s ease-in-out;
 }
-
+.progress-step.disable::before {
+    font-family: "FontAwesome";
+    content: "\f00c";
+    display: flex;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    width: 30px;
+    height: 30px;
+    background-image: #c8c8c8;
+    border: none;
+    border-radius: 100%;
+    color: #fff;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
 .progress-step::before {
     font-family: "FontAwesome";
     content: " ";
@@ -250,4 +292,5 @@ export default {
     background: var(--primary-color-hover-bold);
     z-index: -1;
     width: 100%;
-}</style>
+}
+</style>
