@@ -1,5 +1,5 @@
 <template>
-    <section id="eventDetail" class="bg-transparent box-shadow pb-4 pt-3 section-content">
+    <section id="eventDetail" class="bg-grey box-shadow pb-4 pt-3 section-content">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12 mgt-16 pt-3 pb-3 pb-sm-5">

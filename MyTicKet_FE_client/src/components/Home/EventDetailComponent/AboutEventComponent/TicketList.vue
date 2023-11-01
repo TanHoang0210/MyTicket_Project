@@ -1,5 +1,5 @@
 <template>
-    <section id="ticketList" class="bg-grey">
+    <section id="ticketList" class="bg-transparent">
         <div class="container">
             <div id="eventListing" class="row pb-3">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12 mgt-16 pt-3 pb-3 pb-sm-5">

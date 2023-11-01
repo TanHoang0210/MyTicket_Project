@@ -57,6 +57,7 @@
                 </div>
             </div>
         </main>
+        {{ urlParams }}
         <div>
             <home-footer :categories="categories"></home-footer>
         </div>
@@ -74,10 +75,10 @@ export default {
     },
     data() {
         return {
-            isSelect: true,
-            isComfirm: true,
-            isPaying: true,
-            isComplete: true,
+            isSelect: false,
+            isComfirm: false,
+            isPaying: false,
+            isComplete: false,
             categories: [
                 {
                     id: 1,
@@ -153,7 +154,10 @@ export default {
         this.breadItems.push(breadPre)
         var breadActive = this.$set(this.currentBread, 'text', 'Chọn chỗ');
         this.breadItems.push(breadActive)
-    },
+        if(this.$route.params.section == 'area'){
+            this.isSelect = true;
+        }
+    }
 }
 </script>
 

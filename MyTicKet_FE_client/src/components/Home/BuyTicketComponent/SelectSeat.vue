@@ -29,7 +29,7 @@
                         alt="">
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
-                    <form action="" class="form-ticket-ticket">
+                    <form action="/ticket/order" method="post" class="form-ticket-ticket">
                         <input type="hidden" name="_csrf"
                             value="U8hsPodpZMCBzx_wnz8ZE3Bjxw9H1nbsaN6JLp4OqRM9nB9s0lww9NiiV576DUpcElaiYyyFHtsZnfxornjiVw==">
                         <!-- start: Buy Ticket List -->
@@ -158,20 +158,10 @@ export default {
     props: ['currentEvent', 'listTickets'],
     data() {
         return {
-            date: moment(60 * 10 * 1000)
+            
         }
-    },
-    computed:{
-        time: function(){
-      return this.date.format('mm:ss');
     }
-    },
-    mounted: function(){   
-    setInterval(() => {
-      this.date = moment(this.date.subtract(1, 'seconds'))
-    }, 1000);
   }
-}
 </script>
 
 <style>
@@ -208,7 +198,7 @@ export default {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e);
+    background-image: url();
 }
 
 .panel-heading .step {

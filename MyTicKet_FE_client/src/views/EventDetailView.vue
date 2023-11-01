@@ -3,7 +3,7 @@
     <div>
       <Header />
     </div>
-    <main class="main" style="margin-bottom: 30px;">
+    <main class="main" style="padding-bottom: 30px;">
       <div class="main__container">
         <div class="home__container">
           <section class="event-banner adp">
