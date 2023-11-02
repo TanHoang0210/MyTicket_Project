@@ -29,7 +29,7 @@
                         alt="">
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
-                    <form action="/ticket/order" method="post" class="form-ticket-ticket">
+                    <form @submit.prevent="false" class="form-ticket-ticket">
                         <input type="hidden" name="_csrf"
                             value="U8hsPodpZMCBzx_wnz8ZE3Bjxw9H1nbsaN6JLp4OqRM9nB9s0lww9NiiV576DUpcElaiYyyFHtsZnfxornjiVw==">
                         <!-- start: Buy Ticket List -->
@@ -139,7 +139,7 @@
                         <div class="row">
                             <div class="col-8">
                             </div>
-                            <button id="md-viewMap" class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
+                            <button v-on:click="submitToCheckout()" id="md-viewMap" class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
                                 Thanh Toán
                             </button>
                         </div>
@@ -157,9 +157,13 @@
 export default {
     props: ['currentEvent', 'listTickets'],
     data() {
-        return {
-            
+        return {    
         }
+    },
+    methods: {
+        submitToCheckout: function () {
+            this.$router.go(this.$router.push("/ticket/checkout"))
+        },
     }
   }
 </script>
