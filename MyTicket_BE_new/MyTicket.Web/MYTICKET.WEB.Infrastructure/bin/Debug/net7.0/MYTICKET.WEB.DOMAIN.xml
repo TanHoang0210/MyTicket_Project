@@ -29,6 +29,81 @@
             Địa chỉ email
             </summary>
         </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.EventName">
+            <summary>
+            Tên sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.EventTypeId">
+            <summary>
+            id loại sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.SupplierId">
+            <summary>
+            Id nhà cung cấp sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.EventDescription">
+            <summary>
+            Mô tả
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.ExchangePolicy">
+            <summary>
+            chính sách đổi trả
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.AdmissionPolicy">
+            <summary>
+            Chính sách sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.EventImage">
+            <summary>
+            ảnh sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.Status">
+            <summary>
+            trạng thái sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventDetail.VenueId">
+            <summary>
+            Id sân vận động, truyền vào nếu tổ chức ở svd
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventDetail.OrganizationDay">
+            <summary>
+            Ngày diễn ra sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventDetail.StartSaleTicketDate">
+            <summary>
+            Ngày bắt đầu bán vé
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventDetail.EndSaleTicketDate">
+            <summary>
+            Ngày kết thúc bán vé
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventDetail.EventSeatMapImage">
+            <summary>
+            ảnh map sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventType.Name">
+            <summary>
+            Tên Loaị sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventType.Description">
+            <summary>
+            Mô tả
+            </summary>
+        </member>
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.Role.UserType">
             <summary>
             <see cref="!:UserTypes"/>
@@ -65,6 +140,21 @@
             Địa chỉ email
             </summary>
         </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Ticket.TicketEventId">
+            <summary>
+            id loại sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Ticket.SeatCode">
+            <summary>
+            Mã chỗ ngồi
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Ticket.Status">
+            <summary>
+            trạng thái
+            </summary>
+        </member>
         <member name="T:MYTICKET.WEB.DOMAIN.Entities.User">
             <summary>
             User
@@ -78,6 +168,11 @@
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.User.Status">
             <summary>
             Trạng thái user <see cref="T:MYTICKET.UTILS.ConstantVariables.User.UserStatus"/>
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Venue.Name">
+            <summary>
+            Tên sân vận động
             </summary>
         </member>
     </members>

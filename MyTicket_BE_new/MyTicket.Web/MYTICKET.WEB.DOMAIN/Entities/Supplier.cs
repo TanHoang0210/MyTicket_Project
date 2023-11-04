@@ -51,8 +51,10 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public string Address { get; set; } = null!;
         [MaxLength(18)]
         public string TaxCode { get; set; } = null!;
-        [MaxLength(18)]
-        public string Language { get; set; } = null!;
+
+        public List<Event> Events { get; } = new();
+
+
 
         public DateTime? CreatedDate { get; set; }
         public int? CreatedBy { get; set; }

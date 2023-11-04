@@ -5,7 +5,29 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<NoWarn>1701;1702;1591</NoWarn>
+	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<NoWarn>1701;1702;1591</NoWarn>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="Common\Localization\SourceFiles\en.xml" />
+		<None Remove="Common\Localization\SourceFiles\vi.xml" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Common\Localization\SourceFiles\en.xml" />
+		<EmbeddedResource Include="Common\Localization\SourceFiles\vi.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="DemoModule\Dtos\" />
+		<Folder Include="FileModule\Abstract\" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Common\Localization\SourceFiles\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="ClosedXML" Version="0.102.1" />
