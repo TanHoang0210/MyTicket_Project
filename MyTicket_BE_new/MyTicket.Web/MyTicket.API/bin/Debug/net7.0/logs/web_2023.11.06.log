@@ -1,0 +1,40 @@
+﻿2023-11-06 23:20:08,645 [1] WARN Microsoft.EntityFrameworkCore.Model.Validation - No store type was specified for the decimal property 'Price' on entity type 'TicketEvent'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2023-11-06 23:20:09,180 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (30ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+2023-11-06 23:20:09,346 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (147ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-11-06 23:20:09,692 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (66ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-06 23:20:09,773 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-06 23:20:10,062 [4] INFO Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5030
+2023-11-06 23:20:10,185 [4] INFO Hangfire.BackgroundJobServer - Starting Hangfire Server using job storage: 'In-Memory Storage'
+2023-11-06 23:20:10,185 [4] INFO Hangfire.BackgroundJobServer - Using the following options for Hangfire Server:
+    Worker count: 100
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2023-11-06 23:20:10,215 [4] INFO Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2023-11-06 23:20:10,216 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:41888:ecc22ec5 successfully announced in 4.3767 ms
+2023-11-06 23:20:10,217 [4] INFO Microsoft.Hosting.Lifetime - Hosting environment: Development
+2023-11-06 23:20:10,219 [4] INFO Microsoft.Hosting.Lifetime - Content root path: D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API
+2023-11-06 23:20:10,225 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:41888:ecc22ec5 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2023-11-06 23:20:10,518 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:41888:ecc22ec5 all the dispatchers started
