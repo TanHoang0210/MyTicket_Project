@@ -62,6 +62,11 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// trạng thái sự kiện
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// Ngày sự kiện bắt đầu tổ chức
+        /// </summary>
+        public DateTime StartEventDate { get; set; }
         public List<EventDetail> EventDetails { get;} = new();
         public DateTime? CreatedDate { get; set; }
         public int? CreatedBy { get; set; }

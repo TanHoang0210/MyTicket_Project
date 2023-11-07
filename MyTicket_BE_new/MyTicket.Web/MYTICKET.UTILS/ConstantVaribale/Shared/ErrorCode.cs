@@ -28,14 +28,9 @@
         FileMaxLength = 3001,
         FileExtention = 3002,
 
-        //product manager 4xxx
-        ProductCategoryNotFound = 4000,
-        ParentProductCategoryNotFound = 4001,
-        ProductNotFound = 4002,
-        ProductCategoryIsBeingUsedByProduct = 4003,
-        ProductCategoryIsBeingUsedAsParent = 4004,
-        ProductPriceNotFound = 4005,
-        CalculationUnitNotFound = 4006,
+        //venue manager 4xxx
+        VenueNotFound = 4002,
+
 
         #region Order 5xxx
         //Order

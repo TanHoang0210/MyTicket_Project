@@ -1,0 +1,503 @@
+﻿2023-11-07 23:38:19,773 [1] WARN Microsoft.EntityFrameworkCore.Model.Validation - No store type was specified for the decimal property 'Price' on entity type 'TicketEvent'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2023-11-07 23:38:20,232 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+2023-11-07 23:38:20,298 [6] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (49ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-11-07 23:38:20,633 [10] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (53ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:38:20,730 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (4ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:38:20,879 [9] INFO Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5030
+2023-11-07 23:38:20,996 [9] INFO Hangfire.BackgroundJobServer - Starting Hangfire Server using job storage: 'In-Memory Storage'
+2023-11-07 23:38:20,997 [9] INFO Hangfire.BackgroundJobServer - Using the following options for Hangfire Server:
+    Worker count: 100
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2023-11-07 23:38:21,025 [9] INFO Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2023-11-07 23:38:21,028 [9] INFO Microsoft.Hosting.Lifetime - Hosting environment: Development
+2023-11-07 23:38:21,030 [9] INFO Microsoft.Hosting.Lifetime - Content root path: D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API
+2023-11-07 23:38:21,032 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:22560:cb900d23 successfully announced in 9.3323 ms
+2023-11-07 23:38:21,040 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:22560:cb900d23 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2023-11-07 23:38:21,281 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:22560:cb900d23 all the dispatchers started
+2023-11-07 23:44:56,801 [1] WARN Microsoft.EntityFrameworkCore.Model.Validation - No store type was specified for the decimal property 'Price' on entity type 'TicketEvent'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2023-11-07 23:44:57,386 [6] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (46ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+2023-11-07 23:44:57,459 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (54ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-11-07 23:44:57,796 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (51ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:44:57,900 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (10ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:44:58,031 [8] INFO Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5030
+2023-11-07 23:44:58,118 [8] INFO Hangfire.BackgroundJobServer - Starting Hangfire Server using job storage: 'In-Memory Storage'
+2023-11-07 23:44:58,119 [8] INFO Hangfire.BackgroundJobServer - Using the following options for Hangfire Server:
+    Worker count: 100
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2023-11-07 23:44:58,175 [8] INFO Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2023-11-07 23:44:58,179 [8] INFO Microsoft.Hosting.Lifetime - Hosting environment: Development
+2023-11-07 23:44:58,181 [8] INFO Microsoft.Hosting.Lifetime - Content root path: D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API
+2023-11-07 23:44:58,184 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:38380:0f9d5b86 successfully announced in 10.5107 ms
+2023-11-07 23:44:58,192 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:38380:0f9d5b86 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2023-11-07 23:44:58,582 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:38380:0f9d5b86 all the dispatchers started
+2023-11-07 23:45:50,569 [128] INFO OpenIddict.Server.OpenIddictServerDispatcher - The request URI matched a server endpoint: Token.
+2023-11-07 23:45:50,599 [128] INFO OpenIddict.Server.OpenIddictServerDispatcher - The token request was successfully extracted: {
+  "grant_type": "password",
+  "username": "admin",
+  "password": "[redacted]",
+  "scope": "offfline_access",
+  "client_id": "client-angular",
+  "client_secret": "[redacted]"
+}.
+2023-11-07 23:45:50,719 [129] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (17ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [o].[Id], [o].[ConcurrencyToken], [o].[Description], [o].[Descriptions], [o].[DisplayName], [o].[DisplayNames], [o].[Name], [o].[Properties], [o].[Resources]
+FROM [dbo].[OpenIddictScopes] AS [o]
+WHERE [o].[Name] = N'offfline_access'
+2023-11-07 23:45:50,730 [129] INFO OpenIddict.Server.OpenIddictServerDispatcher - The token request was rejected because invalid scopes were specified: offfline_access.
+2023-11-07 23:45:50,751 [129] INFO OpenIddict.Server.OpenIddictServerDispatcher - The response was successfully returned as a JSON document: {
+  "error": "invalid_scope",
+  "error_description": "The specified 'scope' is invalid.",
+  "error_uri": "https://documentation.openiddict.com/errors/ID2052"
+}.
+2023-11-07 23:45:59,084 [3] INFO OpenIddict.Server.OpenIddictServerDispatcher - The request URI matched a server endpoint: Token.
+2023-11-07 23:45:59,095 [3] INFO OpenIddict.Server.OpenIddictServerDispatcher - The token request was successfully extracted: {
+  "grant_type": "password",
+  "username": "admin",
+  "password": "[redacted]",
+  "scope": "offline_access",
+  "client_id": "client-angular",
+  "client_secret": "[redacted]"
+}.
+2023-11-07 23:45:59,191 [131] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (18ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:45:59,226 [131] INFO OpenIddict.Server.OpenIddictServerDispatcher - The token request was successfully validated.
+2023-11-07 23:45:59,648 [131] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (14ms) [Parameters=[@__username_0='?' (Size = 128) (DbType = AnsiString)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[CreatedBy], [u].[CreatedDate], [u].[CustomerId], [u].[Deleted], [u].[DeletedBy], [u].[DeletedDate], [u].[Email], [u].[FullName], [u].[ModifiedBy], [u].[ModifiedDate], [u].[Password], [u].[Phone], [u].[Status], [u].[SupplierId], [u].[UserType], [u].[Username]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Username] = @__username_0 AND [u].[Deleted] = CAST(0 AS bit)
+2023-11-07 23:45:59,817 [129] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (13ms) [Parameters=[@__key_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[Id] = @__key_0
+2023-11-07 23:46:00,145 [131] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (23ms) [Parameters=[@p0='?' (Size = 450), @p1='?' (Size = 450), @p2='?' (Size = 50), @p3='?' (DbType = DateTime2), @p4='?' (Size = 4000), @p5='?' (Size = 4000), @p6='?' (Size = 50), @p7='?' (Size = 400), @p8='?' (Size = 50)], CommandType='Text', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [dbo].[OpenIddictAuthorizations] ([Id], [ApplicationId], [ConcurrencyToken], [CreationDate], [Properties], [Scopes], [Status], [Subject], [Type])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8);
+2023-11-07 23:46:00,194 [131] INFO OpenIddict.Server.OpenIddictServerDispatcher - An ad hoc authorization was automatically created and associated with the 'client-angular' application: 1b5919b4-b5a3-4979-bd4f-9224c04872eb.
+2023-11-07 23:46:00,241 [130] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (12ms) [Parameters=[@__key_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[Id] = @__key_0
+2023-11-07 23:46:00,274 [130] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (10ms) [Parameters=[@__key_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ApplicationId], [o].[ConcurrencyToken], [o].[CreationDate], [o].[Properties], [o].[Scopes], [o].[Status], [o].[Subject], [o].[Type]
+FROM [dbo].[OpenIddictAuthorizations] AS [o]
+WHERE [o].[Id] = @__key_0
+2023-11-07 23:46:00,371 [131] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (24ms) [Parameters=[@p0='?' (Size = 450), @p1='?' (Size = 450), @p2='?' (Size = 450), @p3='?' (Size = 50), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = DateTime2), @p9='?' (Size = 100), @p10='?' (Size = 50), @p11='?' (Size = 400), @p12='?' (Size = 50)], CommandType='Text', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [dbo].[OpenIddictTokens] ([Id], [ApplicationId], [AuthorizationId], [ConcurrencyToken], [CreationDate], [ExpirationDate], [Payload], [Properties], [RedemptionDate], [ReferenceId], [Status], [Subject], [Type])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12);
+2023-11-07 23:46:00,658 [132] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (12ms) [Parameters=[@__key_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[Id] = @__key_0
+2023-11-07 23:46:00,674 [3] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (6ms) [Parameters=[@__key_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ApplicationId], [o].[ConcurrencyToken], [o].[CreationDate], [o].[Properties], [o].[Scopes], [o].[Status], [o].[Subject], [o].[Type]
+FROM [dbo].[OpenIddictAuthorizations] AS [o]
+WHERE [o].[Id] = @__key_0
+2023-11-07 23:46:00,704 [133] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (13ms) [Parameters=[@p0='?' (Size = 450), @p1='?' (Size = 450), @p2='?' (Size = 450), @p3='?' (Size = 50), @p4='?' (DbType = DateTime2), @p5='?' (DbType = DateTime2), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = DateTime2), @p9='?' (Size = 100), @p10='?' (Size = 50), @p11='?' (Size = 400), @p12='?' (Size = 50)], CommandType='Text', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [dbo].[OpenIddictTokens] ([Id], [ApplicationId], [AuthorizationId], [ConcurrencyToken], [CreationDate], [ExpirationDate], [Payload], [Properties], [RedemptionDate], [ReferenceId], [Status], [Subject], [Type])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12);
+2023-11-07 23:46:00,774 [133] INFO OpenIddict.Server.OpenIddictServerDispatcher - The response was successfully returned as a JSON document: {
+  "access_token": "[redacted]",
+  "token_type": "Bearer",
+  "expires_in": 3599,
+  "refresh_token": "[redacted]"
+}.
+2023-11-07 23:47:06,528 [134] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (10ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:47:09,627 [134] INFO MYTICKET.WEB.SERVICE.FileModule.Implements.FileService - Upload file
+2023-11-07 23:48:37,764 [138] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (11ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:48:42,618 [138] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - Create: input = {"Name":"s\u00E2n v\u1EADn \u0111\u1ED9ng ticket","Address":"123 kim hoa","Capacity":20000,"Description":"s\u00E2n v\u1EADn \u0111\u1ED9ng v\u1EDBi c\u01A1 s\u1EDF v\u1EADt ch\u1EA5t hi\u1EC7n \u0111\u1EA1i, thu h\u00FAt h\u00E0ng ng\u00E0n s\u1EF1 ki\u1EC7n m\u1ED7i n\u0103m t\u1EDBi \u0111\u00E2y \u0111\u1EC3 t\u1ED5 ch\u1EE9c. H\u00E3y \u0111\u1EBFn v\u00E0 tr\u1EA3i nghi\u1EC7m","Image":"api/file/get?folder=venue\u0026file=logo-pink-textcolor.webp"}
+2023-11-07 23:48:46,716 [138] ERROR MYTICKET.BASE.API.Filters.ExceptionFilter - AutoMapper.AutoMapperMappingException: Path = /api/Venue/create, Query = [], Message = Missing type map configuration or unsupported mapping.
+
+Mapping types:
+CreateVenueDto -> VenueDto
+MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto -> MYTICKET.WEB.SERVICE.VenueModule.Dtos.VenueDto
+AutoMapper.AutoMapperMappingException: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+CreateVenueDto -> VenueDto
+MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto -> MYTICKET.WEB.SERVICE.VenueModule.Dtos.VenueDto
+   at lambda_method496(Closure, Object, VenueDto, ResolutionContext)
+   at MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService.Create(CreateVenueDto input) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\Myticket.Service\VenueModule\Implements\VenueService.cs:line 25
+   at MYTICKET.WEB.API.Controllers.VenueController.CreateVenue(CreateVenueDto input) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API\Controllers\VenueController.cs:line 29
+   at lambda_method494(Closure, Object, Object[])
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2023-11-07 23:49:55,134 [1] WARN Microsoft.EntityFrameworkCore.Model.Validation - No store type was specified for the decimal property 'Price' on entity type 'TicketEvent'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2023-11-07 23:49:55,507 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (29ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+2023-11-07 23:49:55,587 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (62ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-11-07 23:49:55,855 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (27ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:49:55,935 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:49:56,043 [9] INFO Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5030
+2023-11-07 23:49:56,100 [9] INFO Hangfire.BackgroundJobServer - Starting Hangfire Server using job storage: 'In-Memory Storage'
+2023-11-07 23:49:56,101 [9] INFO Hangfire.BackgroundJobServer - Using the following options for Hangfire Server:
+    Worker count: 100
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2023-11-07 23:49:56,126 [9] INFO Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2023-11-07 23:49:56,129 [9] INFO Microsoft.Hosting.Lifetime - Hosting environment: Development
+2023-11-07 23:49:56,131 [9] INFO Microsoft.Hosting.Lifetime - Content root path: D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API
+2023-11-07 23:49:56,134 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:9624:592efd39 successfully announced in 7.2997 ms
+2023-11-07 23:49:56,140 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:9624:592efd39 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2023-11-07 23:49:56,450 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:9624:592efd39 all the dispatchers started
+2023-11-07 23:50:08,689 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (18ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:50:11,367 [9] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - Create: input = {"Name":"s\u00E2n v\u1EADn \u0111\u1ED9ng ticket","Address":"123 kim hoa","Capacity":20000,"Description":"s\u00E2n v\u1EADn \u0111\u1ED9ng v\u1EDBi c\u01A1 s\u1EDF v\u1EADt ch\u1EA5t hi\u1EC7n \u0111\u1EA1i, thu h\u00FAt h\u00E0ng ng\u00E0n s\u1EF1 ki\u1EC7n m\u1ED7i n\u0103m t\u1EDBi \u0111\u00E2y \u0111\u1EC3 t\u1ED5 ch\u1EE9c. H\u00E3y \u0111\u1EBFn v\u00E0 tr\u1EA3i nghi\u1EC7m","Image":"api/file/get?folder=venue\u0026file=logo-pink-textcolor.webp"}
+2023-11-07 23:50:24,750 [9] ERROR MYTICKET.BASE.API.Filters.ExceptionFilter - AutoMapper.AutoMapperMappingException: Path = /api/Venue/create, Query = [], Message = Missing type map configuration or unsupported mapping.
+
+Mapping types:
+CreateVenueDto -> VenueDto
+MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto -> MYTICKET.WEB.SERVICE.VenueModule.Dtos.VenueDto
+AutoMapper.AutoMapperMappingException: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+CreateVenueDto -> VenueDto
+MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto -> MYTICKET.WEB.SERVICE.VenueModule.Dtos.VenueDto
+   at lambda_method122(Closure, Object, VenueDto, ResolutionContext)
+   at MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService.Create(CreateVenueDto input) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\Myticket.Service\VenueModule\Implements\VenueService.cs:line 25
+   at MYTICKET.WEB.API.Controllers.VenueController.CreateVenue(CreateVenueDto input) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API\Controllers\VenueController.cs:line 29
+   at lambda_method120(Closure, Object, Object[])
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2023-11-07 23:51:10,026 [1] WARN Microsoft.EntityFrameworkCore.Model.Validation - No store type was specified for the decimal property 'Price' on entity type 'TicketEvent'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2023-11-07 23:51:10,387 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+2023-11-07 23:51:10,468 [6] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (65ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-11-07 23:51:10,736 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (29ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:51:10,827 [6] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:51:10,954 [6] INFO Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5030
+2023-11-07 23:51:11,029 [6] INFO Hangfire.BackgroundJobServer - Starting Hangfire Server using job storage: 'In-Memory Storage'
+2023-11-07 23:51:11,030 [6] INFO Hangfire.BackgroundJobServer - Using the following options for Hangfire Server:
+    Worker count: 100
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2023-11-07 23:51:11,071 [6] INFO Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2023-11-07 23:51:11,073 [6] INFO Microsoft.Hosting.Lifetime - Hosting environment: Development
+2023-11-07 23:51:11,075 [6] INFO Microsoft.Hosting.Lifetime - Content root path: D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API
+2023-11-07 23:51:11,076 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:2120:20b2bc0e successfully announced in 5.454 ms
+2023-11-07 23:51:11,083 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:2120:20b2bc0e is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2023-11-07 23:51:11,580 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:2120:20b2bc0e all the dispatchers started
+2023-11-07 23:51:20,616 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (19ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:51:21,876 [9] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - Create: input = {"Name":"s\u00E2n v\u1EADn \u0111\u1ED9ng ticket","Address":"123 kim hoa","Capacity":20000,"Description":"s\u00E2n v\u1EADn \u0111\u1ED9ng v\u1EDBi c\u01A1 s\u1EDF v\u1EADt ch\u1EA5t hi\u1EC7n \u0111\u1EA1i, thu h\u00FAt h\u00E0ng ng\u00E0n s\u1EF1 ki\u1EC7n m\u1ED7i n\u0103m t\u1EDBi \u0111\u00E2y \u0111\u1EC3 t\u1ED5 ch\u1EE9c. H\u00E3y \u0111\u1EBFn v\u00E0 tr\u1EA3i nghi\u1EC7m","Image":"api/file/get?folder=venue\u0026file=logo-pink-textcolor.webp"}
+2023-11-07 23:51:23,361 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (16ms) [Parameters=[@p0='?' (Size = 264), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime2), @p4='?' (DbType = Boolean), @p5='?' (DbType = Int32), @p6='?' (DbType = DateTime2), @p7='?' (Size = 1024), @p8='?' (Size = 4000), @p9='?' (DbType = Int32), @p10='?' (DbType = DateTime2), @p11='?' (Size = 264)], CommandType='Text', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [dbo].[Venue] ([Address], [Capacity], [CreatedBy], [CreatedDate], [Deleted], [DeletedBy], [DeletedDate], [Description], [Image], [ModifiedBy], [ModifiedDate], [Name])
+OUTPUT INSERTED.[Id]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+2023-11-07 23:51:38,850 [122] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:51:38,864 [122] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - GetById: venueId = 1
+2023-11-07 23:51:45,016 [122] ERROR MYTICKET.BASE.API.Filters.ExceptionFilter - System.InvalidOperationException: Path = /api/Venue/find/1, Query = [], Message = The LINQ expression 'eventtEvents' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+System.InvalidOperationException: The LINQ expression 'eventtEvents' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+   at Microsoft.EntityFrameworkCore.Query.RelationalSqlTranslatingExpressionVisitor.VisitParameter(ParameterExpression parameterExpression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalSqlTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalSqlTranslatingExpressionVisitor.TranslateInternal(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalSqlTranslatingExpressionVisitor.Translate(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.RelationalProjectionBindingExpressionVisitor.Visit(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.RelationalProjectionBindingExpressionVisitor.VisitMemberAssignment(MemberAssignment memberAssignment)
+   at System.Linq.Expressions.ExpressionVisitor.VisitMemberBinding(MemberBinding node)
+   at Microsoft.EntityFrameworkCore.Query.Internal.RelationalProjectionBindingExpressionVisitor.VisitMemberInit(MemberInitExpression memberInitExpression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.RelationalProjectionBindingExpressionVisitor.Visit(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.RelationalProjectionBindingExpressionVisitor.Translate(SelectExpression selectExpression, Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.TranslateSelect(ShapedQueryExpression source, LambdaExpression selector)
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass9_0`1.<Execute>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService.GetById(Int32 venueId) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\Myticket.Service\VenueModule\Implements\VenueService.cs:line 61
+   at MYTICKET.WEB.API.Controllers.VenueController.FindVenueById(Int32 id) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API\Controllers\VenueController.cs:line 47
+   at lambda_method238(Closure, Object, Object[])
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2023-11-07 23:51:53,887 [125] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:51:53,915 [125] WARN MYTICKET.BASE.API.Filters.CustomValidationError - Bad Request: Path = /api/Venue/find, Query = [],  Errors: {"Name":["The Name field is required."]}
+2023-11-07 23:52:30,127 [1] WARN Microsoft.EntityFrameworkCore.Model.Validation - No store type was specified for the decimal property 'Price' on entity type 'TicketEvent'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2023-11-07 23:52:31,207 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (88ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+2023-11-07 23:52:31,419 [6] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (160ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-11-07 23:52:32,318 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (82ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:52:32,605 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (5ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-07 23:52:32,982 [9] INFO Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5030
+2023-11-07 23:52:33,329 [9] INFO Hangfire.BackgroundJobServer - Starting Hangfire Server using job storage: 'In-Memory Storage'
+2023-11-07 23:52:33,331 [9] INFO Hangfire.BackgroundJobServer - Using the following options for Hangfire Server:
+    Worker count: 100
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2023-11-07 23:52:33,406 [9] INFO Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2023-11-07 23:52:33,414 [9] INFO Microsoft.Hosting.Lifetime - Hosting environment: Development
+2023-11-07 23:52:33,422 [9] INFO Microsoft.Hosting.Lifetime - Content root path: D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API
+2023-11-07 23:52:33,426 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:42904:9a4e21da successfully announced in 28.62 ms
+2023-11-07 23:52:33,447 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:42904:9a4e21da is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2023-11-07 23:52:34,781 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:42904:9a4e21da all the dispatchers started
+2023-11-07 23:52:54,469 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (66ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:52:55,174 [9] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - GetAll: input = {"Name":null,"PageSize":0,"PageNumber":0,"Keyword":null,"Sort":null}
+2023-11-07 23:52:55,386 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (31ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [dbo].[Venue] AS [v]
+WHERE [v].[Deleted] = CAST(0 AS bit)
+2023-11-07 23:52:55,534 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (12ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [v].[Id], [v].[Address], [v].[Capacity], [v].[CreatedBy], [v].[CreatedDate], [v].[Deleted], [v].[DeletedBy], [v].[DeletedDate], [v].[Description], [v].[Image], [v].[ModifiedBy], [v].[ModifiedDate], [v].[Name]
+FROM [dbo].[Venue] AS [v]
+WHERE 0 = 1
+2023-11-07 23:53:04,242 [122] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (23ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:53:04,282 [122] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - GetAll: input = {"Name":null,"PageSize":1,"PageNumber":1,"Keyword":null,"Sort":null}
+2023-11-07 23:53:04,316 [122] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [dbo].[Venue] AS [v]
+WHERE [v].[Deleted] = CAST(0 AS bit)
+2023-11-07 23:53:04,376 [122] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (15ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [v].[Id], [v].[Address], [v].[Capacity], [v].[CreatedBy], [v].[CreatedDate], [v].[Deleted], [v].[DeletedBy], [v].[DeletedDate], [v].[Description], [v].[Image], [v].[ModifiedBy], [v].[ModifiedDate], [v].[Name]
+FROM [dbo].[Venue] AS [v]
+WHERE [v].[Deleted] = CAST(0 AS bit)
+ORDER BY [v].[Id] DESC
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+2023-11-07 23:53:10,711 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (20ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:53:10,736 [4] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - GetAll: input = {"Name":null,"PageSize":2,"PageNumber":1,"Keyword":null,"Sort":null}
+2023-11-07 23:53:10,767 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (10ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [dbo].[Venue] AS [v]
+WHERE [v].[Deleted] = CAST(0 AS bit)
+2023-11-07 23:53:10,803 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (14ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [v].[Id], [v].[Address], [v].[Capacity], [v].[CreatedBy], [v].[CreatedDate], [v].[Deleted], [v].[DeletedBy], [v].[DeletedDate], [v].[Description], [v].[Image], [v].[ModifiedBy], [v].[ModifiedDate], [v].[Name]
+FROM [dbo].[Venue] AS [v]
+WHERE [v].[Deleted] = CAST(0 AS bit)
+ORDER BY [v].[Id] DESC
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+2023-11-07 23:53:16,514 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (13ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:53:16,529 [4] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - GetAll: input = {"Name":null,"PageSize":2,"PageNumber":2,"Keyword":null,"Sort":null}
+2023-11-07 23:53:16,551 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [dbo].[Venue] AS [v]
+WHERE [v].[Deleted] = CAST(0 AS bit)
+2023-11-07 23:53:16,577 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (9ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [v].[Id], [v].[Address], [v].[Capacity], [v].[CreatedBy], [v].[CreatedDate], [v].[Deleted], [v].[DeletedBy], [v].[DeletedDate], [v].[Description], [v].[Image], [v].[ModifiedBy], [v].[ModifiedDate], [v].[Name]
+FROM [dbo].[Venue] AS [v]
+WHERE [v].[Deleted] = CAST(0 AS bit)
+ORDER BY [v].[Id] DESC
+OFFSET @__p_0 ROWS FETCH NEXT @__p_0 ROWS ONLY
+2023-11-07 23:53:20,500 [122] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (9ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:53:20,520 [122] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - GetAll: input = {"Name":null,"PageSize":2,"PageNumber":1,"Keyword":null,"Sort":null}
+2023-11-07 23:53:20,550 [122] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [dbo].[Venue] AS [v]
+WHERE [v].[Deleted] = CAST(0 AS bit)
+2023-11-07 23:53:20,586 [122] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (10ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [v].[Id], [v].[Address], [v].[Capacity], [v].[CreatedBy], [v].[CreatedDate], [v].[Deleted], [v].[DeletedBy], [v].[DeletedDate], [v].[Description], [v].[Image], [v].[ModifiedBy], [v].[ModifiedDate], [v].[Name]
+FROM [dbo].[Venue] AS [v]
+WHERE [v].[Deleted] = CAST(0 AS bit)
+ORDER BY [v].[Id] DESC
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+2023-11-07 23:54:19,576 [124] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (18ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0
+2023-11-07 23:54:25,080 [124] INFO MYTICKET.BASE.API.Filters.ExceptionFilter - MYTICKET.UTILS.CustomException.UserFriendlyException: Path = /api/file/get, Query = [{"Key":"folder","Value":["venue"]},{"Key":"file","Value":["api/file/get?folder=venue\u0026file=logo-pink-textcolor.webp"]}], ErrorCode = FileNotFound, Message = en:error_FileNotFound
+MYTICKET.UTILS.CustomException.UserFriendlyException: Exception of type 'MYTICKET.UTILS.CustomException.UserFriendlyException' was thrown.
+   at MYTICKET.WEB.SERVICE.FileModule.Implements.FileService.GetFile(String folder, String fileName, FileConfig config) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\Myticket.Service\FileModule\Implements\FileService.cs:line 51
+   at MYTICKET.WEB.SERVICE.FileModule.Implements.FileService.GetFile(String folder, String fileName) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\Myticket.Service\FileModule\Implements\FileService.cs:line 34
+   at MYTICKET.WEB.API.Controllers.FileController.GetFile(String folder, String file, Boolean download) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API\Controllers\FileController.cs:line 37
+   at lambda_method210(Closure, Object, Object[])
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2023-11-07 23:54:25,159 [124] INFO MYTICKET.BASE.API.Filters.ExceptionFilter - MYTICKET.UTILS.CustomException.UserFriendlyException: Path = /api/file/get, Query = [{"Key":"folder","Value":["venue"]},{"Key":"file","Value":["api/file/get?folder=venue\u0026file=logo-pink-textcolor.webp"]}], ErrorCode = FileNotFound, Message = en:error_FileNotFound
+MYTICKET.UTILS.CustomException.UserFriendlyException: Exception of type 'MYTICKET.UTILS.CustomException.UserFriendlyException' was thrown.
+   at MYTICKET.WEB.SERVICE.FileModule.Implements.FileService.GetFile(String folder, String fileName, FileConfig config) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\Myticket.Service\FileModule\Implements\FileService.cs:line 51
+   at MYTICKET.WEB.SERVICE.FileModule.Implements.FileService.GetFile(String folder, String fileName) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\Myticket.Service\FileModule\Implements\FileService.cs:line 34
+   at MYTICKET.WEB.API.Controllers.FileController.GetFile(String folder, String file, Boolean download) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API\Controllers\FileController.cs:line 37
+   at lambda_method210(Closure, Object, Object[])
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2023-11-07 23:54:33,314 [124] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (20ms) [Parameters=[@__userId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[Status]
+FROM [dbo].[User] AS [u]
+WHERE [u].[Id] = @__userId_0

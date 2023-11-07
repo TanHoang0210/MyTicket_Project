@@ -83,6 +83,41 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.VenueController.CreateVenue(MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto)">
+            <summary>
+            thêm mới svd
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.VenueController.UpdateVenue(MYTICKET.WEB.SERVICE.VenueModule.Dtos.UpdateVenueDto)">
+            <summary>
+            cập nhập svd
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.VenueController.FindVenueById(System.Int32)">
+            <summary>
+            lấy thông tin svd theo id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.VenueController.FindProduct(MYTICKET.WEB.SERVICE.VenueModule.Dtos.FilterVenueDto)">
+            <summary>
+            lây danh sách svd
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.VenueController.DeleteVenue(System.Int32)">
+            <summary>
+            Xóa venue
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:MYTICKET.WEB.API.MiddleWare.CheckUserMiddleware">
             <summary>
             Check user kế thừa từ WebAPIBase.Middlewares.CheckUserMiddleware

@@ -8,6 +8,8 @@ using MYTICKET.WEB.SERVICE.AuthModule.Implements;
 using MYTICKET.WEB.SERVICE.Common.Localization;
 using MYTICKET.WEB.SERVICE.FileModule.Abstracts;
 using MYTICKET.WEB.SERVICE.FileModule.Implements;
+using MYTICKET.WEB.SERVICE.VenueModule.Abstracts;
+using MYTICKET.WEB.SERVICE.VenueModule.Implements;
 
 namespace MyTicket.API
 
@@ -32,6 +34,7 @@ namespace MyTicket.API
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<ISupplierService, SupplierService>();
             builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddScoped<IVenueService, VenueService>();
 
 
             var app = builder.Build();

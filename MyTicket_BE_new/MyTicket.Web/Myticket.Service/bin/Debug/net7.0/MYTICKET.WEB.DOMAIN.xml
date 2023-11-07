@@ -69,6 +69,11 @@
             trạng thái sự kiện
             </summary>
         </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.StartEventDate">
+            <summary>
+            Ngày sự kiện bắt đầu tổ chức
+            </summary>
+        </member>
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventDetail.VenueId">
             <summary>
             Id sân vận động, truyền vào nếu tổ chức ở svd

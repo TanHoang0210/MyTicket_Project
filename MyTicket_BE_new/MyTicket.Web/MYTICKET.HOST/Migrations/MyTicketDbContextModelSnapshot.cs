@@ -150,6 +150,9 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("StartEventDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")

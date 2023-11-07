@@ -162,6 +162,36 @@
             Loại tài khoản
             </summary>
         </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.EventName">
+            <summary>
+            Tên sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.EventTypeId">
+            <summary>
+            id loại sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.EventDescription">
+            <summary>
+            Mô tả
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.EventImage">
+            <summary>
+            ảnh sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.Status">
+            <summary>
+            trạng thái sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.StartEventDate">
+            <summary>
+            Ngày bắt đầu sự kiện
+            </summary>
+        </member>
         <member name="M:MYTICKET.WEB.SERVICE.FileModule.Implements.FileService.GetFile(System.String,System.String,MYTICKET.WEB.SERVICE.FileModule.Dtos.Setting.FileConfig)">
             <summary>
             Đọc file ra dạng byte
@@ -180,6 +210,96 @@
             <param name="fileName"></param>
             <param name="config"></param>
             <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.VenueModule.Abstracts.IVenueService.Create(MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto)">
+            <summary>
+            Thêm mới svd
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.VenueModule.Abstracts.IVenueService.Update(MYTICKET.WEB.SERVICE.VenueModule.Dtos.UpdateVenueDto)">
+            <summary>
+            cập nhật thông tin sân vận động
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.VenueModule.Abstracts.IVenueService.GetAll(MYTICKET.WEB.SERVICE.VenueModule.Dtos.FilterVenueDto)">
+            <summary>
+            Danh sách sân vận động
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.VenueModule.Abstracts.IVenueService.GetById(System.Int32)">
+            <summary>
+            Thông tin chi tiết sân vận động
+            </summary>
+            <param name="venueId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.VenueModule.Abstracts.IVenueService.Delete(System.Int32)">
+            <summary>
+            xóa sân vận động
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto">
+            <summary>
+            tạo mới svd
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto.Name">
+            <summary>
+            tên svd
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto.Address">
+            <summary>
+            địa chỉ svd
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto.Capacity">
+            <summary>
+            sức chứa svd
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto.Description">
+            <summary>
+            Mô tả
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto.Image">
+            <summary>
+            ảnh svd
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.VenueModule.Dtos.FilterVenueDto.Name">
+            <summary>
+            tên svd
+            </summary>
+        </member>
+        <member name="T:MYTICKET.WEB.SERVICE.VenueModule.Dtos.UpdateVenueDto">
+            <summary>
+            chỉnh sửa svd
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.VenueModule.Dtos.UpdateVenueDto.Id">
+            <summary>
+            id svd
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.VenueModule.Dtos.VenueDetailDto.Name">
+            <summary>
+            Tên sân vận động
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.VenueModule.Dtos.VenueDto.Name">
+            <summary>
+            Tên sân vận động
+            </summary>
         </member>
     </members>
 </doc>
