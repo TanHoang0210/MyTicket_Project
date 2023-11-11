@@ -5450,3 +5450,159 @@ FROM [dbo].[Venue] AS [v]
 WHERE [v].[Deleted] = CAST(0 AS bit)
 ORDER BY [v].[Id] DESC
 OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+2023-11-11 22:59:05,448 [1] WARN Microsoft.EntityFrameworkCore.Model.Validation - No store type was specified for the decimal property 'Price' on entity type 'TicketEvent'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2023-11-11 22:59:06,388 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (56ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+2023-11-11 22:59:06,506 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (82ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-11-11 22:59:06,959 [6] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (34ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-11 22:59:07,062 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-11 22:59:07,245 [8] INFO Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5030
+2023-11-11 22:59:07,348 [8] INFO Hangfire.BackgroundJobServer - Starting Hangfire Server using job storage: 'In-Memory Storage'
+2023-11-11 22:59:07,349 [8] INFO Hangfire.BackgroundJobServer - Using the following options for Hangfire Server:
+    Worker count: 100
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2023-11-11 22:59:07,379 [8] INFO Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2023-11-11 22:59:07,382 [8] INFO Microsoft.Hosting.Lifetime - Hosting environment: Development
+2023-11-11 22:59:07,385 [8] INFO Microsoft.Hosting.Lifetime - Content root path: D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API
+2023-11-11 22:59:07,389 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:18076:60557447 successfully announced in 14.0431 ms
+2023-11-11 22:59:07,402 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:18076:60557447 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2023-11-11 22:59:08,248 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:18076:60557447 all the dispatchers started
+2023-11-11 22:59:43,984 [126] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - GetById: venueId = 1
+2023-11-11 22:59:46,675 [126] ERROR MYTICKET.BASE.API.Filters.ExceptionFilter - System.InvalidOperationException: Path = /myticket/api/venue/find/1, Query = [], Message = The LINQ expression 'eventtEvents' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+System.InvalidOperationException: The LINQ expression 'eventtEvents' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+   at Microsoft.EntityFrameworkCore.Query.RelationalSqlTranslatingExpressionVisitor.VisitParameter(ParameterExpression parameterExpression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalSqlTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalSqlTranslatingExpressionVisitor.TranslateInternal(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalSqlTranslatingExpressionVisitor.Translate(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.RelationalProjectionBindingExpressionVisitor.Visit(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.RelationalProjectionBindingExpressionVisitor.VisitMemberAssignment(MemberAssignment memberAssignment)
+   at System.Linq.Expressions.ExpressionVisitor.VisitMemberBinding(MemberBinding node)
+   at Microsoft.EntityFrameworkCore.Query.Internal.RelationalProjectionBindingExpressionVisitor.VisitMemberInit(MemberInitExpression memberInitExpression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.RelationalProjectionBindingExpressionVisitor.Visit(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.RelationalProjectionBindingExpressionVisitor.Translate(SelectExpression selectExpression, Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.TranslateSelect(ShapedQueryExpression source, LambdaExpression selector)
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass9_0`1.<Execute>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService.GetById(Int32 venueId) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\Myticket.Service\VenueModule\Implements\VenueService.cs:line 61
+   at MYTICKET.WEB.API.Controllers.VenueController.FindVenueById(Int32 id) in D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API\Controllers\VenueController.cs:line 46
+   at lambda_method118(Closure, Object, Object[])
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2023-11-11 23:57:43,900 [1] WARN Microsoft.EntityFrameworkCore.Model.Validation - No store type was specified for the decimal property 'Price' on entity type 'TicketEvent'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2023-11-11 23:57:44,313 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (34ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+2023-11-11 23:57:44,398 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (66ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-11-11 23:57:44,687 [9] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (28ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-11 23:57:44,767 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-11 23:57:44,932 [8] INFO Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5030
+2023-11-11 23:57:45,006 [8] INFO Hangfire.BackgroundJobServer - Starting Hangfire Server using job storage: 'In-Memory Storage'
+2023-11-11 23:57:45,006 [8] INFO Hangfire.BackgroundJobServer - Using the following options for Hangfire Server:
+    Worker count: 100
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2023-11-11 23:57:45,057 [8] INFO Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2023-11-11 23:57:45,059 [8] INFO Microsoft.Hosting.Lifetime - Hosting environment: Development
+2023-11-11 23:57:45,062 [8] INFO Microsoft.Hosting.Lifetime - Content root path: D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API
+2023-11-11 23:57:45,063 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:47468:060b6839 successfully announced in 6.8247 ms
+2023-11-11 23:57:45,071 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:47468:060b6839 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2023-11-11 23:57:45,554 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:47468:060b6839 all the dispatchers started
+2023-11-11 23:59:45,567 [1] WARN Microsoft.EntityFrameworkCore.Model.Validation - No store type was specified for the decimal property 'Price' on entity type 'TicketEvent'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2023-11-11 23:59:45,955 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (29ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+2023-11-11 23:59:46,038 [6] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (65ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-11-11 23:59:46,346 [8] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (27ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-11 23:59:46,447 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[@__identifier_0='?' (Size = 100)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [o].[Id], [o].[ClientId], [o].[ClientSecret], [o].[ConcurrencyToken], [o].[ConsentType], [o].[DisplayName], [o].[DisplayNames], [o].[Permissions], [o].[PostLogoutRedirectUris], [o].[Properties], [o].[RedirectUris], [o].[Requirements], [o].[Type]
+FROM [dbo].[OpenIddictApplications] AS [o]
+WHERE [o].[ClientId] = @__identifier_0
+2023-11-11 23:59:46,578 [4] INFO Microsoft.Hosting.Lifetime - Now listening on: http://localhost:5030
+2023-11-11 23:59:46,657 [4] INFO Hangfire.BackgroundJobServer - Starting Hangfire Server using job storage: 'In-Memory Storage'
+2023-11-11 23:59:46,658 [4] INFO Hangfire.BackgroundJobServer - Using the following options for Hangfire Server:
+    Worker count: 100
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2023-11-11 23:59:46,686 [4] INFO Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+2023-11-11 23:59:46,689 [4] INFO Microsoft.Hosting.Lifetime - Hosting environment: Development
+2023-11-11 23:59:46,691 [4] INFO Microsoft.Hosting.Lifetime - Content root path: D:\Do AN Tot Nghiep\MyTicket\src\MyTicket_BE_new\MyTicket.Web\MyTicket.API
+2023-11-11 23:59:46,693 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:51100:f9c3f71f successfully announced in 7.6565 ms
+2023-11-11 23:59:46,701 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:51100:f9c3f71f is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2023-11-11 23:59:47,343 [BackgroundServerProcess #1] INFO Hangfire.Server.BackgroundServerProcess - Server myticket.base.api:51100:f9c3f71f all the dispatchers started

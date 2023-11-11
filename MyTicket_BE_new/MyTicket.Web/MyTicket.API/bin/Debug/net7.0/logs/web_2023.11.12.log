@@ -1,0 +1,10 @@
+﻿2023-11-12 00:00:12,595 [4] INFO MYTICKET.WEB.SERVICE.VenueModule.Implements.VenueService - GetById: venueId = 1
+2023-11-12 00:00:12,693 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (24ms) [Parameters=[@__venueId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [v].[Id], [v].[Address], [v].[Capacity], [v].[CreatedBy], [v].[CreatedDate], [v].[Deleted], [v].[DeletedBy], [v].[DeletedDate], [v].[Description], [v].[Image], [v].[ModifiedBy], [v].[ModifiedDate], [v].[Name]
+FROM [dbo].[Venue] AS [v]
+WHERE [v].[Id] = @__venueId_0 AND [v].[Deleted] = CAST(0 AS bit)
+2023-11-12 00:00:12,842 [4] INFO Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (6ms) [Parameters=[@__venueId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [e0].[EventName], [e0].[Id], [e0].[EventDescription], [e0].[EventImage], [e0].[EventTypeId], [e0].[StartEventDate], [e0].[Status]
+FROM [dbo].[EventDetail] AS [e]
+LEFT JOIN [dbo].[Event] AS [e0] ON [e].[EventId] = [e0].[Id]
+WHERE [e].[VenueId] = @__venueId_0

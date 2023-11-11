@@ -58,31 +58,32 @@ namespace MYTICKET.WEB.SERVICE.VenueModule.Implements
         public VenueDetailDto GetById(int venueId)
         {
             _logger.LogInformation($"{nameof(GetById)}: venueId = {venueId}");
-            var result = (from venue in _dbContext.Venues
-                         join venueEvent in _dbContext.EventDetails on venue.Id equals venueEvent.VenueId into venues
-                         from venueEvent in venues.DefaultIfEmpty()
-                         join eventt in _dbContext.Events on venueEvent.EventId equals eventt.Id into eventtEvents
-                         from eventt in eventtEvents.DefaultIfEmpty()
-                         select new VenueDetailDto
+            var venue = _dbContext.Venues.FirstOrDefault(s => s.Id == venueId && !s.Deleted)
+                ?? throw new UserFriendlyException(ErrorCode.VenueNotFound);
+            var events = (from eventVenue in _dbContext.EventDetails
+                         join myevent in _dbContext.Events on eventVenue.EventId equals myevent.Id into eventVenues
+                         from myevent in eventVenues.DefaultIfEmpty()
+                         where eventVenue.VenueId == venueId
+                         select new EventDto
                          {
-                             Name = venue.Name,
-                             Id = venue.Id,
-                             Address = venue.Address,
-                             Capacity = venue.Capacity,
-                             Description = venue.Description,
-                             Image = venue.Image,
-                             EventVenues = eventtEvents.Select(s => new EventDto 
-                             {
-                                 EventName = s.EventName,
-                                 EventDescription = s.EventDescription,
-                                 EventImage = s.EventImage,
-                                 EventTypeId = s.EventTypeId,
-                                 Id = s.Id,
-                                 StartEventDate = s.StartEventDate,
-                                 Status = s.Status
-                             })
-                             
-                         }).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.VenueNotFound);
+                             EventName = myevent.EventName,
+                             Id = myevent.Id,
+                             EventDescription = myevent.EventDescription,
+                             EventImage = myevent.EventImage,
+                             EventTypeId = myevent.EventTypeId,
+                             StartEventDate = myevent.StartEventDate,
+                             Status = myevent.Status
+                         }) ?? throw new UserFriendlyException(ErrorCode.NotFound);
+            var result = new VenueDetailDto
+            {
+                Id = venue.Id,
+                Name = venue.Name,
+                Address = venue.Address,
+                Capacity = venue.Capacity,
+                Description = venue.Description,
+                Image = venue.Image,
+                EventVenues = events
+            };
             return result;
         }
 
