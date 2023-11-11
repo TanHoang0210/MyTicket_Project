@@ -8,8 +8,7 @@ using MYTICKET.WEB.SERVICE.VenueModule.Dtos;
 
 namespace MYTICKET.WEB.API.Controllers
 {
-    [Authorize]
-    [Route("api/[controller]")]
+    [Route("myticket/api/venue")]
     [ApiController]
     public class VenueController : ControllerBase
     {

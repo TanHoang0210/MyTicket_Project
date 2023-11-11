@@ -12,7 +12,7 @@ using System.Net;
 namespace MYTICKET.WEB.API.Controllers
 {
     [Authorize]
-    [Route("api/user")]
+    [Route("myticket/api/user")]
     [ApiController]
     public class UserController : ApiControllerBase
     {

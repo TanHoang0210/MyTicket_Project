@@ -4,8 +4,8 @@
       <div class="login-logo">
         <Transition appear @before-enter="beforeEnter" @enter="enter">
           <router-link style="display: block;" to="/">
-                <img class="login-logo-img" src="https://i.ibb.co/NnfkKTT/1-1.png" alt="">
-            </router-link>
+            <img class="login-logo-img" src="img/ticketlogo-black.png" alt="">
+          </router-link>
         </Transition>
       </div>
     </div>
@@ -13,26 +13,25 @@
       <div class="login-form">
         <h3 class="login-form-label">Đăng nhập</h3>
         <span class="login-form-des">Đăng nhập và trải nghiệm mua vé tại MyTicket ngay hôm nay!</span>
-        <b-form @submit="onSubmit" class="login-form--inner">
-          <b-form-group id="email">
-            <b-form-label class="input-label-login" label-for="email">Tài Khoản</b-form-label>
-            <b-form-input class="form-control-login" id="email" v-model="loginForm.email" type="email"
+        <b-form @submit.prevent="onSubmit" class="login-form--inner">
+          <b-form-group>
+            <b-form-label class="input-label-login" label-for="username">Tài Khoản</b-form-label>
+            <b-form-input class="form-control-login" id="username" v-model="loginForm.username" type="text"
               placeholder="Nhập tài khoản" required></b-form-input>
           </b-form-group>
 
-          <b-form-group id="password">
+          <b-form-group>
             <b-form-label class="input-label-login" label-for="password">Mật Khẩu</b-form-label>
             <div class="input-password">
               <b-form-input v-if="!showPassword" class="form-control-login" :type="'password'" id="password"
                 v-model="loginForm.password" placeholder="Nhập mật khẩu" required>
               </b-form-input>
-              <b-form-input v-else class="form-control-login" :type="'text'" id="password"
-                v-model="loginForm.password" placeholder="Nhập mật khẩu" required>
+              <b-form-input v-else class="form-control-login" :type="'text'" id="password" v-model="loginForm.password"
+                placeholder="Nhập mật khẩu" required>
               </b-form-input>
               <b-icon v-if="!showPassword" class="show-password-btn" @click="showPassword = !showPassword"
                 icon="eye"></b-icon>
-                <b-icon v-else class="show-password-btn" @click="showPassword = !showPassword"
-                icon="eye-slash"></b-icon>
+              <b-icon v-else class="show-password-btn" @click="showPassword = !showPassword" icon="eye-slash"></b-icon>
             </div>
             <div>
               <b-form-checkbox class="checkbox-me" value="remember">
@@ -54,6 +53,8 @@
 <script>
 import { ref } from 'vue'
 import gsap from 'gsap'
+import { useRouter } from "vue-router"
+import axios from 'axios';
 export default {
   setup() {
     const beforeEnter = (el) => {
@@ -73,7 +74,7 @@ export default {
   data() {
     return {
       loginForm: {
-        email: '',
+        username: '',
         password: '',
         rememeber: false
       },
@@ -81,14 +82,34 @@ export default {
     }
   },
   methods: {
-    onSubmit(event) {
-      if(this.loginForm.email == "tanmusic0210@gmail.com"){
-        if(this.loginForm.password == "02102001")
+    async onSubmit() {
+      const requestConfig = {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        paramsSerializer: params => {
+          return new URLSearchParams(params).toString();
+        },
+      };
+      axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+      const res = await axios.post('connect/token',
         {
-          
-        }else{
-
-        }
+          grant_type: 'password',
+          username: this.loginForm.username,
+          password: this.loginForm.password,
+          scope: 'offline_access',
+          client_id: 'client-angular',
+          client_secret: '52F4A9A45C1F21B53B62F56DA52F7',
+        }, requestConfig)
+      if(res.status){
+        console.log(res)
+        localStorage.setItem('accessToken',res.data.access_token)
+        localStorage.setItem('refreshToken',res.data.refresh_token)
+        await this.$router.push('/');
+      }
+      else{
+        console.log(res)
       }
     },
     onReset(event) {
@@ -249,4 +270,5 @@ export default {
 
 .input-password {
   position: relative;
-}</style>
+}
+</style>

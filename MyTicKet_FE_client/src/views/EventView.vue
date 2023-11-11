@@ -1,7 +1,9 @@
 <template>
     <div class="main-event">
     <div>
-      <Header/>
+      <Header
+    :isLogin="!isLogin"
+    ></Header>
     </div>
     <div class="about">
       <h1>This is an about page</h1>

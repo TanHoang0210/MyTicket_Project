@@ -1,7 +1,9 @@
 <template>
     <div>
         <div>
-            <Header />
+            <Header
+    :isLogin="!isLogin"
+    ></Header>
         </div>
         <div style="display: block; height: 50px; background-color: var(--primary-color-bold); margin-bottom:20px ;">
             <b-breadcrumb class="event-breadcrumb black-breadcrumb" :items="breadItems"></b-breadcrumb>
@@ -14,42 +16,50 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
                                 <div class="purchaseProgress">
                                     <div class="progress-track"></div>
-                                    <div :class="{
+                                    <div
+                                     :class="{
                                         'active': isSelect,
                                         '': !isSelect,
-                                        'done': isComfirm || isComplete || isPaying
-                                    }" class="progress-step">
+                                        'done':isComfirm || isComplete || isPaying
+                                        }"
+                                     class="progress-step">
                                         Chọn chỗ
                                     </div>
-                                    <div :class="{
+                                    <div 
+                                    :class="{
                                         'active': isComfirm,
                                         '': !isComfirm,
-                                        'done': isPaying || isComplete
-                                    }" class="progress-step">
+                                        'done':isPaying || isComplete
+                                        }"
+                                    class="progress-step">
                                         Xác minh
                                     </div>
-                                    <div :class="{
+                                    <div 
+                                    :class="{
                                         'active': isPaying,
                                         '': !isPaying,
-                                        'done': isComplete
-                                    }" class="progress-step">
+                                        'done':isComplete
+                                        }"
+                                    class="progress-step">
                                         Thanh toán
                                     </div>
-                                    <div :class="{
+                                    <div
+                                    :class="{
                                         'active': isComplete,
                                         '': !isComplete,
-                                    }" class="progress-step">
+                                        }"
+                                     class="progress-step">
                                         Nhận vé
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <check-out v-if="isComfirm"></check-out>
-                        <select-seat v-else-if="isSelect" :currentEvent="currentEvent" :listTickets="listTickets"></select-seat>
+                        <select-seat v-if="isSelect" :currentEvent="currentEvent" :listTickets="listTickets"></select-seat>
                     </div>
                 </div>
             </div>
         </main>
+        {{ urlParams }}
         <div>
             <home-footer :categories="categories"></home-footer>
         </div>
@@ -60,17 +70,16 @@
 import Header from '@/components/Header.vue'
 import HomeFooter from '@/components/Home/HomeFooter.vue'
 import SelectSeat from '@/components/Home/BuyTicketComponent/SelectSeat.vue'
-import CheckOut from '@/components/Home/BuyTicketComponent/CheckOut.vue'
 export default {
     name: 'BuyTicketView',
     components: {
-        Header, HomeFooter, SelectSeat, CheckOut
+        Header, HomeFooter, SelectSeat
     },
     data() {
         return {
             isSelect: false,
             isComfirm: false,
-            isPaying: false,
+            isPaying: false, 
             isComplete: false,
             categories: [
                 {
@@ -97,16 +106,16 @@ export default {
             breadItems: [
                 {
                     text: 'Home',
-                    href: '/#'
+                    href: '#'
                 },
                 {
                     text: 'Event',
                     href: '/event'
-                },
+                }
             ],
             preBread: {
                 text: "",
-                href: ''
+                href: '/event/detail/id=5'
             },
             currentBread: {
                 text: "",
@@ -143,21 +152,12 @@ export default {
         }
     },
     mounted() {
-        var preBread = this.$set(this.preBread, 'href', this.currentEvent.name);
-        console.log(preBread)
-        this.breadItems.push(preBread)
-        switch (this.$route.params.section){
-            case "area":
-            var breadActive = this.$set(this.currentBread, 'text', 'Chọn chỗ');
-            this.breadItems.push(breadActive)
+        var breadPre = this.$set(this.preBread, 'text', this.currentEvent.name);
+        this.breadItems.push(breadPre)
+        var breadActive = this.$set(this.currentBread, 'text', 'Chọn chỗ');
+        this.breadItems.push(breadActive)
+        if(this.$route.params.section == 'area'){
             this.isSelect = true;
-            break;
-            case "checkout":
-            this.isComfirm = true;
-            var breadActive = this.$set(this.currentBread, 'text', 'CheckOut');
-            this.breadItems.push(breadActive)
-            console.log(this.isComfirm)
-            break;
         }
     }
 }
@@ -241,7 +241,6 @@ export default {
     justify-content: center;
     transition: all 1s ease-in-out;
 }
-
 .progress-step.disable::before {
     font-family: "FontAwesome";
     content: "\f00c";
@@ -258,7 +257,6 @@ export default {
     text-align: center;
     justify-content: center;
 }
-
 .progress-step::before {
     font-family: "FontAwesome";
     content: " ";

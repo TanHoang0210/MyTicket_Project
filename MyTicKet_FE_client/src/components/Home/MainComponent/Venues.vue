@@ -6,14 +6,9 @@
                 <div class="venue__item">
                     <b-card class="mb-0 venue__item--info">
                         <div class="venue__item--img" style="position: relative;">
-                            <b-card-img :src="venue.img" alt="Image"></b-card-img>
+                            <b-card-img :src="$fileUrl+venue.image" alt="Image"></b-card-img>
                             <router-link to="/about">
                                 <div class="ticket__button--modal">
-                                    <button class="ticket__button">
-                                        <h3 class="ticket__button--title">
-                                            >
-                                        </h3>
-                                    </button>
                                 </div>
                             </router-link>
                         </div>
@@ -32,7 +27,7 @@ import Banner from "@/components/Home/MainComponent/EventsComponent.vue/Banner.v
 export default {
     props: ['venues'],
     components: { MainEvent, Banner },
-    name: "venues"
+    name: "venues",
 }
 </script>
 <style>

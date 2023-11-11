@@ -11,7 +11,7 @@ using MYTICKET.WEB.SERVICE.FileModule.Dtos.UploadFile;
 
 namespace MYTICKET.WEB.API.Controllers
 {
-    [Route("api/file")]
+    [Route("myticket/api/file")]
     [ApiController]
     public class FileController : ApiControllerBase
     {

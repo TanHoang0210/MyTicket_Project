@@ -15,14 +15,15 @@ import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueSmoothScroll from 'vue2-smooth-scroll'
-
+import './data/axios'
+import axios  from 'axios'
 /* add icons to the library */
 library.add(faUserSecret)
-
+Vue.prototype.$fileUrl = "http://localhost:5030/myticket/";
 /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
-
+Vue.prototype.$axios = axios;
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.use(VueSmoothScroll)

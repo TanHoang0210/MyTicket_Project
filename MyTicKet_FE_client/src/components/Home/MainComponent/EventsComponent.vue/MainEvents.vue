@@ -9,11 +9,7 @@
                   <b-card-img :src="event.img" alt="Image"></b-card-img>
                   <router-link :to="{ path: '/event/detail', query: { id: event.id } }">
                 <div class="ticket__button--modal">
-                    <button class="ticket__button">
-                        <h3 class="ticket__button--title">
-                            >
-                        </h3>
-                    </button>
+
                 </div>
             </router-link>
               </div>

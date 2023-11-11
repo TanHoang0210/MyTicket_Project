@@ -4,7 +4,7 @@
         <div class="login-logo">
           <Transition appear @before-enter="beforeEnter" @enter="enter">
             <router-link style="display: block;" to="/">
-                <img class="login-logo-img" src="https://i.ibb.co/NnfkKTT/1-1.png" alt="">
+                <img class="login-logo-img" src="img/ticketlogo-black.png" alt="">
             </router-link>
           </Transition>
         </div>
@@ -19,10 +19,15 @@
               <b-form-input class="form-control-login" id="email" v-model="loginForm.email" type="email"
                 placeholder="Nhập Email của bạn" required></b-form-input>
             </b-form-group>
-            <b-form-group id="sdt">
-              <b-form-label class="input-label-login" label-for="sdt">Số điện thoại</b-form-label>
-              <b-form-input class="form-control-login" id="sdt" v-model="loginForm.sdt" type="tel"
+            <b-form-group id="phone">
+              <b-form-label class="input-label-login" label-for="phone">Số điện thoại</b-form-label>
+              <b-form-input class="form-control-login" id="phone" v-model="loginForm.phone" type="tel"
                 placeholder="Nhập số điện thoại của bạn" required></b-form-input>
+            </b-form-group>
+            <b-form-group id="username">
+              <b-form-label class="input-label-login" label-for="username">Tài khoản</b-form-label>
+              <b-form-input class="form-control-login" id="username" v-model="loginForm.username" type="text"
+                placeholder="Nhập tên đăng nhập của bạn" required></b-form-input>
             </b-form-group>
             <b-form-group id="password">
               <b-form-label class="input-label-login" label-for="password">Mật Khẩu</b-form-label>
@@ -86,10 +91,12 @@
     data() {
       return {
         loginForm: {
-          email: '',
+          username:'',
           password: '',
           confirmPassword:'',
-          sdt:'',
+          email: '',
+          phone:'',
+          fullname:'',
           rememeber: false
         },
         showPassword: false,

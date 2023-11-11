@@ -1,7 +1,9 @@
 <template>
   <div id="#">
     <div>
-      <Header />
+      <Header
+    :isLogin="!isLogin"
+    ></Header>
     </div>
     <main class="main" style="padding-bottom: 30px;">
       <div class="main__container">

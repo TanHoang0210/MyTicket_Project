@@ -11,11 +11,7 @@
                   <b-card-img :src="category.img" alt="Image"></b-card-img>
                   <router-link to="/about">
                 <div class="ticket__button--modal">
-                    <button class="ticket__button">
-                        <h3 class="ticket__button--title">
-                            >
-                        </h3>
-                    </button>
+
                 </div>
             </router-link>
               </div>
