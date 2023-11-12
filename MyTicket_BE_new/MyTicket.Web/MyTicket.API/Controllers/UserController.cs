@@ -11,7 +11,6 @@ using System.Net;
 
 namespace MYTICKET.WEB.API.Controllers
 {
-    [Authorize]
     [Route("myticket/api/user")]
     [ApiController]
     public class UserController : ApiControllerBase
@@ -31,6 +30,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("find-all")]
         //[PermissionFilter(PermissionKeys.UserTable)]
         public APIResponse<PagingResult<UserDto>> FindAll([FromQuery] FilterUserDto input)
@@ -40,6 +40,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(APIResponse<User>), (int)HttpStatusCode.OK)]
         public APIResponse FindById(int id)
@@ -65,9 +66,9 @@ namespace MYTICKET.WEB.API.Controllers
         /// <returns></returns>
         [HttpPost("add-by-customer")]
 
-        public APIResponse AddByCustomer([FromBody] CreateUserDto input)
+        public APIResponse AddByCustomer([FromBody] CreateCustomerUserDto input)
         {
-            _customerService.CreateUser(input);
+            _customerService.CreateCustomerUser(input);
             return new();
         }
 
@@ -78,9 +79,9 @@ namespace MYTICKET.WEB.API.Controllers
         /// <returns></returns>
         [HttpPost("add-by-suplier")]
 
-        public APIResponse AddBySuplier([FromBody] CreateUserDto input)
+        public APIResponse AddBySuplier([FromBody] CreateSupplierDto input)
         {
-            _supplierService.CreateUser(input);
+            _supplierService.CreateSupplierUser(input);
             return new();
         }
 
@@ -89,6 +90,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPut("update")]
         //[PermissionFilter(PermissionKeys.UserUpdate)]
         public APIResponse Update([FromBody] UpdateUserDto input)
@@ -102,6 +104,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPut("delete/{id}")]
         //[PermissionFilter(PermissionKeys.UserDelete)]
         public APIResponse Delete(int id)
@@ -115,6 +118,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPut("change-status/{id}")]
         //[PermissionFilter(PermissionKeys.UserChangeStatus)]
         public APIResponse ChangeStatus(int id)
@@ -122,7 +126,7 @@ namespace MYTICKET.WEB.API.Controllers
             _userService.ChangeStatus(id);
             return new();
         }
-
+        [Authorize]
         [HttpPut("set-password")]
         public APIResponse SetPassword(SetPasswordUserDto input)
         {

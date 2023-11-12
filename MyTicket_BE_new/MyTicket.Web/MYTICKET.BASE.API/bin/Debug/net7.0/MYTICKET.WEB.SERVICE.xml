@@ -4,6 +4,20 @@
         <name>MYTICKET.WEB.SERVICE</name>
     </assembly>
     <members>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.ICustomerService.CreateCustomerUser(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateCustomerUserDto)">
+            <summary>
+            Thêm user kh
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.ISupplierService.CreateSupplierUser(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateSupplierDto)">
+            <summary>
+            Thêm user ncc
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
         <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.IUserService.FindById(System.Int32)">
             <summary>
             Tìm kiếm User theo Id
@@ -80,6 +94,66 @@
         <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.RoleDto.RoleDto.Description">
             <summary>
             Mô tả
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateCustomerUserDto._username">
+            <summary>
+            Tên đăng nhập
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateCustomerUserDto._password">
+            <summary>
+            Mật khẩu
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateCustomerUserDto._email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateCustomerUserDto._phone">
+            <summary>
+            Số điện thoại
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateCustomerUserDto._lastName">
+            <summary>
+            Tên
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateCustomerUserDto._firstName">
+            <summary>
+            Họ
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateSupplierDto._username">
+            <summary>
+            Tên đăng nhập
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateSupplierDto._password">
+            <summary>
+            Mật khẩu
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateSupplierDto._email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateSupplierDto._phone">
+            <summary>
+            Số điện thoại
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateSupplierDto._fullName">
+            <summary>
+            Tên
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateSupplierDto._shortName">
+            <summary>
+            Họ
             </summary>
         </member>
         <member name="F:MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateUserDto._username">
@@ -172,6 +246,11 @@
             id loại sự kiện
             </summary>
         </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.EventTypeName">
+            <summary>
+            id loại sự kiện
+            </summary>
+        </member>
         <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.EventDescription">
             <summary>
             Mô tả
@@ -190,6 +269,28 @@
         <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.StartEventDate">
             <summary>
             Ngày bắt đầu sự kiện
+            </summary>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.EventTypeModule.Abstracts.IEventTypeService.Create(MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.CreateEventTypeDto)">
+            <summary>
+            Thêm loại sự kiện
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.EventTypeModule.Abstracts.IEventTypeService.FindAll">
+            <summary>
+            Danh sách loại sự kiện
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.CreateEventTypeDto._name">
+            <summary>
+            Tên Loaị sự kiện
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.CreateEventTypeDto._description">
+            <summary>
+            Mô tả
             </summary>
         </member>
         <member name="M:MYTICKET.WEB.SERVICE.FileModule.Implements.FileService.GetFile(System.String,System.String,MYTICKET.WEB.SERVICE.FileModule.Dtos.Setting.FileConfig)">

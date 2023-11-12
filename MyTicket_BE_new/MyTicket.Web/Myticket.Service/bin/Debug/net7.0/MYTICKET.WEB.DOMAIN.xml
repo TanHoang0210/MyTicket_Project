@@ -9,24 +9,39 @@
             Customer
             </summary>
         </member>
-        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.FullName">
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.FirstName">
             <summary>
             Tên đầy đủ
             </summary>
         </member>
-        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.ShortName">
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.LastName">
             <summary>
             Tên viết tắt
             </summary>
         </member>
-        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.Phone">
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.Country">
             <summary>
-            Số điện thoại
+            Quê quán
             </summary>
         </member>
-        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.Email">
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.Nationality">
             <summary>
-            Địa chỉ email
+            Quốc tịch
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.Address">
+            <summary>
+            Địa chỉ
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.Gender">
+            <summary>
+            Giới tính
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Customer.DateOfBirth">
+            <summary>
+            Ngày sinh
             </summary>
         </member>
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.EventName">
@@ -117,7 +132,7 @@
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.RolePermission.PermissionKey">
             <summary>
             Tên permission <br/>
-            <see cref="!:PermissionConfig"/>
+            <see cref="T:MYTICKET.UTILS.RolePermission.PermissionConfig"/>
             </summary>
         </member>
         <member name="T:MYTICKET.WEB.DOMAIN.Entities.Suppiler">
@@ -133,16 +148,6 @@
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.Suppiler.ShortName">
             <summary>
             Tên viết tắt
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Suppiler.Phone">
-            <summary>
-            Số điện thoại
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Suppiler.Email">
-            <summary>
-            Địa chỉ email
             </summary>
         </member>
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.Ticket.TicketEventId">

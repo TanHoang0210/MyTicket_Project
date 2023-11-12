@@ -24,8 +24,6 @@
 
 	<ItemGroup>
 		<Folder Include="DemoModule\Dtos\" />
-		<Folder Include="EventModule\Abstracts\" />
-		<Folder Include="EventModule\Implements\" />
 		<Folder Include="FileModule\Abstract\" />
 	</ItemGroup>
 	<ItemGroup>

@@ -2,6 +2,7 @@
 using MYTICKET.WEB.DOMAIN.Entities;
 using MYTICKET.WEB.SERVICE.AuthModule.Dtos.RoleDto;
 using MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto;
+using MYTICKET.WEB.SERVICE.EventTypeModule.Dtos;
 using MYTICKET.WEB.SERVICE.VenueModule.Dtos;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,9 @@ namespace MYTICKET.WEB.SERVICE.Common
             CreateMap<UpdateVenueDto,Venue>().ReverseMap();
             CreateMap<VenueDto,Venue>().ReverseMap();
             CreateMap<VenueDetailDto,Venue>().ReverseMap();
+
+            //EventType
+            CreateMap<EventType, EventTypeDto>().ReverseMap();
         }
 
     }

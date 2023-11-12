@@ -10,7 +10,7 @@ namespace MYTICKET.WEB.Infrastructure.Persistence
         public static void SeedData(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasData(
-                new User { Id = 1, Username = "admin", Password = CryptographyUtils.CreateMD5("123qwe"), FullName = "admin", UserType = UserTypes.ADMIN, Status = UserStatus.ACTIVE });
+                new User { Id = 1, Username = "admin", Password = CryptographyUtils.CreateMD5("123qwe"), UserType = UserTypes.ADMIN, Status = UserStatus.ACTIVE });
         }
     }
 }

@@ -8,7 +8,7 @@ namespace MYTICKET.WEB.DOMAIN.Entities
     /// Customer
     /// </summary>
     [Table(nameof(Customer), Schema = DbSchemas.Default)]
-    [Index(nameof(Deleted), nameof(FullName), nameof(ShortName), Name = $"IX_{nameof(Customer)}")]
+    [Index(nameof(Deleted), nameof(LastName), Name = $"IX_{nameof(Customer)}")]
     public class Customer : IFullAudited
     {
         [Key]
@@ -19,37 +19,44 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// Tên đầy đủ
         /// </summary>
         [MaxLength(256)]
-        public string FullName { get; set; } = null!;
+        public string FirstName { get; set; } = null!;
 
         /// <summary>
         /// Tên viết tắt
         /// </summary>
         [MaxLength(128)]
-        public string? ShortName { get; set; }
+        public string LastName { get; set; } = null!;
 
 
         /// <summary>
-        /// Số điện thoại
+        /// Quê quán
         /// </summary>
         [MaxLength(128)]
         [Unicode(false)]
-        public string? Phone { get; set; }
+        public int Country { get; set; }
 
         /// <summary>
-        /// Địa chỉ email
+        /// Quốc tịch
         /// </summary>
         [MaxLength(128)]
         [Unicode(false)]
-        public string? Email { get; set; }
+        public int Nationality { get; set; }
 
-
+        /// <summary>
+        /// Địa chỉ
+        /// </summary>
         [MaxLength(2024)]
-        public string Address { get; set; } = null!;
-        [MaxLength(18)]
-        public string TaxCode { get; set; } = null!;
-        [MaxLength(18)]
-        public string Language { get; set; } = null!;
+        public string? Address { get; set; } = null!;
 
+        /// <summary>
+        /// Giới tính
+        /// </summary>
+        public int Gender { get; set; }
+
+        /// <summary>
+        /// Ngày sinh
+        /// </summary>
+        public DateTime? DateOfBirth { get; set; }
         public DateTime? CreatedDate { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }

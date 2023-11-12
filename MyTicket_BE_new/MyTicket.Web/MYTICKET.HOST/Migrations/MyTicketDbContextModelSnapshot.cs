@@ -32,9 +32,13 @@ namespace MYTICKET.Hostconsle.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(2024)
                         .HasColumnType("nvarchar(2024)");
+
+                    b.Property<int>("Country")
+                        .HasMaxLength(128)
+                        .IsUnicode(false)
+                        .HasColumnType("int");
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -43,6 +47,9 @@ namespace MYTICKET.Hostconsle.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
@@ -53,20 +60,18 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(128)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(128)");
-
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("Language")
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(18)
-                        .HasColumnType("nvarchar(18)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
@@ -74,23 +79,14 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Phone")
+                    b.Property<int>("Nationality")
                         .HasMaxLength(128)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(128)");
-
-                    b.Property<string>("ShortName")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("TaxCode")
-                        .IsRequired()
-                        .HasMaxLength(18)
-                        .HasColumnType("nvarchar(18)");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Deleted", "FullName", "ShortName" }, "IX_Customer");
+                    b.HasIndex(new[] { "Deleted", "LastName" }, "IX_Customer");
 
                     b.ToTable("Customer", "dbo");
                 });
@@ -387,11 +383,6 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(128)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(128)");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -402,11 +393,6 @@ namespace MYTICKET.Hostconsle.Migrations
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(128)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("ShortName")
                         .HasMaxLength(128)
@@ -544,10 +530,6 @@ namespace MYTICKET.Hostconsle.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(128)");
 
-                    b.Property<string>("FullName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
 
@@ -594,7 +576,6 @@ namespace MYTICKET.Hostconsle.Migrations
                         {
                             Id = 1,
                             Deleted = false,
-                            FullName = "admin",
                             Password = "46F94C8DE14FB36680850768FF1B7F2A",
                             Status = 1,
                             UserType = 1,

@@ -179,7 +179,6 @@ namespace MYTICKET.WEB.API.Controllers
                     .SetClaim(Claims.Subject, user.Id)
                     .SetClaim(Claims.Issuer, $"{Request.Scheme}://{Request.Host.Value}")
                     .SetClaim(Claims.Email, user.Email)
-                    .SetClaim(Claims.Name, user.FullName)
                     .SetClaim(UserClaimTypes.UserType, user.UserType)
                     .SetClaim(UserClaimTypes.UserId, user.Id);
 

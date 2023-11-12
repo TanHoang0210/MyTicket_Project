@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MYTICKET.BASE.ENTITIES.Entities;
 using MYTICKET.UTILS.ConstantVaribale.Db;
+using MYTICKET.UTILS.RolePermission;
 
 namespace MYTICKET.WEB.DOMAIN.Entities
 {

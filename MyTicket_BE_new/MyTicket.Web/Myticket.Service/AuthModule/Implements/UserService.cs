@@ -84,7 +84,6 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
             _logger.LogInformation($"{nameof(FindAll)}: input = {JsonSerializer.Serialize(input)}");
             var result = new PagingResult<UserDto>();
             var users = _dbContext.Users.Where(u => !u.Deleted && (input.Username == null || u.Username.Contains(input.Username))
-                                                               && (input.FullName == null || u.FullName.Contains(input.FullName))
                                                                && (input.CustomerId == null || u.CustomerId == input.CustomerId)
                                                                 && (input.SupplierId == null || u.SupplierId == input.SupplierId)
                                                                && (input.Status == null || u.Status == input.Status));
@@ -113,7 +112,6 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == input.Id && u.Status == UserStatus.ACTIVE && !u.Deleted) ?? throw new UserFriendlyException(ErrorCode.UserNotFound); ;
             user.Email = input.Email;
             user.Phone = input.Phone;
-            user.FullName = input.FullName;
 
             //Thêm role
             if (input.RoleIds != null)

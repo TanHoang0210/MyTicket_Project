@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,11 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Abstracts
 {
     public interface ICustomerService : IUserService
     {
+        /// <summary>
+        /// Thêm user kh
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        void CreateCustomerUser(CreateCustomerUserDto input);
     }
 }

@@ -23,6 +23,11 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
         public int? EventTypeId { get; set; }
 
         /// <summary>
+        /// id loại sự kiện
+        /// </summary>
+        public int? EventTypeName { get; set; }
+
+        /// <summary>
         /// Mô tả
         /// </summary>
         public string? EventDescription { get; set; }

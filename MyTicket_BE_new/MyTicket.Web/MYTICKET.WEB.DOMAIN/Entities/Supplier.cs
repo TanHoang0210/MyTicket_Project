@@ -32,20 +32,6 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         [MaxLength(128)]
         public string? ShortName { get; set; }
 
-        /// <summary>
-        /// Số điện thoại
-        /// </summary>
-        [MaxLength(128)]
-        [Unicode(false)]
-        public string? Phone { get; set; }
-
-        /// <summary>
-        /// Địa chỉ email
-        /// </summary>
-        [MaxLength(128)]
-        [Unicode(false)]
-        public string? Email { get; set; }
-
 
         [MaxLength(2024)]
         public string Address { get; set; } = null!;

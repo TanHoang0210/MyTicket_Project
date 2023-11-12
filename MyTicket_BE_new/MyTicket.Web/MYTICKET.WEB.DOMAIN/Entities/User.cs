@@ -34,9 +34,6 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         [Unicode(false)]
         public string? Phone { get; set; }
 
-        [MaxLength(256)]
-        public string? FullName { get; set; }
-
         /// <summary>
         /// Loại user <see cref="UserTypes"/>
         /// </summary>

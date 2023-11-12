@@ -10,6 +10,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.EventTypeController.FindProduct">
+            <summary>
+            lây danh sách loại sự kiện
+            </summary>
+        </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.EventTypeController.CreateVenue(MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.CreateEventTypeDto)">
+            <summary>
+            thêm loại sự kiện
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
         <member name="M:MYTICKET.WEB.API.Controllers.FileController.GetFile(System.String,System.String,System.Boolean)">
             <summary>
             Xem file
@@ -48,14 +60,14 @@
             <param name="input"></param>
             <returns></returns>
         </member>
-        <member name="M:MYTICKET.WEB.API.Controllers.UserController.AddByCustomer(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateUserDto)">
+        <member name="M:MYTICKET.WEB.API.Controllers.UserController.AddByCustomer(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateCustomerUserDto)">
             <summary>
             Thêm User Khach hang
             </summary>
             <param name="input"></param>
             <returns></returns>
         </member>
-        <member name="M:MYTICKET.WEB.API.Controllers.UserController.AddBySuplier(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateUserDto)">
+        <member name="M:MYTICKET.WEB.API.Controllers.UserController.AddBySuplier(MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto.CreateSupplierDto)">
             <summary>
             Thêm User nha cung cap
             </summary>

@@ -17,39 +17,31 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
         public SupplierService(ILogger<UserService> logger, IHttpContextAccessor httpContext) : base(logger, httpContext)
         {
         }
-        public override void CreateUser(CreateUserDto input)
+        public void CreateSupplierUser(CreateSupplierDto input)
         {
-            _logger.LogInformation($"{nameof(CreateUser)}: input = {JsonSerializer.Serialize(input)}");
-            var userId = CommonUtils.GetCurrentUserId(_httpContext);
+            _logger.LogInformation($"{nameof(CreateSupplierUser)}: input = {JsonSerializer.Serialize(input)}");
             input.Password = CryptographyUtils.CreateMD5(input.Password);
             var transaction = _dbContext.Database.BeginTransaction();
-            var user = _mapper.Map<User>(input);
-
-
-            if (input.Status == null)
+            var addSupplier = _dbContext.Suppilers.Add(new Suppiler
             {
-                user.Status = UserStatus.ACTIVE;
-            }
-            user.UserType = UserTypes.SUPPLIER;
-
-            var result = _dbContext.Users.Add(user);
-
+                FullName = input.FullName,
+                ShortName = input.ShortName,
+                Address = input.Address,
+                TaxCode = input.TaxCode,     
+            }).Entity;
+            _dbContext.SaveChanges();
+            var result = _dbContext.Users.Add(new User
+            {
+                SupplierId = addSupplier.Id,
+                Phone = input.Phone,
+                Email = input.Email,
+                Status = UserStatus.ACTIVE,
+                UserType = UserTypes.SUPPLIER,
+                Password = input.Password,
+                Username = input.Username,
+            });
             _dbContext.SaveChanges();
 
-            //Thêm role
-            if (input.RoleIds != null)
-            {
-                foreach (var item in input.RoleIds)
-                {
-                    var role = _dbContext.Roles.FirstOrDefault(e => e.Id == item) ?? throw new UserFriendlyException(ErrorCode.RoleNotFound);
-                    _dbContext.UserRoles.Add(new UserRole
-                    {
-                        UserId = result.Entity.Id,
-                        RoleId = item
-                    });
-                }
-            }
-            _dbContext.SaveChanges();
             transaction.Commit();
         }
     }
