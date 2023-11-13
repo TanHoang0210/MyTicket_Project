@@ -236,6 +236,167 @@
             Loại tài khoản
             </summary>
         </member>
+        <member name="M:MYTICKET.WEB.SERVICE.EventModule.Abstracts.IEventService.CreateEvent(MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDto)">
+            <summary>
+            
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.EventModule.Abstracts.IEventService.FindAll(MYTICKET.WEB.SERVICE.EventModule.Dtos.FilterEventDto)">
+            <summary>
+            danh sách sự kiện có phân trang
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.EventModule.Abstracts.IEventService.GetEventById(System.Int32)">
+            <summary>
+            chi tiết sự kiện 
+            </summary>
+            <param name="eventDetailId"></param>
+            <returns></returns>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDetailDto.VenueId">
+            <summary>
+            Id sân vận động, truyền vào nếu tổ chức ở svd
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDetailDto.OrganizationDay">
+            <summary>
+            Ngày diễn ra sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDetailDto.StartSaleTicketDate">
+            <summary>
+            Ngày bắt đầu bán vé
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDetailDto.EndSaleTicketDate">
+            <summary>
+            Ngày kết thúc bán vé
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDetailDto._seatmap">
+            <summary>
+            ảnh map sự kiện
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDto._eventName">
+            <summary>
+            Tên sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDto.EventTypeId">
+            <summary>
+            id loại sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDto.SupplierId">
+            <summary>
+            Id nhà cung cấp sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDto.EventDescription">
+            <summary>
+            Mô tả
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDto.ExchangePolicy">
+            <summary>
+            chính sách đổi trả
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDto.AdmissionPolicy">
+            <summary>
+            Chính sách sự kiện
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDto._image">
+            <summary>
+            ảnh sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.Id">
+            <summary>
+            id chi tiết sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventName">
+            <summary>
+            Tên sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventTypeId">
+            <summary>
+            id loại sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventTypeName">
+            <summary>
+            tên loại sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.SupplierId">
+            <summary>
+            Id nhà cung cấp sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventDescription">
+            <summary>
+            Mô tả
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.ExchangePolicy">
+            <summary>
+            chính sách đổi trả
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.AdmissionPolicy">
+            <summary>
+            Chính sách sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventImage">
+            <summary>
+            ảnh sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.Status">
+            <summary>
+            trạng thái chi tiết sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.StartEventDate">
+            <summary>
+            Ngày sự kiện bắt đầu tổ chức
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.VenueId">
+            <summary>
+            Id sân vận động, truyền vào nếu tổ chức ở svd
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.OrganizationDay">
+            <summary>
+            Ngày diễn ra sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.StartSaleTicketDate">
+            <summary>
+            Ngày bắt đầu bán vé
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EndSaleTicketDate">
+            <summary>
+            Ngày kết thúc bán vé
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventSeatMapImage">
+            <summary>
+            ảnh map sự kiện
+            </summary>
+        </member>
         <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.EventName">
             <summary>
             Tên sự kiện

@@ -49,5 +49,9 @@
         
         //Document 7xxx
         DocumentNotFound = 7000,
+
+        //Event 800
+        EventDetailNotFound = 8000,
+        EventNotFound = 8001,
     }
 }

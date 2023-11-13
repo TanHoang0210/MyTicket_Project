@@ -1,4 +1,5 @@
-﻿using MYTICKET.BASE.SERVICE.Common;
+﻿using Microsoft.AspNetCore.Mvc;
+using MYTICKET.BASE.SERVICE.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
     public class FilterEventDto : PagingRequestBaseDto
     {
         private string? _eventName;
+        [FromQuery(Name = "eventName")]
         public  string? EventName 
         {
             get => _eventName;

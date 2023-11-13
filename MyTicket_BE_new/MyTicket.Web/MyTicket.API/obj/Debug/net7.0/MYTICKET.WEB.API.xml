@@ -10,6 +10,27 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.EventController.CreateVenue(MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDto)">
+            <summary>
+            thêm sự kiện
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.EventController.FindAllEvent(MYTICKET.WEB.SERVICE.EventModule.Dtos.FilterEventDto)">
+            <summary>
+            lây danh sách sự kiện
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.EventController.FindProduct(System.Int32)">
+            <summary>
+            lấy chi tiết sự kiện
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:MYTICKET.WEB.API.Controllers.EventTypeController.FindProduct">
             <summary>
             lây danh sách loại sự kiện
