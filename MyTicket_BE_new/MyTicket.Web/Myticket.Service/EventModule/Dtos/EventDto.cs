@@ -25,7 +25,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
         /// <summary>
         /// id loại sự kiện
         /// </summary>
-        public int? EventTypeName { get; set; }
+        public string? EventTypeName { get; set; }
 
         /// <summary>
         /// Mô tả
@@ -45,6 +45,13 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
         /// <summary>
         /// Ngày bắt đầu sự kiện
         /// </summary>
-        public DateTime StartEventDate { get; set; }
+        public DateTime? FirstEventDate { get; set; }
+
+        /// <summary>
+        /// Ngày bắt đầu sự kiện
+        /// </summary>
+        public DateTime? LastEventDate { get; set; }
+
+        public IEnumerable<EventDetailDto>? EventDetails { get; set; }
     }
 }

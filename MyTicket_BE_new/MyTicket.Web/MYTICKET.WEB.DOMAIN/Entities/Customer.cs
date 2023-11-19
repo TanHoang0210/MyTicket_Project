@@ -56,7 +56,10 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// <summary>
         /// Ngày sinh
         /// </summary>
+        /// 
         public DateTime? DateOfBirth { get; set; }
+
+        public List<Order> Orders { get; set; } = new();
         public DateTime? CreatedDate { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }

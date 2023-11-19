@@ -13,5 +13,6 @@ namespace MYTICKET.WEB.SERVICE.EventTypeModule.Dtos
         public required string Name { get; set; }
 
         public string? Description { get; set; }
+        public string? EventTypeImage{ get; set; }
     }
 }

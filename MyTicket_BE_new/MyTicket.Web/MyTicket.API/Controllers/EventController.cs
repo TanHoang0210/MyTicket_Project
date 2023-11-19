@@ -9,7 +9,6 @@ using MYTICKET.WEB.SERVICE.VenueModule.Dtos;
 
 namespace MYTICKET.WEB.API.Controllers
 {
-    [Authorize]
     [Route("myticket/api/event")]
     [ApiController]
     public class EventController : ControllerBase
@@ -26,6 +25,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost("create")]
         public APIResponse CreateVenue([FromBody] CreateEventDto input)
         {
@@ -48,7 +48,16 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("find-by-id")]
-        public APIResponse<EventDetailDto> FindProduct(int id)
+        public APIResponse<EventDto> FindProduct([FromQuery] int id)
                => new(_eventService.GetEventById(id));
+
+        /// <summary>
+        /// lấy 1 chi tiết sự kiện
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("detail/find-by-id")]
+        public APIResponse<EventDetailDto> FindEventDetailbyId([FromQuery] int id)
+               => new(_eventService.GetEventDetailTicketById(id));
     }
 }

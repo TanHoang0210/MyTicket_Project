@@ -28,16 +28,16 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr v-for="ticket in listTickets" class="text-center">
-                                                                    <td>{{ ticket.date }}</td>
-                                                                    <td> {{ currentEvent.name }}</td>
-                                                                    <td> {{ currentEvent.venue }}</td>
+                                                                <tr v-for="ticket in currentEvent.eventDetails" class="text-center">
+                                                                    <td>{{ formatDate(ticket.organizationDay) }}</td>
+                                                                    <td> {{ currentEvent.eventName }}</td>
+                                                                    <td> {{ ticket.venueName }}</td>
                                                                     <td>
                                                                         <b-button
-                                                                            v-if="ticket.status == 'active' && ticket.quantity > 0"
+                                                                            v-if="ticket.status == 1"
                                                                             variant="primary" class="button-event ">
                                                                             <router-link class="buy-btn"
-                                                                            :to="{ path: '/ticket/area', query: { id: currentEvent.id } }"
+                                                                            :to="{ name: 'buyTicket', params: {  type: 'area', id:ticket.id}}"
                                                                               style="color: #fff; !important">
                                                                                 Mua
                                                                                 vé
@@ -45,13 +45,13 @@
                                                                         </b-button>
 
                                                                         <b-button
-                                                                            v-else-if="ticket.status == 'active' && ticket.quantity <= 0"
+                                                                            v-else-if="ticket.status == 2"
                                                                             variant="secondary"
                                                                             class="button-event btn-primary" disabled>Đã bán
                                                                             hết</b-button>
 
 
-                                                                        <img v-else-if="ticket.status == 'deactive'"
+                                                                        <img v-else-if="ticket.status == 3"
                                                                             class="sold-out"
                                                                             src="https://i.ibb.co/LrT0jLQ/soldout.png"
                                                                             alt="">
@@ -74,9 +74,16 @@
     </section>
 </template>
 <script>
+import moment from 'moment';
 export default {
     name: "TicketList",
     props: ['currentEvent', 'listTickets'],
+    methods:{
+        formatDate(date) {
+      // Chuyển đổi ngày thành định dạng dd/mm/yyyy
+      return moment(date).format('DD/MM/YYYY');
+    },
+    }
 }
 </script>
 <style>

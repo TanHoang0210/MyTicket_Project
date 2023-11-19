@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MYTICKET.BASE.ENTITIES.Interfaces;
 using MYTICKET.UTILS.ConstantVaribale.Db;
+using MYTICKET.UTILS.ConstantVaribale.Shared;
 using System.Xml.Linq;
 
 namespace MYTICKET.WEB.DOMAIN.Entities
@@ -9,6 +10,8 @@ namespace MYTICKET.WEB.DOMAIN.Entities
     [Index(nameof(EventId), nameof(OrganizationDay), Name = $"IX_{nameof(EventDetail)}")]
     public class EventDetail : IFullAudited
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public int EventId { get; set; }
@@ -32,6 +35,16 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// Ngày kết thúc bán vé
         /// </summary>
         public DateTime EndSaleTicketDate { get; set; }
+
+        /// <summary>
+        /// kiểu chọn chỗ 
+        /// <see cref="EventSelectSeatType"/>
+        /// </summary>
+        public int SeatSelectType { get; set; }
+        /// <summary>
+        /// có sơ đồ để chọn vé không
+        /// </summary>
+        public bool HavingSeatMap { get; set; }
         /// <summary>
         /// ảnh map sự kiện
         /// </summary>
@@ -39,7 +52,7 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public string? EventSeatMapImage { get; set; }
         public int Status { get; set; }
         public List<TicketEvent> TicketEvents { get; } = new();
-
+        public List<OrderDetail> OrderDetails { get; set; } = new();
         public DateTime? CreatedDate { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }

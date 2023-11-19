@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MYTICKET.BASE.API.Controller;
@@ -51,6 +52,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost("add")]
         //[PermissionFilter(PermissionKeys.UserCreate)]
         public APIResponse Add([FromBody] CreateUserDto input)
@@ -77,6 +79,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost("add-by-suplier")]
 
         public APIResponse AddBySuplier([FromBody] CreateSupplierDto input)
@@ -133,5 +136,10 @@ namespace MYTICKET.WEB.API.Controllers
             _userService.SetPassword(input);
             return new();
         }
+
+        [Authorize]
+        [HttpGet("current-user")]
+        public APIResponse GetMe()
+            => new(_userService.GetCurentUser());
     }
 }

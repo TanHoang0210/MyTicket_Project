@@ -140,6 +140,9 @@ namespace MYTICKET.Hostconsle.Migrations
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)");
 
+                    b.Property<bool>("IsExChange")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
 
@@ -203,6 +206,9 @@ namespace MYTICKET.Hostconsle.Migrations
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)");
 
+                    b.Property<bool>("HavingSeatMap")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
 
@@ -211,6 +217,9 @@ namespace MYTICKET.Hostconsle.Migrations
 
                     b.Property<DateTime>("OrganizationDay")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("SeatSelectType")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartSaleTicketDate")
                         .HasColumnType("datetime2");
@@ -257,6 +266,10 @@ namespace MYTICKET.Hostconsle.Migrations
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)");
 
+                    b.Property<string>("EventTypeImage")
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
+
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
 
@@ -273,6 +286,121 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.HasIndex(new[] { "Name" }, "IX_EventType");
 
                     b.ToTable("EventType", "dbo");
+                });
+
+            modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("QrCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "CustomerId" }, "IX_Order");
+
+                    b.ToTable("Order", "dbo");
+                });
+
+            modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.OrderDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int?>("CustomerTransfer")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EventDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ExchangeStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("isExchange")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("isTransfer")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex(new[] { "EventDetailId", "TicketId" }, "IX_OrderDetail");
+
+                    b.ToTable("OrderDetail", "dbo");
                 });
 
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.Role", b =>
@@ -418,6 +546,9 @@ namespace MYTICKET.Hostconsle.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SeatCode")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -427,6 +558,9 @@ namespace MYTICKET.Hostconsle.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(1);
+
+                    b.Property<string>("TicketCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TicketEventId")
                         .HasColumnType("int");
@@ -481,9 +615,6 @@ namespace MYTICKET.Hostconsle.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
@@ -911,6 +1042,36 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Navigation("Event");
                 });
 
+            modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.Order", b =>
+                {
+                    b.HasOne("MYTICKET.WEB.DOMAIN.Entities.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.OrderDetail", b =>
+                {
+                    b.HasOne("MYTICKET.WEB.DOMAIN.Entities.EventDetail", "EventDetail")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("EventDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MYTICKET.WEB.DOMAIN.Entities.Order", "Order")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EventDetail");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.RolePermission", b =>
                 {
                     b.HasOne("MYTICKET.WEB.DOMAIN.Entities.Role", "Role")
@@ -983,6 +1144,11 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Navigation("Authorization");
                 });
 
+            modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.Customer", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.Event", b =>
                 {
                     b.Navigation("EventDetails");
@@ -990,12 +1156,19 @@ namespace MYTICKET.Hostconsle.Migrations
 
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.EventDetail", b =>
                 {
+                    b.Navigation("OrderDetails");
+
                     b.Navigation("TicketEvents");
                 });
 
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.EventType", b =>
                 {
                     b.Navigation("Events");
+                });
+
+            modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.Order", b =>
+                {
+                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.Suppiler", b =>

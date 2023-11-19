@@ -57,5 +57,10 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Abstracts
         /// </summary>
         /// <param name="input"></param>
         void ChangePassword(ChangePasswordDto input);
+
+        /// <summary>
+        /// Lấy user hiên tại
+        /// </summary>
+        CurrentCustomerDto GetCurentUser();
     }
 }

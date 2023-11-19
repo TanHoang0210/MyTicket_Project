@@ -8,6 +8,8 @@ namespace MYTICKET.WEB.DOMAIN.Entities
     [Index(nameof(Name), Name = $"IX_{nameof(EventType)}")]
     public class EventType : IFullAudited
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>
@@ -20,6 +22,9 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// </summary>
         [MaxLength(1024)]
         public string? Description { get; set; }
+
+        [MaxLength(1024)]
+        public string? EventTypeImage { get; set; }
 
         public List<Event> Events { get; } = new();
         #region FullAudit

@@ -115,6 +115,31 @@ namespace MYTICKET.WEB.Infrastructure.Persistence
                 .WithMany(ticketEvent => ticketEvent.Tickets)
                 .HasForeignKey(e => e.TicketEventId);
             #endregion
+            #region Order
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("getdate()");
+            });
+            modelBuilder.Entity<Order>()
+            .HasOne(order => order.Customer)
+            .WithMany(customer => customer.Orders)
+            .HasForeignKey(e => e.CustomerId);
+            #endregion
+            #region OrderDetail
+            modelBuilder.Entity<OrderDetail>(entity =>
+            {
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("getdate()");
+            });
+            modelBuilder.Entity<OrderDetail>()
+            .HasOne(orderDetail => orderDetail.Order)
+            .WithMany(order => order.OrderDetails)
+            .HasForeignKey(e => e.OrderId);
+
+            modelBuilder.Entity<OrderDetail>()
+            .HasOne(orderDetail => orderDetail.EventDetail)
+            .WithMany(eventDetail => eventDetail.OrderDetails)
+            .HasForeignKey(e => e.EventDetailId);
+            #endregion
             modelBuilder.SeedData();
             base.OnModelCreating(modelBuilder);
         }

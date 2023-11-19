@@ -59,14 +59,9 @@
                     </div>
                 </div>
                 <div class="user-control">
-                    <router-link v-if="!isLogin" class="register-link" style="text-decoration: none; color: #555;"
-                        to="/login">
+                    <div v-if="currentUser" class="user-info">
                         <b-icon style="margin-right: 5px;" icon="person-fill"></b-icon>
-                        Đăng Nhập
-                    </router-link>
-                    <div v-else class="user-info">
-                        <b-icon style="margin-right: 5px;" icon="person-fill"></b-icon>
-                        {{ user.userName }}
+                        {{ currentUser.lastName }} {{ currentUser.firstName }}
                         <div class="user-action">
                             <ul class="user-action-list">
                                 <li class="user-action-item">
@@ -98,6 +93,10 @@
                             </ul>
                         </div>
                     </div>
+                    <router-link v-else class="register-link" style="text-decoration: none; color: #555;" to="/login">
+                        <b-icon style="margin-right: 5px;" icon="person-fill"></b-icon>
+                        Đăng Nhập
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -131,10 +130,7 @@ export default {
                 }
             ],
             isActive: false,
-            user: {
-                userId: 1,
-                userName: "Nhat Tan",
-            },
+            user: null
         }
     },
     methods: {
@@ -144,28 +140,35 @@ export default {
             // some code to filter users
         },
         async logout() {
-            const response = await axios.post('connect/logout', {},{
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            })
-                .then(response =>
+            try {
+                const response = await axios.post('connect/logout', {}, {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                })
                     localStorage.removeItem('accessToken'),
                     localStorage.removeItem('refreshToken'),
-                    this.isLogin = false)
-                .catch(error => {
-                    alert("đăng xuất thất bại!")
-                    console.error("There was an error!", error);
+                    localStorage.removeItem('currentUser'),
+                    localStorage.removeItem('tokenExpiration'),
+                    this.$store.dispatch('logout');
+                this.$toasted.success('Đăng xuất thành công', {
+                    position: 'top-right',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
                 });
-            await this.$router.push('/');
+            } catch (error) {
+                this.$toasted.error('Đăng xuất thất bại', {
+                    position: 'top-right',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                });
+            }
         }
     },
     mounted() {
-        if (localStorage.getItem('accessToken')) {
-            this.isLogin = true;
-        } else {
-            this.isLogin = false;
+        console.log(this.$store.getters.tokenExpiration)
+    },
+    computed: {
+        currentUser() {
+            return this.$store.getters.currentUser;
         }
     }
 }

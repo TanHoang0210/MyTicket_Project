@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MYTICKET.UTILS.ConstantVaribale.Db;
+using MYTICKET.UTILS.ConstantVaribale.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,12 @@ namespace MYTICKET.WEB.DOMAIN.Entities
     [Index(nameof(SeatCode), Name = $"IX_{nameof(Ticket)}")]
     public class Ticket
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+
+        public string? TicketCode { get; set; }
         /// <summary>
         /// id loại sự kiện
         /// </summary>
@@ -28,7 +33,12 @@ namespace MYTICKET.WEB.DOMAIN.Entities
 
         /// <summary>
         /// trạng thái
+        /// <see cref="TicketStatus"/>
         /// </summary>
         public int Status { get; set; }
+        /// <summary>
+        /// Vé của khách hàng nào
+        /// </summary>
+        public int CustomerId { get; set; }
     }
 }

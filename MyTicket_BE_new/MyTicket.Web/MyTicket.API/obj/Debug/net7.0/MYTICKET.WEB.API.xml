@@ -31,12 +31,21 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:MYTICKET.WEB.API.Controllers.EventTypeController.FindProduct">
+        <member name="M:MYTICKET.WEB.API.Controllers.EventController.FindEventDetailbyId(System.Int32)">
+            <summary>
+            lấy 1 chi tiết sự kiện
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.API.Controllers.EventTypeController.FindEventType(MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.FitlerEventTypeDto)">
             <summary>
             lây danh sách loại sự kiện
             </summary>
+            <param name="input"></param>
+            <returns></returns>
         </member>
-        <member name="M:MYTICKET.WEB.API.Controllers.EventTypeController.CreateVenue(MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.CreateEventTypeDto)">
+        <member name="M:MYTICKET.WEB.API.Controllers.EventTypeController.CreateEventType(MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.CreateEventTypeDto)">
             <summary>
             thêm loại sự kiện
             </summary>

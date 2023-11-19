@@ -208,5 +208,29 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
             user.Password = CryptographyUtils.CreateMD5(input.NewPassword);
             _dbContext.SaveChanges();
         }
+
+        public CurrentCustomerDto GetCurentUser()
+        {
+            var currentUserId = CommonUtils.GetCurrentUserId(_httpContext);
+            var result = (from user in _dbContext.Users
+                         join customer in _dbContext.Customers on user.CustomerId equals customer.Id
+                         where user.Id == currentUserId && !user.Deleted && !customer.Deleted
+                         select new CurrentCustomerDto
+                         {
+                             Id = user.Id,
+                             Address = customer.Address,
+                             Country = customer.Country,
+                             DateOfBirth = customer.DateOfBirth,
+                             Email = user.Email,
+                             FirstName = customer.FirstName,
+                             Gender = customer.Gender,
+                             LastName = customer.LastName,
+                             Nationality = customer.Nationality,
+                             Password = user.Password,
+                             Phone = user.Phone,
+                             Username = user.Username                          
+                         }).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.UserNotFound) ;
+            return result;
+        }
     }
 }

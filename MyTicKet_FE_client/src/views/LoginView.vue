@@ -82,35 +82,10 @@ export default {
     }
   },
   methods: {
-    async onSubmit() {
-      const requestConfig = {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        paramsSerializer: params => {
-          return new URLSearchParams(params).toString();
-        },
-      };
-      axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-      const res = await axios.post('connect/token',
-        {
-          grant_type: 'password',
-          username: this.loginForm.username,
-          password: this.loginForm.password,
-          scope: 'offline_access',
-          client_id: 'client-angular',
-          client_secret: '52F4A9A45C1F21B53B62F56DA52F7',
-        }, requestConfig)
-      if(res.status){
-        console.log(res)
-        localStorage.setItem('accessToken',res.data.access_token)
-        localStorage.setItem('refreshToken',res.data.refresh_token)
-        await this.$router.push('/');
-      }
-      else{
-        console.log(res)
-      }
+    onSubmit(event) {
+      event.preventDefault()
+      this.Login();
+      this.$router.push('/');
     },
     onReset(event) {
       event.preventDefault()
@@ -124,6 +99,51 @@ export default {
       }
       if (this.inputtype === "password") {
         this.inputtype = "text"
+      }
+    },
+    async Login() {
+      try {
+        const requestConfig = {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          paramsSerializer: params => {
+            return new URLSearchParams(params).toString();
+          },
+        };
+        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+        const res = await axios.post('connect/token',
+          {
+            grant_type: 'password',
+            username: this.loginForm.username,
+            password: this.loginForm.password,
+            scope: 'offline_access',
+            client_id: 'client-angular',
+            client_secret: '52F4A9A45C1F21B53B62F56DA52F7',
+          }, requestConfig);
+        localStorage.setItem('accessToken', res.data.access_token)
+        this.$store.commit('setTokens', {
+          accessToken: res.data.access_token,
+          refreshToken: res.data.refresh_token,
+          tokenExpiration: res.data.expires_in,
+        });
+        localStorage.setItem('refreshToken', res.data.refresh_token)
+        localStorage.setItem('tokenExpiration', res.data.expires_in);
+        const user = await axios.get(
+          "myticket/api/user/current-user"
+        )
+        this.$store.commit('setCurrentUser', user.data.data);
+        localStorage.setItem('currentUser', JSON.stringify(user.data.data));
+        this.$toasted.success('Đăng nhập thành công', {
+          position: 'top-right',
+          duration: 3000, // Thời gian hiển thị toast (ms)
+        });
+      } catch (error) {
+        this.$toasted.error(error, {
+          position: 'top-right',
+          duration: 3000, // Thời gian hiển thị toast (ms)
+        });
       }
     }
   }

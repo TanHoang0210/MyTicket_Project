@@ -1,9 +1,7 @@
 <template>
     <div>
         <div>
-            <Header
-    :isLogin="!isLogin"
-    ></Header>
+            <Header :isLogin="!isLogin"></Header>
         </div>
         <div style="display: block; height: 50px; background-color: var(--primary-color-bold); margin-bottom:20px ;">
             <b-breadcrumb class="event-breadcrumb black-breadcrumb" :items="breadItems"></b-breadcrumb>
@@ -16,45 +14,38 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
                                 <div class="purchaseProgress">
                                     <div class="progress-track"></div>
-                                    <div
-                                     :class="{
+                                    <div :class="{
                                         'active': isSelect,
                                         '': !isSelect,
-                                        'done':isComfirm || isComplete || isPaying
-                                        }"
-                                     class="progress-step">
+                                        'done': isComfirm || isComplete || isPaying
+                                    }" class="progress-step">
                                         Chọn chỗ
                                     </div>
-                                    <div 
-                                    :class="{
+                                    <div :class="{
                                         'active': isComfirm,
                                         '': !isComfirm,
-                                        'done':isPaying || isComplete
-                                        }"
-                                    class="progress-step">
+                                        'done': isPaying || isComplete
+                                    }" class="progress-step">
                                         Xác minh
                                     </div>
-                                    <div 
-                                    :class="{
+                                    <div :class="{
                                         'active': isPaying,
                                         '': !isPaying,
-                                        'done':isComplete
-                                        }"
-                                    class="progress-step">
+                                        'done': isComplete
+                                    }" class="progress-step">
                                         Thanh toán
                                     </div>
-                                    <div
-                                    :class="{
+                                    <div :class="{
                                         'active': isComplete,
                                         '': !isComplete,
-                                        }"
-                                     class="progress-step">
+                                    }" class="progress-step">
                                         Nhận vé
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <select-seat v-if="isSelect" :currentEvent="currentEvent" :listTickets="listTickets"></select-seat>
+                        <select-seat v-if="isSelect" @getCurrentEvent="handleChildData"
+                            :breadItems="breadItems"></select-seat>
                     </div>
                 </div>
             </div>
@@ -70,6 +61,7 @@
 import Header from '@/components/Header.vue'
 import HomeFooter from '@/components/Home/HomeFooter.vue'
 import SelectSeat from '@/components/Home/BuyTicketComponent/SelectSeat.vue'
+import axios from 'axios'
 export default {
     name: 'BuyTicketView',
     components: {
@@ -77,9 +69,10 @@ export default {
     },
     data() {
         return {
+            currentEvent: null,
             isSelect: false,
             isComfirm: false,
-            isPaying: false, 
+            isPaying: false,
             isComplete: false,
             categories: [
                 {
@@ -106,59 +99,29 @@ export default {
             breadItems: [
                 {
                     text: 'Home',
-                    href: '#'
+                    href: '/'
                 },
                 {
                     text: 'Event',
                     href: '/event'
                 }
-            ],
-            preBread: {
-                text: "",
-                href: '/event/detail/id=5'
-            },
-            currentBread: {
-                text: "",
-                active: true
-            },
-            currentEvent: {
-                id: 6,
-                img: "https://static.ticketmaster.sg/images/activity/23_euphony2023_28b732c998089649a3ae8202af802888.jpg",
-                name: "Kịch IDECAF: Sắc Màu",
-                date: '22/10/2023',
-                type: 'Theater',
-                venue: 'Sân vận động QK7',
-            },
-            listTickets: [
-                {
-                    id: 1,
-                    date: "22/10/2023",
-                    quantity: 10,
-                    status: "deactive"
-                },
-                {
-                    id: 2,
-                    date: "23/10/2023",
-                    quantity: 0,
-                    status: "active"
-                },
-                {
-                    id: 3,
-                    date: "24/10/2023",
-                    quantity: 10,
-                    status: "active"
-                }
-            ],
+            ]
         }
     },
     mounted() {
-        var breadPre = this.$set(this.preBread, 'text', this.currentEvent.name);
-        this.breadItems.push(breadPre)
-        var breadActive = this.$set(this.currentBread, 'text', 'Chọn chỗ');
-        this.breadItems.push(breadActive)
-        if(this.$route.params.section == 'area'){
+        if (this.$route.params.type == 'area') {
             this.isSelect = true;
+            console.log(this.currentEvent)
         }
+    },
+    methods: {
+        handleChildData(data) {
+            this.currentEvent = data;
+            var breadPre = { text: this.currentEvent.eventName, href: this.$router.getMatchedComponents(this.$route)[0].path };
+            this.breadItems.push(breadPre);
+            var breadActive = { text: 'Chọn chỗ', href: '' };
+            this.breadItems.push(breadActive);
+        },
     }
 }
 </script>
@@ -241,6 +204,7 @@ export default {
     justify-content: center;
     transition: all 1s ease-in-out;
 }
+
 .progress-step.disable::before {
     font-family: "FontAwesome";
     content: "\f00c";
@@ -257,6 +221,7 @@ export default {
     text-align: center;
     justify-content: center;
 }
+
 .progress-step::before {
     font-family: "FontAwesome";
     content: " ";

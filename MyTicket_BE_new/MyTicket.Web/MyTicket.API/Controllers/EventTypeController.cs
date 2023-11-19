@@ -10,7 +10,6 @@ using MYTICKET.WEB.SERVICE.VenueModule.Dtos;
 
 namespace MYTICKET.WEB.API.Controllers
 {
-    [Authorize]
     [Route("myticket/api/event-type")]
     [ApiController]
     public class EventTypeController : ControllerBase
@@ -26,9 +25,11 @@ namespace MYTICKET.WEB.API.Controllers
         /// <summary>
         /// lây danh sách loại sự kiện
         /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [HttpGet("find")]
-        public APIResponse<List<EventTypeDto>> FindProduct()
-               => new(_eventTypeService.FindAll());
+        public APIResponse<PagingResult<EventTypeDto>> FindEventType([FromQuery] FitlerEventTypeDto input)
+               => new(_eventTypeService.FindAll(input));
 
         /// <summary>
         /// thêm loại sự kiện
@@ -36,7 +37,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost("create")]
-        public APIResponse CreateVenue([FromBody] CreateEventTypeDto input)
+        public APIResponse CreateEventType([FromBody] CreateEventTypeDto input)
         {
             _eventTypeService.Create(input);
             return new();

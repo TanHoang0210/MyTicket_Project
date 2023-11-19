@@ -14,6 +14,8 @@ namespace MYTICKET.WEB.DOMAIN.Entities
     [Index(nameof(Deleted), nameof(Name),Name = $"IX_{nameof(Venue)}")]
     public class Venue : IFullAudited
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>

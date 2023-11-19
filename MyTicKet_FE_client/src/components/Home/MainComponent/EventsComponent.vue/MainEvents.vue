@@ -6,23 +6,31 @@
               class="mb-3 event__item--info"
               >
               <div class="event__item--img" style="position: relative;">
-                  <b-card-img :src="event.img" alt="Image"></b-card-img>
-                  <router-link :to="{ path: '/event/detail', query: { id: event.id } }">
+                  <b-card-img :src="$fileUrl+event.eventImage" alt="Image"></b-card-img>
+                  <router-link :to="{ name: 'eventDetail', query: { id: event.id }} ">
                 <div class="ticket__button--modal">
 
                 </div>
             </router-link>
               </div>
-              <b-card-sub-title>{{ event.date }}</b-card-sub-title>
-              <b-card-sub-title class="event-name">{{event.name}}</b-card-sub-title>
+              <b-card-sub-title v-if="event.firstEventDate == event.lastEventDate">{{ formatDate(event.firstEventDate) }}</b-card-sub-title>
+              <b-card-sub-title v-else-if="event.firstEventDate != event.lastEventDate">{{formatDate(event.firstEventDate) }} - {{ formatDate(event.lastEventDate) }}</b-card-sub-title>
+              <b-card-sub-title class="event-name">{{event.eventName}}</b-card-sub-title>
       </b-card>
             </div>
             </div>
         </div>
 </template>
 <script>
+import moment from 'moment';
 export default{
-    props:['events']
+    props:['events'],
+    methods:{
+        formatDate(date) {
+      // Chuyển đổi ngày thành định dạng dd/mm/yyyy
+      return moment(date).format('DD/MM/YYYY');
+    },
+    }
 }
 </script>
 <style scoped>
@@ -109,7 +117,20 @@ export default{
     right: 0;
 }
 .card-img{
+    width: 100% !important;
+    height: auto !important;
     transition: all ease-out 0.3s !important;
+}
+.event__item--img{
+    position: relative;
+    width: 100%;
+    background-color: inherit;
+    background-size: 100%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    background-position: left top;
+    text-align: center;
 }
 .event__item--img:hover .card-img{
     transform: perspective(800px) translateZ(50px) !important;

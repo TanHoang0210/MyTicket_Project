@@ -25,10 +25,17 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Abstracts
         PagingResult<EventDto> FindAll(FilterEventDto input);
 
         /// <summary>
-        /// chi tiết sự kiện 
+        /// cthông tin sự kiện
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <returns></returns>
+        EventDto GetEventById(int eventId);
+
+        /// <summary>
+        /// lấy thông tin 1 chi tiết sự kiện theo id
         /// </summary>
         /// <param name="eventDetailId"></param>
         /// <returns></returns>
-        EventDetailDto GetEventById(int eventDetailId);
+        EventDetailDto GetEventDetailTicketById(int eventDetailId);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.ENTITIES.Interfaces;
 using MYTICKET.UTILS.ConstantVaribale.Db;
+using MYTICKET.UTILS.ConstantVaribale.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace MYTICKET.WEB.DOMAIN.Entities
     [Index(nameof(EventName), nameof(EventTypeId), Name = $"IX_{nameof(Event)}")]
     public class Event : IFullAudited
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>
@@ -62,6 +65,10 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// trạng thái sự kiện
         /// </summary>
         public int Status { get; set; }
+        /// <summary>
+        /// sujw kien cho phep tra ve hay khong
+        /// </summary>
+        public bool IsExChange { get; set; }
 
         /// <summary>
         /// Ngày sự kiện bắt đầu tổ chức

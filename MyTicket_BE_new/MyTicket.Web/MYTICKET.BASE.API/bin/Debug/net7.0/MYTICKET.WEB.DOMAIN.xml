@@ -43,6 +43,7 @@
             <summary>
             Ngày sinh
             </summary>
+            
         </member>
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.EventName">
             <summary>
@@ -84,6 +85,11 @@
             trạng thái sự kiện
             </summary>
         </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.IsExChange">
+            <summary>
+            sujw kien cho phep tra ve hay khong
+            </summary>
+        </member>
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.Event.StartEventDate">
             <summary>
             Ngày sự kiện bắt đầu tổ chức
@@ -109,6 +115,17 @@
             Ngày kết thúc bán vé
             </summary>
         </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventDetail.SeatSelectType">
+            <summary>
+            kiểu chọn chỗ 
+            <see cref="T:MYTICKET.UTILS.ConstantVaribale.Shared.EventSelectSeatType"/>
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventDetail.HavingSeatMap">
+            <summary>
+            có sơ đồ để chọn vé không
+            </summary>
+        </member>
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventDetail.EventSeatMapImage">
             <summary>
             ảnh map sự kiện
@@ -122,6 +139,31 @@
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.EventType.Description">
             <summary>
             Mô tả
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Order.CustomerId">
+            <summary>
+            Id khách hàng đặt vé
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Order.Status">
+            <summary>
+            trạng thái đơn đặt
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Order.OrderDate">
+            <summary>
+            ngày đặt
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.OrderDetail.isTransfer">
+            <summary>
+            chuyển nhượng vé
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.OrderDetail.CustomerTransfer">
+            <summary>
+            người được chuyển nhượng
             </summary>
         </member>
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.Role.UserType">
@@ -163,6 +205,12 @@
         <member name="P:MYTICKET.WEB.DOMAIN.Entities.Ticket.Status">
             <summary>
             trạng thái
+            <see cref="T:MYTICKET.UTILS.ConstantVaribale.Shared.TicketStatus"/>
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.DOMAIN.Entities.Ticket.CustomerId">
+            <summary>
+            Vé của khách hàng nào
             </summary>
         </member>
         <member name="T:MYTICKET.WEB.DOMAIN.Entities.User">

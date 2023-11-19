@@ -71,6 +71,11 @@
             </summary>
             <param name="input"></param>
         </member>
+        <member name="M:MYTICKET.WEB.SERVICE.AuthModule.Abstracts.IUserService.GetCurentUser">
+            <summary>
+            Lấy user hiên tại
+            </summary>
+        </member>
         <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.PermissionDto.PermissionDetailDto.Key">
             <summary>
             PermissionKey
@@ -88,7 +93,7 @@
         </member>
         <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.RoleDto.RoleDto.UserType">
             <summary>
-            <see cref="!:UserTypes"/>
+            <see cref="T:MYTICKET.UTILS.ConstantVariables.User.UserTypes"/>
             </summary>
         </member>
         <member name="P:MYTICKET.WEB.SERVICE.AuthModule.Dtos.RoleDto.RoleDto.Description">
@@ -252,7 +257,14 @@
         </member>
         <member name="M:MYTICKET.WEB.SERVICE.EventModule.Abstracts.IEventService.GetEventById(System.Int32)">
             <summary>
-            chi tiết sự kiện 
+            cthông tin sự kiện
+            </summary>
+            <param name="eventId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.EventModule.Abstracts.IEventService.GetEventDetailTicketById(System.Int32)">
+            <summary>
+            lấy thông tin 1 chi tiết sự kiện theo id
             </summary>
             <param name="eventDetailId"></param>
             <returns></returns>
@@ -277,7 +289,7 @@
             Ngày kết thúc bán vé
             </summary>
         </member>
-        <member name="F:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDetailDto._seatmap">
+        <member name="F:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDetailDto._eventSeatMapImage">
             <summary>
             ảnh map sự kiện
             </summary>
@@ -315,66 +327,6 @@
         <member name="F:MYTICKET.WEB.SERVICE.EventModule.Dtos.CreateEventDto._image">
             <summary>
             ảnh sự kiện
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.Id">
-            <summary>
-            id chi tiết sự kiện
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventName">
-            <summary>
-            Tên sự kiện
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventTypeId">
-            <summary>
-            id loại sự kiện
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventTypeName">
-            <summary>
-            tên loại sự kiện
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.SupplierId">
-            <summary>
-            Id nhà cung cấp sự kiện
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventDescription">
-            <summary>
-            Mô tả
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.ExchangePolicy">
-            <summary>
-            chính sách đổi trả
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.AdmissionPolicy">
-            <summary>
-            Chính sách sự kiện
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.EventImage">
-            <summary>
-            ảnh sự kiện
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.Status">
-            <summary>
-            trạng thái chi tiết sự kiện
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.StartEventDate">
-            <summary>
-            Ngày sự kiện bắt đầu tổ chức
-            </summary>
-        </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.VenueId">
-            <summary>
-            Id sân vận động, truyền vào nếu tổ chức ở svd
             </summary>
         </member>
         <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDetailDto.OrganizationDay">
@@ -427,7 +379,12 @@
             trạng thái sự kiện
             </summary>
         </member>
-        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.StartEventDate">
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.FirstEventDate">
+            <summary>
+            Ngày bắt đầu sự kiện
+            </summary>
+        </member>
+        <member name="P:MYTICKET.WEB.SERVICE.EventModule.Dtos.EventDto.LastEventDate">
             <summary>
             Ngày bắt đầu sự kiện
             </summary>
@@ -439,10 +396,12 @@
             <param name="input"></param>
             <returns></returns>
         </member>
-        <member name="M:MYTICKET.WEB.SERVICE.EventTypeModule.Abstracts.IEventTypeService.FindAll">
+        <member name="M:MYTICKET.WEB.SERVICE.EventTypeModule.Abstracts.IEventTypeService.FindAll(MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.FitlerEventTypeDto)">
             <summary>
             Danh sách loại sự kiện
             </summary>
+            <param name="input"></param>
+            <returns></returns>
         </member>
         <member name="F:MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.CreateEventTypeDto._name">
             <summary>
@@ -452,6 +411,11 @@
         <member name="F:MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.CreateEventTypeDto._description">
             <summary>
             Mô tả
+            </summary>
+        </member>
+        <member name="F:MYTICKET.WEB.SERVICE.EventTypeModule.Dtos.CreateEventTypeDto._image">
+            <summary>
+            Anh
             </summary>
         </member>
         <member name="M:MYTICKET.WEB.SERVICE.FileModule.Implements.FileService.GetFile(System.String,System.String,MYTICKET.WEB.SERVICE.FileModule.Dtos.Setting.FileConfig)">
@@ -471,6 +435,13 @@
             <param name="folder"></param>
             <param name="fileName"></param>
             <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MYTICKET.WEB.SERVICE.TicketModule.Abstracts.ITicketService.GetAllTicket(System.Int32)">
+            <summary>
+            Lấy danh sách vé 
+            </summary>
+            <param name="eventDetailId"></param>
             <returns></returns>
         </member>
         <member name="M:MYTICKET.WEB.SERVICE.VenueModule.Abstracts.IVenueService.Create(MYTICKET.WEB.SERVICE.VenueModule.Dtos.CreateVenueDto)">

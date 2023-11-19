@@ -8,7 +8,7 @@
               class="mb-0 category__item--info"
               >
               <div class="category__item--img" style="position: relative;">
-                  <b-card-img :src="category.img" alt="Image"></b-card-img>
+                  <b-card-img :src="$fileUrl+category.eventTypeImage" alt="Image"></b-card-img>
                   <router-link to="/about">
                 <div class="ticket__button--modal">
 

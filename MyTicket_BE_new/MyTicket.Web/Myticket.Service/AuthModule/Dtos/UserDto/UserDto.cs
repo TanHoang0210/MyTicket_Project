@@ -16,27 +16,27 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto
         /// <summary>
         /// Tên đăng nhập
         /// </summary>
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         /// <summary>
         /// Mật khẩu
         /// </summary>
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         /// <summary>
         /// Email
         /// </summary>
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// Số điện thoại
         /// </summary>
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
         /// <summary>
         /// Tên người dùng
         /// </summary>
-        public string FullName { get; set; }
+        public string? FullName { get; set; }
 
         /// <summary>
         /// Trạng thái tài khoản
@@ -47,8 +47,8 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto
         /// Loại tài khoản
         /// </summary>
         public int? UserType { get; set; }
-        public int? BusinessCustomerId { get; set; }
-        public int? RestaurantId { get; set; }
+        public int? SupplierId { get; set; }
+        public int? CustomerId { get; set; }
         public List<int> RoleIds { get; set; }
     }
 }

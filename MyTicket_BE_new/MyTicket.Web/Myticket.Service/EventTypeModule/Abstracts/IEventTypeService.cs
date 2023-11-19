@@ -1,4 +1,5 @@
-﻿using MYTICKET.WEB.SERVICE.EventTypeModule.Dtos;
+﻿using MYTICKET.BASE.SERVICE.Common;
+using MYTICKET.WEB.SERVICE.EventTypeModule.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace MYTICKET.WEB.SERVICE.EventTypeModule.Abstracts
         /// <summary>
         /// Danh sách loại sự kiện
         /// </summary>
-        List<EventTypeDto> FindAll();
+        /// <param name="input"></param>
+        /// <returns></returns>
+        PagingResult<EventTypeDto> FindAll(FitlerEventTypeDto input);
     }
 }

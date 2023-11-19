@@ -21,11 +21,21 @@ namespace MYTICKET.WEB.SERVICE.EventTypeModule.Dtos
         /// <summary>
         /// Mô tả
         /// </summary>
-        private string? _description = null!;
-        public string? Description
+        private string _description = null!;
+        public string Description
         {
             get => _description;
-            set => _description = value?.Trim();
+            set => _description = value.Trim();
+        }
+
+        /// <summary>
+        /// Anh
+        /// </summary>
+        private string _image = null!;
+        public string Image
+        {
+            get => _image;
+            set => _image = value.Trim();
         }
     }
 }

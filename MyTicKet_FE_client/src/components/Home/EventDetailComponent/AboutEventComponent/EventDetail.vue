@@ -7,27 +7,7 @@
                     <div class="row">
                         <div id="activityContent" class="col-lg-9 col-md-9 col-sm-12 col-xs-12 col-12">
                             <div style="justify-content: center;letter-spacing: 1px; font-size: 18px;">
-                                <p>Euphony: Harmony of Sounds là sự hợp tác giữa cộng đồng người Hoa tại Republic
-                                    Polytechnic
-                                    Concerto và đàn dây
-                                    Buổi hòa nhạc.</p>
-                                <p>Buổi hòa nhạc đôi này sẽ mang lại sự hài hòa của các bản giao hưởng khác nhau của
-                                    truyền thống và cổ điển
-                                    âm nhạc, nhằm mục đích thể hiện sự độc đáo của từng nhạc cụ và cá nhân. Cái này
-                                    hiệu suất cũng sẽ
-                                    có các nhạc sĩ từ The Purple Symphony và Inclusive Arts Movement (I.AM).</p>
-                                <p>Bằng cách tôn vinh sự đa dạng và hòa hợp thông qua niềm đam mê âm nhạc chung của họ, điều
-                                    này
-                                    hiệu suất đó
-                                    vượt qua rào cản sẽ khiến khán giả được truyền cảm hứng.</p>
-                                <p>
-                                    <i>
-                                        Euphony: Harmony of Sounds là một trong những điểm nổi bật của lễ hội trong khuôn
-                                        khổ Republic
-                                        Suy ngẫm của Bách khoa
-                                        Lễ hội nghệ thuật cộng đồng.
-                                    </i>
-                                </p>
+                                {{ currentEvent.eventDescription }}
                             </div>
                         </div>
                         <div id="sponsorSidebar" class="col-md-3 col-sm-12 col-xs-12 sponsor">
@@ -36,9 +16,17 @@
                                     class="col-md-12 col-sm-12 col-xs-12 d-none d-sm-block text-center pb-3">
                                     <ul class="additional-button list-unstyled p-0">
                                         <li>
-                                            <button v-on:click="modalShow = true" id="md-viewMap"
-                                                class="btn btn-outline-primary w-90 mb-3 action-btn viewmap-btn">Xem vị trí
-                                                chỗ ngồi</button>
+                                            <h1 style="line-height: 1.5;
+                                                position: relative;
+                                                font-size: 22px;
+                                                margin-bottom: 24px;
+                                                letter-spacing: 2px;
+                                                font-weight: 700;
+                                                text-transform: uppercase;
+                                                padding-bottom: 15px;
+                                                color: var(--text-color);"> Xem vị trí chỗ ngồi</h1>
+                                            <button v-for="item in currentEvent.eventDetails" v-on:click="modalShow = true" id="md-viewMap"
+                                                class="btn btn-outline-primary w-90 mb-3 action-btn viewmap-btn">{{item.venueName}}</button>
                                         </li>
                                     </ul>
                                 </div>
@@ -56,31 +44,32 @@
                 </div>
             </div>
         </div>
-    <div v-show="modalShow">
-    <div class="modal-ready" v-on:click="modalShow =false">
+        <div v-show="modalShow">
+            <div class="modal-ready" v-on:click="modalShow = false">
 
-    </div>
-    <div class="modal-seatmap"  style="overflow: hidden auto;" tabindex="-1">
-        <div class="modal-seatmap-inner">
-            <div class="map-content">
-            <div class="map-figure">
-                <button v-on:click="modalShow =false" type="button" class="map-close">
-                    <b-icon icon="x-lg"></b-icon>
-                </button>
-                <figure v-on:click="zoomMap()" style="cursor: zoom-in;">
-                        <img class="mfp-img"
-                            src="https://static.ticketmaster.sg/images/activity/field/23_euphony2023_dd028f21b48dced710f997c10541d4c0.jpg"
-                            style="max-height: 640px;">
-                    </figure>
+            </div>
+            <div class="modal-seatmap" style="overflow: hidden auto;" tabindex="-1">
+                <div class="modal-seatmap-inner">
+                    <div class="map-content">
+                        <div class="map-figure">
+                            <button v-on:click="modalShow = false" type="button" class="map-close">
+                                <b-icon icon="x-lg"></b-icon>
+                            </button>
+                            <figure v-on:click="zoomMap()" style="cursor: zoom-in;">
+                                <img class="mfp-img"
+                                    :src="$fileUrl+currentEvent.eventImage"
+                                    style="max-height: 640px;">
+                            </figure>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        </div>
-    </div>
-</div>
     </section>
 </template>
 <script>
 export default {
+    props:['currentEvent','listTickets'],
     data() {
         return {
             modalShow: false
@@ -121,7 +110,8 @@ p {
     background-color: var(--primary-color-bold) !important;
     color: #fff !important;
 }
-.modal-ready{
+
+.modal-ready {
     top: 0;
     left: 0;
     width: 100%;
@@ -132,7 +122,8 @@ p {
     background: #0b0b0b;
     opacity: .8;
 }
-.modal-seatmap{
+
+.modal-seatmap {
     top: 0;
     left: 0;
     width: 100%;
@@ -142,6 +133,7 @@ p {
     outline: none !important;
     -webkit-backface-visibility: hidden;
 }
+
 .modal-seatmap-inner {
     text-align: center;
     position: absolute;
@@ -152,10 +144,12 @@ p {
     padding: 0 8px;
     box-sizing: border-box;
 }
-.map-figure{
+
+.map-figure {
     cursor: pointer;
 }
-.map-close{
+
+.map-close {
     color: #FFF;
     right: -6px;
     text-align: right;
@@ -164,7 +158,8 @@ p {
     background-color: transparent;
     border: none !important;
 }
-.map-content{
+
+.map-content {
     position: relative;
     display: inline-block;
     vertical-align: middle;
@@ -172,7 +167,8 @@ p {
     text-align: left;
     z-index: 1045;
 }
-.mfp-img{
+
+.mfp-img {
     width: auto;
     max-width: 100%;
     height: auto;

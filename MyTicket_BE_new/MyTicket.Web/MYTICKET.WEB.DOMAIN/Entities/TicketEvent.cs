@@ -8,6 +8,8 @@ namespace MYTICKET.WEB.DOMAIN.Entities
     [Index(nameof(EventDetailId), nameof(Name), Name = $"IX_{nameof(TicketEvent)}")]
     public class TicketEvent : IFullAudited
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [MaxLength(264)]
         public required string Name { get; set; }
@@ -19,8 +21,6 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public EventDetail? EventDetail { get; set; }
 
         public int Status { get; set; }
-
-        public int Quantity { get; set; }
 
         public List<Ticket> Tickets { get; } = new();
         public DateTime? CreatedDate { get; set; }

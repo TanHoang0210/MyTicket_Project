@@ -1,4 +1,5 @@
-﻿using MYTICKET.WEB.DOMAIN.Entities;
+﻿using MYTICKET.UTILS.ConstantVariables.User;
+using MYTICKET.WEB.DOMAIN.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
