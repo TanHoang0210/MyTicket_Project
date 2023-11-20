@@ -25,17 +25,25 @@ namespace MYTICKET.WEB.DOMAIN.Entities
 
         public EventDetail EventDetail { get; set; } = null!;
 
+        public int TicketEventId { get; set; }
+
+        public TicketEvent TicketEvent { get; set; } = null!;
         public int TicketId { get; set;}
+
+        public Ticket Ticket { get; set; } = null!;
         /// <summary>
         /// chuyển nhượng vé
         /// </summary>
-        public int? isTransfer {  get; set; }
+        public int? IsTransfer {  get; set; }
+
+        public int? TransferStatus { get; set; }
+
         /// <summary>
         /// người được chuyển nhượng
         /// </summary>
         public int? CustomerTransfer {  get; set; }
 
-        public int? isExchange { get; set; }
+        public int? IsExchange { get; set; }
         public int? ExchangeStatus { get; set; }
 
         #region fulldaudit

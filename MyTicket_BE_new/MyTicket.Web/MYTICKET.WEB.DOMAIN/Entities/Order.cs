@@ -31,10 +31,12 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// <summary>
         /// ngày đặt
         /// </summary>
-        public DateTime OrderDate {  get; set; } 
+        public DateTime OrderDate {  get; set; }
 
-        public List<OrderDetail> OrderDetails { get; } = new();
+        public decimal Total { get; set; }
+
         public string? QrCode { get; set; }
+        public List<OrderDetail> OrderDetails { get; } = new();
         #region fullaudit
         public DateTime? CreatedDate { get ; set ; }
         public int? CreatedBy { get; set; }

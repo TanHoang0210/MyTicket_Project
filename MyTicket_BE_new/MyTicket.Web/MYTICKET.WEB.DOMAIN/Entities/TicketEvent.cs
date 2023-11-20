@@ -23,6 +23,11 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public int Status { get; set; }
 
         public List<Ticket> Tickets { get; } = new();
+
+        /// <summary>
+        /// Vé của khách hàng nào
+        /// </summary>
+        public OrderDetail? OrderDetail { get; set; }
         public DateTime? CreatedDate { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }

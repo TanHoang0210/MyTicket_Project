@@ -5,6 +5,7 @@ using MYTICKET.UTILS.ConstantVariables.Shared;
 using MYTICKET.UTILS.ConstantVariables.User;
 using MYTICKET.UTILS.ConstantVaribale.Db;
 using MYTICKET.WEB.DOMAIN.Entities;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace MYTICKET.WEB.Infrastructure.Persistence
 {
@@ -23,6 +24,8 @@ namespace MYTICKET.WEB.Infrastructure.Persistence
         public DbSet<Venue> Venues { get; set; }
         public DbSet<TicketEvent> TicketEvents { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         public MyTicketDbContext() : base()
         {
@@ -139,6 +142,16 @@ namespace MYTICKET.WEB.Infrastructure.Persistence
             .HasOne(orderDetail => orderDetail.EventDetail)
             .WithMany(eventDetail => eventDetail.OrderDetails)
             .HasForeignKey(e => e.EventDetailId);
+
+            modelBuilder.Entity<Ticket>()
+                        .HasOne(od => od.OrderDetail)
+                        .WithOne(t => t.Ticket)
+                        .HasForeignKey<OrderDetail>(t => t.TicketId);
+
+            modelBuilder.Entity<TicketEvent>()
+                        .HasOne(od => od.OrderDetail)
+                        .WithOne(t => t.TicketEvent)
+                        .HasForeignKey<OrderDetail>(t => t.TicketEventId);
             #endregion
             modelBuilder.SeedData();
             base.OnModelCreating(modelBuilder);

@@ -39,6 +39,8 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// <summary>
         /// Vé của khách hàng nào
         /// </summary>
-        public int CustomerId { get; set; }
+        public OrderDetail? OrderDetail { get; set; }
+
+        public int? CustomerId { get; set; }
     }
 }
