@@ -373,10 +373,24 @@ FodyWeavers.xsd
 
 # appsettings.json | prod
 # appsettings.json
-/src/EPIC.APIGateway/EPIC.APIGateway/cors.now.txt
 
 DbScaffold/
 *.lock
 
-/src/BE/STE.WebSell/STE.Tools/STE.HostConsole/Migrations
-/src/BE/STE.WebSell/STE.Tools/STE.HostConsole/Scripts
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code folders
+.vscode/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
