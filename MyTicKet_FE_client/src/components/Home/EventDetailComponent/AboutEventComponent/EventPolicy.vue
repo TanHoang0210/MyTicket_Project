@@ -9,13 +9,16 @@
                     <div id="eventfaq-content">
                         <p style="font-weight: 600; font-size: 18px;">Quy tắc vào cổng</p>
                         <ol>
-                            <li>Vé vào cửa chỉ bằng vé đầy đủ. Vé in/điện tử phải được xuất trình để vào cổng.</li>
-                            <li>Sẽ không nhận trẻ sơ sinh trong tay và trẻ em dưới 3 tuổi.</li>
-                            <li>Việc bán lại (các) vé ở cùng mức giá hoặc bất kỳ mức giá nào vượt quá giá mua ban đầu đều bị
-                                cấm.</li>
-                            <li>Trẻ em từ 3 tuổi trở lên phải mua vé vào cổng.</li>
-                            <li>Không được phép chụp ảnh có đèn flash.</li>
-                            <li>Không được phép mang đồ ăn và đồ uống vào địa điểm.</li>
+                                <!-- <li>Vé vào cửa chỉ bằng vé đầy đủ. Vé in/điện tử phải được xuất trình để vào cổng.</li>
+                                <li>Sẽ không nhận trẻ sơ sinh trong tay và trẻ em dưới 3 tuổi.</li>
+                                <li>Việc bán lại (các) vé ở cùng mức giá hoặc bất kỳ mức giá nào vượt quá giá mua ban đầu đều bị
+                                    cấm.</li>
+                                <li>Trẻ em từ 3 tuổi trở lên phải mua vé vào cổng.</li>
+                                <li>Không được phép chụp ảnh có đèn flash.</li>
+                                <li>Không được phép mang đồ ăn và đồ uống vào địa điểm.</li> -->
+                                <li v-for="item in policy">
+                                    {{ item }}
+                                </li>
                         </ol>
                     </div>
                 </div>
@@ -24,7 +27,14 @@
     </section>
 </template>
 <script>
-
+export default {
+    props:['currentEvent'],
+    computed: {
+        policy() {
+      return this.currentEvent.admissionPolicy.split('. ');
+    }
+  }
+}
 </script>
 
 <style>

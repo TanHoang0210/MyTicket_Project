@@ -1,4 +1,5 @@
-﻿using MYTICKET.WEB.SERVICE.OrderModule.Dtos;
+﻿using MYTICKET.BASE.SERVICE.Common;
+using MYTICKET.WEB.SERVICE.OrderModule.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
         /// <returns></returns>
         OrderDto CreateOrder(CreateOrderDto input);
 
-        OrderDto FindAllOrderByCustomerId(FilterOrderCustomer input);
+        /// <summary>
+        /// Danh sách vé của khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        PagingResult<OrderDetailDto> FindAllOrderByCustomerId(FilterOrderCustomer input);
     }
 }

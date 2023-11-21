@@ -37,6 +37,12 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
         /// </summary>
         public string? EventImage { get; set; }
 
+
+        public string? AdmissionPolicy { get; set; }
+
+        public string? ExchangePolicy { get; set; }
+
+
         /// <summary>
         /// trạng thái sự kiện
         /// </summary>

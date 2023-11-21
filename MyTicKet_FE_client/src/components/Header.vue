@@ -151,7 +151,7 @@ export default {
                     localStorage.removeItem('currentUser'),
                     localStorage.removeItem('tokenExpiration'),
                     this.$store.dispatch('logout');
-                this.$toasted.success('Đăng xuất thành công', {
+                    this.$toasted.success('Đăng xuất thành công', {
                     position: 'top-right',
                     duration: 3000, // Thời gian hiển thị toast (ms)
                 });

@@ -38,6 +38,12 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
         /// </summary>
         [MaxLength(1024)]
         public string? EventSeatMapImage { get; set; }
+
+        public int SeatSelectType { get; set; }
+        /// <summary>
+        /// có sơ đồ để chọn vé không
+        /// </summary>
+        public bool HavingSeatMap { get; set; }
         public int Status { get; set; }
         public IEnumerable<TicketEventDto>? TicketEvents { get; set; }
     }

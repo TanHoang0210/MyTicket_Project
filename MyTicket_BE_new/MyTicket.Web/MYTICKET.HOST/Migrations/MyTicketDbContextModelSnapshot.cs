@@ -394,9 +394,6 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TicketEventId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TicketId")
                         .HasColumnType("int");
 
@@ -406,9 +403,6 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("TicketEventId")
-                        .IsUnique();
 
                     b.HasIndex("TicketId")
                         .IsUnique();
@@ -570,9 +564,7 @@ namespace MYTICKET.Hostconsle.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .HasColumnType("int");
 
                     b.Property<string>("TicketCode")
                         .HasColumnType("nvarchar(max)");
@@ -1082,12 +1074,6 @@ namespace MYTICKET.Hostconsle.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MYTICKET.WEB.DOMAIN.Entities.TicketEvent", "TicketEvent")
-                        .WithOne("OrderDetail")
-                        .HasForeignKey("MYTICKET.WEB.DOMAIN.Entities.OrderDetail", "TicketEventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("MYTICKET.WEB.DOMAIN.Entities.Ticket", "Ticket")
                         .WithOne("OrderDetail")
                         .HasForeignKey("MYTICKET.WEB.DOMAIN.Entities.OrderDetail", "TicketId")
@@ -1099,8 +1085,6 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Ticket");
-
-                    b.Navigation("TicketEvent");
                 });
 
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.RolePermission", b =>
@@ -1119,7 +1103,7 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.HasOne("MYTICKET.WEB.DOMAIN.Entities.TicketEvent", "TicketEvent")
                         .WithMany("Tickets")
                         .HasForeignKey("TicketEventId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("TicketEvent");
@@ -1214,8 +1198,6 @@ namespace MYTICKET.Hostconsle.Migrations
 
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.TicketEvent", b =>
                 {
-                    b.Navigation("OrderDetail");
-
                     b.Navigation("Tickets");
                 });
 

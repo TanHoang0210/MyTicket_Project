@@ -33,7 +33,7 @@
                     <img class="img-seatmap" :src="$fileUrl + currentTicketEvent.eventSeatMapImage" alt="">
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
-                    <form @submit.prevent="false" class="form-ticket-ticket">
+                    <form @submit.prevent="submitToCheckout" class="form-ticket-ticket">
                         <input type="hidden" name="_csrf"
                             value="U8hsPodpZMCBzx_wnz8ZE3Bjxw9H1nbsaN6JLp4OqRM9nB9s0lww9NiiV576DUpcElaiYyyFHtsZnfxornjiVw==">
                         <!-- start: Buy Ticket List -->
@@ -67,7 +67,7 @@
                         <div class="row">
                             <div class="col-8">
                             </div>
-                            <button v-on:click="submitToCheckout()" id="md-viewMap"
+                            <button type="submit" id="md-viewMap"
                                 class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
                                 Thanh Toán
                             </button>
@@ -131,7 +131,7 @@
                                     <td>
                                         <select id="TicketForm_ticketPrice_001" class="w100 form-select"
                                             name="TicketForm[ticketPrice][001]">
-                                            <option value="0">Chọn số lượng
+                                            <option disabled value="">Chọn số lượng
                                             </option>
                                             <option v-for="i in ticketnow.quantity" :value="i">{{ i }}
                                             </option>
@@ -146,7 +146,7 @@
                             </div>
                             <button v-on:click="submitToCheckout()" id="md-viewMap"
                                 class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
-                                Thanh Toán
+                                Thanh Toán nhé
                             </button>
                         </div>
                     </form>
@@ -220,6 +220,7 @@ export default {
                     }
                 ]
             },
+
         }
     },
     mounted() {
@@ -227,7 +228,11 @@ export default {
     },
     methods: {
         submitToCheckout: function () {
-            this.$router.push({ name: 'user', params: { id: 123 } });
+            if(this.$store.state.accessToken != null){
+                this.$router.push({ name: 'orderTicket', params: {  type: 'order'}});
+            }else{
+                this.$router.push({ name: 'login'});
+            }
         },
         formatDate(date) {
             // Chuyển đổi ngày thành định dạng dd/mm/yyyy

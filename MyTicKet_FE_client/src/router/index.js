@@ -49,6 +49,11 @@ const routes = [
     component:BuyTicket
   },
   {
+    path: '/ticket/:type',
+    name: 'orderTicket',
+    component: () => import(/* webpackChunkName: "about" */ '../components/Home/BuyTicketComponent/Ordering.vue')
+  },
+  {
     path: '/ticket',
     name: 'Ticket',
     // route level code-splitting

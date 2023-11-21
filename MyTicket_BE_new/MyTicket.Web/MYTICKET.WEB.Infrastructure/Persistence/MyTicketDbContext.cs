@@ -107,16 +107,12 @@ namespace MYTICKET.WEB.Infrastructure.Persistence
             .HasOne(ticketEvent => ticketEvent.EventDetail)
             .WithMany(eventDetail => eventDetail.TicketEvents)
             .HasForeignKey(e => e.EventDetailId);
-            #endregion
-            #region Ticket
-            modelBuilder.Entity<Ticket>(entity =>
-            {
-                entity.Property(e => e.Status).HasDefaultValue(ActiveStatus.ACTIVE);
-            });
-            modelBuilder.Entity<Ticket>()
-                .HasOne(ticket => ticket.TicketEvent)
-                .WithMany(ticketEvent => ticketEvent.Tickets)
-                .HasForeignKey(e => e.TicketEventId);
+
+            modelBuilder.Entity<TicketEvent>()
+                .HasMany(te => te.Tickets)
+                .WithOne(t => t.TicketEvent)
+                .HasForeignKey(t => t.TicketEventId)
+                .OnDelete(DeleteBehavior.NoAction);
             #endregion
             #region Order
             modelBuilder.Entity<Order>(entity =>
@@ -143,15 +139,10 @@ namespace MYTICKET.WEB.Infrastructure.Persistence
             .WithMany(eventDetail => eventDetail.OrderDetails)
             .HasForeignKey(e => e.EventDetailId);
 
-            modelBuilder.Entity<Ticket>()
-                        .HasOne(od => od.OrderDetail)
-                        .WithOne(t => t.Ticket)
-                        .HasForeignKey<OrderDetail>(t => t.TicketId);
-
-            modelBuilder.Entity<TicketEvent>()
-                        .HasOne(od => od.OrderDetail)
-                        .WithOne(t => t.TicketEvent)
-                        .HasForeignKey<OrderDetail>(t => t.TicketEventId);
+            modelBuilder.Entity<OrderDetail>()
+                        .HasOne(od => od.Ticket)
+                        .WithOne(t => t.OrderDetail)
+                        .HasForeignKey<OrderDetail>(od => od.TicketId);
             #endregion
             modelBuilder.SeedData();
             base.OnModelCreating(modelBuilder);

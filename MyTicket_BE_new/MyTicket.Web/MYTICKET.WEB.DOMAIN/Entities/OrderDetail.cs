@@ -25,9 +25,6 @@ namespace MYTICKET.WEB.DOMAIN.Entities
 
         public EventDetail EventDetail { get; set; } = null!;
 
-        public int TicketEventId { get; set; }
-
-        public TicketEvent TicketEvent { get; set; } = null!;
         public int TicketId { get; set;}
 
         public Ticket Ticket { get; set; } = null!;

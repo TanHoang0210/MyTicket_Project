@@ -1,6 +1,5 @@
 <template>
-    <div style="display: flex;
-     background-color: rgb(0, 0, 0,0.3); position: relative; height: 100vh;">
+    <div class="loading">
         <b-spinner style="width: 3rem; height: 3rem; margin: auto; color: var(--primary-color-hover-bold);" label="Large Spinner"></b-spinner>
     </div>
     
@@ -10,4 +9,12 @@
 
 </script>
 
-<style></style>
+<style>
+.loading{
+    display: flex;
+     background-color: #000;
+      position: relative;
+       height: 100vh;
+       opacity: 0.4;
+}
+</style>

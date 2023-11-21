@@ -41,6 +41,9 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
             set => _eventSeatMapImage = value?.Trim();
         }
 
+        public bool HavingSeatMap {  get; set; }
+
+        public int SelectSeatType { get; set; }
         public List<CreateTicketEventDto>? TicketEvents { get; set; }
     }
 }

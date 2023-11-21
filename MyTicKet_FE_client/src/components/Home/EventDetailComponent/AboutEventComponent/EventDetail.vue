@@ -57,7 +57,7 @@
                             </button>
                             <figure v-on:click="zoomMap()" style="cursor: zoom-in;">
                                 <img class="mfp-img"
-                                    :src="$fileUrl+currentEvent.eventImage"
+                                    :src="$fileUrl+currentEvent.eventDetails[0].eventSeatMapImage"
                                     style="max-height: 640px;">
                             </figure>
                         </div>
@@ -69,7 +69,7 @@
 </template>
 <script>
 export default {
-    props:['currentEvent','listTickets'],
+    props:['currentEvent'],
     data() {
         return {
             modalShow: false

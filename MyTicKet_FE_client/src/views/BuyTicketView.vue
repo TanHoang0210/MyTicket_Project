@@ -44,8 +44,10 @@
                                 </div>
                             </div>
                         </div>
-                        <select-seat v-if="isSelect" @getCurrentEvent="handleChildData"
+                        <select-seat v-show="isSelect" @getCurrentEvent="handleChildData"
                             :breadItems="breadItems"></select-seat>
+                        <check-out v-show="isComfirm" @getCurrentEvent="handleChildData"
+                            :breadItems="breadItems"></check-out>
                     </div>
                 </div>
             </div>
@@ -61,16 +63,18 @@
 import Header from '@/components/Header.vue'
 import HomeFooter from '@/components/Home/HomeFooter.vue'
 import SelectSeat from '@/components/Home/BuyTicketComponent/SelectSeat.vue'
+import CheckOut from '@/components/Home/BuyTicketComponent/CheckOut.vue'
 import axios from 'axios'
 export default {
     name: 'BuyTicketView',
     components: {
-        Header, HomeFooter, SelectSeat
+        Header, HomeFooter, SelectSeat, CheckOut
     },
     data() {
         return {
             currentEvent: null,
             isSelect: false,
+            isOrdering: false,
             isComfirm: false,
             isPaying: false,
             isComplete: false,
@@ -108,10 +112,15 @@ export default {
             ]
         }
     },
-    mounted() {
+    created() {
         if (this.$route.params.type == 'area') {
             this.isSelect = true;
-            console.log(this.currentEvent)
+        }
+        else if (this.$route.params.type == 'checkout') {
+            this.isComfirm = true;
+        }
+        else if (this.$route.params.type == 'order') {
+            this.isOrdering = true;
         }
     },
     methods: {

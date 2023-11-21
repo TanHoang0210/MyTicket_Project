@@ -21,15 +21,15 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
         {
         }
 
-        public EventDto CreateEvent(CreateEventDto input)
+        public void CreateEvent(CreateEventDto input)
         {
-            var currentUser = CommonUtils.GetCurrentSupplierId(_httpContext); ;
+            var currentUser = CommonUtils.GetCurrentUserId(_httpContext);
             _logger.LogInformation($"{nameof(CreateEvent)}: input = {JsonSerializer.Serialize(input)}");
             var transaction = _dbContext.Database.BeginTransaction();
             var eventAdd = _dbContext.Events
                                      .Add(new Event
                                      {
-                                         SupplierId = currentUser,
+                                         SupplierId = input.SupplierId,
                                          EventName = input.EventName,
                                          AdmissionPolicy = input.AdmissionPolicy,
                                          Status = EventStatuses.INIT,
@@ -37,6 +37,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                                          ExchangePolicy = input.ExchangePolicy,
                                          EventTypeId = input.EventTypeId,
                                          EventImage = input.EventImage,
+                                         IsExChange = input.IsExchange,
                                      }).Entity;
             _dbContext.SaveChanges();
             if (input.EventDetails != null && input.EventDetails.Count() > 0)
@@ -46,13 +47,15 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                     var eventDetailAdd = _dbContext.EventDetails
                                                 .Add(new EventDetail
                                                 {
+                                                    EventId = eventAdd.Id,
                                                     VenueId = itemEvent.VenueId,
                                                     Status = EventStatuses.INIT,
                                                     StartSaleTicketDate = itemEvent.StartSaleTicketDate,
                                                     EndSaleTicketDate = itemEvent.EndSaleTicketDate,
                                                     OrganizationDay = itemEvent.OrganizationDay,
                                                     EventSeatMapImage = itemEvent.EventSeatMapImage,
-                                                    EventId = eventAdd.Id,
+                                                    HavingSeatMap = itemEvent.HavingSeatMap,
+                                                    SeatSelectType = itemEvent.SelectSeatType
                                                 }).Entity;
                     _dbContext.SaveChanges();
                     if (itemEvent.TicketEvents != null)
@@ -65,7 +68,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                                                               EventDetailId = eventDetailAdd.Id,
                                                               Name = ticket.Name,
                                                               Status = TicketEventStatuses.INIT,
-                                                              Price = ticket.Price,
+                                                              Price = ticket.Price,                                                          
                                                           }).Entity;
                             _dbContext.SaveChanges();
                             for (int i = 1; i <= ticket.Quantity; i++)
@@ -75,6 +78,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                                     {
                                         TicketEventId = ticketEventAdd.Id,
                                         SeatCode = "SEAT" + i,
+                                        Status = TicketStatus.ACTIVE,
+                                        TicketCode = GenerateCode(5),                                      
                                     });
                                 _dbContext.SaveChanges();
                             }
@@ -86,7 +91,6 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             eventAdd.StartEventDate = startDateEvent;
             _dbContext.SaveChanges();
             transaction.Commit();
-            return _mapper.Map<EventDto>(eventAdd);
         }
 
         public PagingResult<EventDto> FindAll(FilterEventDto input)
@@ -135,6 +139,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                     FirstEventDate = _dbContext.EventDetails.Where(o => o.EventId == s.Id).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay).First().Date,
                     LastEventDate = _dbContext.EventDetails.Where(o => o.EventId == s.Id).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay).Last().Date,
                     Status = s.Status,
+                    ExchangePolicy = s.ExchangePolicy,
+                    AdmissionPolicy = s.AdmissionPolicy
                 })
                 .FirstOrDefault()
                ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
@@ -156,6 +162,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                     StartSaleTicketDate = s.StartSaleTicketDate,
                     Status = s.Status,
                     VenueId = s.VenueId,
+                    HavingSeatMap = s.HavingSeatMap,
+                    SeatSelectType = s.SeatSelectType,
                     VenueName = _dbContext.Venues.Where(x => x.Id == s.VenueId && !s.Deleted).Select(s => s.Name).FirstOrDefault(),
                     TicketEvents = s.TicketEvents.Select(x => new TicketEventDto
                     {
@@ -202,6 +210,17 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                     })
                 }).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.EventDetailNotFound);
             return eventDetails;
+        }
+        private string GenerateCode(int length)
+        {
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+            // Tạo một chuỗi với ký tự ngẫu nhiên từ tập hợp chars
+            string randomString = new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return randomString;
         }
     }
 }

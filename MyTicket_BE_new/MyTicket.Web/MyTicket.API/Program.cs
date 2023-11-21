@@ -12,6 +12,8 @@ using MYTICKET.WEB.SERVICE.EventTypeModule.Abstracts;
 using MYTICKET.WEB.SERVICE.EventTypeModule.Implements;
 using MYTICKET.WEB.SERVICE.FileModule.Abstracts;
 using MYTICKET.WEB.SERVICE.FileModule.Implements;
+using MYTICKET.WEB.SERVICE.OrderModule.Abstracts;
+using MYTICKET.WEB.SERVICE.OrderModule.Implements;
 using MYTICKET.WEB.SERVICE.VenueModule.Abstracts;
 using MYTICKET.WEB.SERVICE.VenueModule.Implements;
 
@@ -41,6 +43,7 @@ namespace MyTicket.API
             builder.Services.AddScoped<IVenueService, VenueService>();
             builder.Services.AddScoped<IEventTypeService, EventTypeService>();
             builder.Services.AddScoped<IEventService, EventService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
 
             var app = builder.Build();

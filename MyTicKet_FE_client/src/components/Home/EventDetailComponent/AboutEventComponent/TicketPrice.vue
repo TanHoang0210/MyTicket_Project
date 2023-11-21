@@ -6,22 +6,29 @@
                         <h1 class="black-heading">
                             Ticket Pricing
                         </h1>
-                        <div class="prices-content">
+                        <div v-for="(detail,index) in currentEvent.eventDetails" class="prices-content">
                             <p>
                                 <strong>
                                     <span style="color: var(--primary-color-hover-bold);">
-                                       THÔNG TIN MỞ BÁN VÉ
+                                       THÔNG TIN MỞ BÁN VÉ Ngày {{ index + 1 }}
                                     </span>
                                     <br>
                                     <strong>
-                                        BẮT ĐẦU MỞ BÁN
+                                        BẮT ĐẦU MỞ BÁN : 
                                     </strong>
                                     <span>
-                                        23/10/2023
+                                        {{ formatDate(detail.startSaleTicketDate) }}
+                                    </span>
+                                    <br>
+                                    <strong>
+                                        ĐÓNG CỔNG BÁN VÉ : 
+                                    </strong>
+                                    <span>
+                                        {{ formatDate(detail.endSaleTicketDate) }}
                                     </span>
                                 </strong>
                                 <br>
-                                10:00AM chỉ có tại
+                                Chỉ có tại
                                 <router-link to="/" style="text-decoration: none; color: #000fff;">
                                     MyTicket.com
                                 </router-link>
@@ -35,12 +42,13 @@
                             </p>
                             <p>
                                 <span>
-                                    CAT 1: 3.000.000 vnđ
-                                    <br>
-                                    CAT 2: 2.000.000 vnđ
-                                    <br>
-                                    CAT 3: 1.000.000 vnđ
-                                    <br>
+                                    <span  v-for="ticket in detail.ticketEvents">
+                                        {{ ticket.name }} : 
+                                        <span style="color: red;">
+                                            {{ formatCurrency(ticket.price) }}
+                                        </span>
+                                        <br>
+                                    </span>
                                     <br>
                                     <i>*Giá vé trên đã bao gồm tất cả các dịch vụ đi kèm.*</i>
                                 </span>
@@ -71,7 +79,20 @@
     </section>
 </template>
 <script>
-
+import moment from 'moment';
+import numeral from 'numeral';
+export default {
+    props:['currentEvent'],
+    methods:{
+        formatDate(date) {
+      // Chuyển đổi ngày thành định dạng dd/mm/yyyy
+      return moment(date).format(' hh:mm DD/MM/YYYY');
+    },
+    formatCurrency(value) {
+            return numeral(value).format('0,0') + ' VND';
+        },
+    }
+}
 </script>
 
 <style>

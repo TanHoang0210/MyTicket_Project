@@ -73,7 +73,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
             get => _image;
             set => _image = value?.Trim();
         }
-        
+        public bool IsExchange { get; set; }
         public List<CreateEventDetailDto>? EventDetails { get; set; }
     }
 }

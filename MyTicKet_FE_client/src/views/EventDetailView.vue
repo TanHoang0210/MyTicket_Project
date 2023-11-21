@@ -136,7 +136,7 @@
               </div>
             </div>
           </section>
-          <about-event-detail :currentEvent="currentEvent" :listTickets="listTickets" :modalShow="modalShow">
+          <about-event-detail :currentEvent="currentEvent" :modalShow="modalShow">
           </about-event-detail>
         </div>
       </div>

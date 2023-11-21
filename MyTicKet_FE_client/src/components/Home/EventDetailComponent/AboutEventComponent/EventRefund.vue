@@ -8,7 +8,7 @@
                 </h1>
                 <div id="eventfaq-content">
                     <ol>
-                        <li>Ban tổ chức/Chủ địa điểm có quyền từ chối cho vào/trục xuất bất kỳ người nào có hành vi gây mất
+                        <!-- <li>Ban tổ chức/Chủ địa điểm có quyền từ chối cho vào/trục xuất bất kỳ người nào có hành vi gây mất
                             trật tự hoặc không phù hợp hoặc gây ra mối đe dọa về an ninh hoặc việc người khác tận hưởng Sự
                             kiện mà không phải bồi thường.</li>
                         <li>Người giữ vé chịu mọi rủi ro về thương tích và mọi trách nhiệm đối với việc mất mát, phá hủy
@@ -19,7 +19,10 @@
                         <li>Không hoàn lại tiền, trao đổi, nâng cấp hoặc hủy khi vé) được bán.</li>
                         <li>Chúng tôi muốn cảnh báo người dân không nên mua vé từ người bán trái phép hoặc trang web của bên
                             thứ 3. Bằng cách mua vé thông qua các điểm bán hàng không được ủy quyền này, người mua sẽ gặp
-                            rủi ro rằng tính hợp lệ của vé không thể được đảm bảo và không thể hoàn lại tiền.</li>
+                            rủi ro rằng tính hợp lệ của vé không thể được đảm bảo và không thể hoàn lại tiền.</li> -->
+                            <li v-for="item in exchange">
+                                {{ item}}
+                            </li>
                     </ol>
                 </div>
         </div>
@@ -27,7 +30,14 @@
 </section>
 </template>
 <script>
-
+export default {
+    props:['currentEvent'],
+    computed: {
+        exchange() {
+      return this.currentEvent.exchangePolicy.split('. ');
+    }
+  }
+}
 </script>
 
 <style>

@@ -15,7 +15,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Abstracts
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        EventDto CreateEvent(CreateEventDto input);
+        void CreateEvent(CreateEventDto input);
 
         /// <summary>
         /// danh sách sự kiện có phân trang

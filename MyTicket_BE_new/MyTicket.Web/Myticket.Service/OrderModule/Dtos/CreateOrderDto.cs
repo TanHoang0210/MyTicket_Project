@@ -9,11 +9,6 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
 {
     public class CreateOrderDto
     {
-        /// <summary>
-        /// ngày đặt
-        /// </summary>
-        public DateTime OrderDate { get; set; }
-
         public List<CreateOrderDetailWithTicketTypeDto>? TicketTypes { get; set; }
         public List<CreateOrderDetailWithTicketDto>? Tickets { get; set; }
     }
