@@ -14,7 +14,9 @@ using MYTICKET.BASE.API.Middlewares;
 using MYTICKET.UTILS.ConstantVariables.Shared;
 using MYTICKET.UTILS.Security;
 using MYTICKET.WEB.Infrastructure.Persistence;
+using MYTICKET.WEB.SERVICE;
 using MYTICKET.WEB.SERVICE.FileModule.Dtos.Setting;
+using MYTICKET.WEB.SERVICE.MailService.Dtos;
 using Newtonsoft.Json;
 using StackExchange.Profiling.Storage;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -234,6 +236,12 @@ namespace MYTICKET.BASE.API
                     options.Configuration.ChannelPrefix = $"{{SignalR-{Assembly.GetExecutingAssembly().GetName().Name}}}";
                 });
             }
+            services.AddOptions();
+            services.Configure<VNPaySettings>(
+                builder.Configuration.GetSection("VNPaySettings"));
+            services.AddOptions();
+            services.Configure<MailSettings>(
+                builder.Configuration.GetSection("MailSettings"));
         }
 
         /// <summary>

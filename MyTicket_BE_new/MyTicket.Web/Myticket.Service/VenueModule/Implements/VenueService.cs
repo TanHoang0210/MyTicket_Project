@@ -42,7 +42,16 @@ namespace MYTICKET.WEB.SERVICE.VenueModule.Implements
             _logger.LogInformation($"{nameof(GetAll)}: input = {JsonSerializer.Serialize(input)}");
             var result = new PagingResult<VenueDto>();
             var query = _dbContext.Venues.Where(p => !p.Deleted
-                                                      && (input.Name == null || p.Name.ToLower().Contains(input.Name.ToLower())));
+                                                      && (input.Name == null || p.Name.ToLower().Contains(input.Name.ToLower())))
+                .Select(s => new VenueDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Address = s.Address,
+                    Capacity = s.Capacity,
+                    Description = s.Description,
+                    Image = s.Image
+                });
 
             result.TotalItems = query.Count();
             query = query.OrderDynamic(input.Sort);
@@ -51,7 +60,7 @@ namespace MYTICKET.WEB.SERVICE.VenueModule.Implements
             {
                 query = query.Skip(input.GetSkip()).Take(input.PageSize);
             }
-            result.Items = _mapper.Map<IEnumerable<VenueDto>>(query);
+            result.Items = query;
             return result;
         }
 

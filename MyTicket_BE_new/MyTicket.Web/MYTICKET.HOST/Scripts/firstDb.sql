@@ -158,7 +158,6 @@ CREATE TABLE [dbo].[Order] (
     [Status] int NOT NULL,
     [OrderDate] datetime2 NOT NULL,
     [Total] decimal(18,2) NOT NULL,
-    [QrCode] nvarchar(max) NULL,
     [CreatedDate] datetime2 NULL DEFAULT (getdate()),
     [CreatedBy] int NULL,
     [ModifiedDate] datetime2 NULL,
@@ -322,6 +321,7 @@ CREATE TABLE [dbo].[OrderDetail] (
     [CustomerTransfer] int NULL,
     [IsExchange] int NULL,
     [ExchangeStatus] int NULL,
+    [QrCode] nvarchar(max) NULL,
     [CreatedDate] datetime2 NULL DEFAULT (getdate()),
     [CreatedBy] int NULL,
     [ModifiedDate] datetime2 NULL,
@@ -426,7 +426,7 @@ CREATE INDEX [IX_Venue] ON [dbo].[Venue] ([Deleted], [Name]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20231120175240_AddEntity', N'7.0.13');
+VALUES (N'20231122075247_FirstMigration', N'7.0.13');
 GO
 
 COMMIT;

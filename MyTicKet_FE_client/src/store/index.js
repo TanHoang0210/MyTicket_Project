@@ -9,6 +9,7 @@ export default new Vuex.Store({
     accessToken: null,
     refreshToken: null,
     tokenExpiration: null,
+    orderFormData: null,
   },
   getters: {
     currentUser: state => state.currentUser,
@@ -17,6 +18,9 @@ export default new Vuex.Store({
     tokenExpiration: state => state.tokenExpiration,
   },
   mutations: {
+    setOrderData(state, orderFormData) {
+      state.orderFormData = orderFormData;
+    },
     setCurrentUser(state, user) {
       state.currentUser = user;
     },

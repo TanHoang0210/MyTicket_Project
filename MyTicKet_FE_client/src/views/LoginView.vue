@@ -81,11 +81,23 @@ export default {
       showPassword: false
     }
   },
+  mounted(){
+    console.log("haha")
+    console.log(this.$route.query.routeInfo)
+  }
+  ,
   methods: {
     onSubmit(event) {
+      const routeInfo = this.$route.query.routeInfo;
       event.preventDefault()
       this.Login();
+      if (routeInfo) {
+      // Nếu có, bạn có thể sử dụng thông tin route đó (ví dụ: chuyển hướng người dùng đến trang order)
+      this.$router.push(routeInfo);
+    } else {
+      // Nếu không, xử lý chuyển hướng mặc định sau khi đăng nhập
       this.$router.push('/');
+    }
     },
     onReset(event) {
       event.preventDefault()

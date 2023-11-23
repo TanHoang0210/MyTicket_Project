@@ -13,11 +13,17 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
 
         public int OrderId { get; set; }
 
+        public string? OrderCode { get; set; }
+
+        public DateTime? OrderDate { get; set; }
+
         public int EventDetailId { get; set; }
         public string? EventName { get; set; }
 
         public DateTime? OrganizationDay { get; set; }
         public string? VenueName { get; set; }
+
+        public string? VenueAddress { get; set; }
 
         public int TicketId { get; set; }
         public string? TicketEventName { get; set; }
@@ -27,5 +33,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
         public string? SeatCode { get; set; }
 
         public decimal Price { get; set; }
+
+        public string? QrCode { get; set; }
     }
 }

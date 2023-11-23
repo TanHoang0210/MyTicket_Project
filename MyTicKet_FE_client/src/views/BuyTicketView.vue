@@ -44,15 +44,17 @@
                                 </div>
                             </div>
                         </div>
-                        <select-seat v-show="isSelect" @getCurrentEvent="handleChildData"
-                            :breadItems="breadItems"></select-seat>
-                        <check-out v-show="isComfirm" @getCurrentEvent="handleChildData"
+                        <select-seat v-if="isSelect" @getCurrentEvent="handleChildData"
+                            :breadItems="breadItems"
+                            :isSelect="isSelect"
+                            ></select-seat>
+                        <check-out v-if="isComfirm" @getCurrentEvent="handleChildData"
                             :breadItems="breadItems"></check-out>
+                            <complete v-if="isComplete" :isComplete="isComplete"></complete>
                     </div>
                 </div>
             </div>
         </main>
-        {{ urlParams }}
         <div>
             <home-footer :categories="categories"></home-footer>
         </div>
@@ -64,11 +66,12 @@ import Header from '@/components/Header.vue'
 import HomeFooter from '@/components/Home/HomeFooter.vue'
 import SelectSeat from '@/components/Home/BuyTicketComponent/SelectSeat.vue'
 import CheckOut from '@/components/Home/BuyTicketComponent/CheckOut.vue'
+import Complete from '@/components/Home/BuyTicketComponent/Complete.vue'
 import axios from 'axios'
 export default {
     name: 'BuyTicketView',
     components: {
-        Header, HomeFooter, SelectSeat, CheckOut
+        Header, HomeFooter, SelectSeat, CheckOut,Complete
     },
     data() {
         return {
@@ -112,15 +115,20 @@ export default {
             ]
         }
     },
-    created() {
+    beforeMount() {
+        if (this.$route.params.type == 'checkout') {
+            this.isComfirm = true;
+        }
         if (this.$route.params.type == 'area') {
             this.isSelect = true;
         }
-        else if (this.$route.params.type == 'checkout') {
-            this.isComfirm = true;
-        }
-        else if (this.$route.params.type == 'order') {
+        if (this.$route.params.type == 'order') {
             this.isOrdering = true;
+        }
+        if (this.$route.params.type == 'complete') {
+            var breadActive = { text: 'Nhận vé', href: '' };
+            this.breadItems.push(breadActive);
+            this.isComplete = true;
         }
     },
     methods: {

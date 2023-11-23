@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS;
@@ -37,8 +38,41 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpGet("find/{id}")]
+        [HttpGet("find-all")]
         public APIResponse<PagingResult<OrderDetailDto>> FindVenueById([FromQuery]FilterOrderCustomer input)
                => new(_orderService.FindAllOrderByCustomerId(input));
+
+        /// <summary>
+        /// Đơn hàng khách hàng
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("find-order/for-pay")]
+        public APIResponse<OrderDto> FindOrderById()
+               => new(_orderService.GetOrderReadyToPayByCustomer());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("ticket/delete/{id}")]
+        public APIResponse DeleteOrderTicketById(int id)
+        {
+            _orderService.DeleteOrderDetail(id);
+            return new();
+        }
+        [HttpPut("update-order-status")]
+        public async Task<IActionResult> UpdateStatus([FromBody] UpdateOrderStatusDto input)
+        {
+            try
+            {
+                await _orderService.UpdateOrderStatus(input);
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

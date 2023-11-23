@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.ENTITIES.Interfaces;
 using MYTICKET.UTILS.ConstantVaribale.Db;
+using MYTICKET.UTILS.ConstantVaribale.Shared;
 
 namespace MYTICKET.WEB.DOMAIN.Entities
 {
@@ -26,6 +27,7 @@ namespace MYTICKET.WEB.DOMAIN.Entities
 
         /// <summary>
         /// trạng thái đơn đặt
+        /// <see cref="OrderStatuses"/>
         /// </summary>
         public int Status { get; set; }
         /// <summary>
@@ -33,9 +35,13 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// </summary>
         public DateTime OrderDate {  get; set; }
 
+        /// <summary>
+        /// Hết hạn thanh toán
+        /// </summary>
+        public DateTime ExpireDate { get; set; }
+
         public decimal Total { get; set; }
 
-        public string? QrCode { get; set; }
         public List<OrderDetail> OrderDetails { get; } = new();
         #region fullaudit
         public DateTime? CreatedDate { get ; set ; }

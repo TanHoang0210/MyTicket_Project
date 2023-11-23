@@ -47,8 +47,9 @@ export default {
       ],
     }
   },
-  beforeMount() {
+  mounted() {
     this.getAllData();
+    console.log("Đường dẫn hiện tại:", this.$route.query);
   },
   methods: {
     async getAllData() {
@@ -75,7 +76,7 @@ export default {
           "myticket/api/venue/find",
           {
             params: {
-              pageSize: 5,
+              pageSize: 6,
               pageNumber: 1,
             },
           }

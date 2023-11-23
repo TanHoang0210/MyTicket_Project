@@ -50,8 +50,15 @@ const routes = [
   },
   {
     path: '/ticket/:type',
+    name: 'checkout',
+    component:BuyTicket,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/ticket/:type',
     name: 'orderTicket',
-    component: () => import(/* webpackChunkName: "about" */ '../components/Home/BuyTicketComponent/Ordering.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../components/Home/BuyTicketComponent/Ordering.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/ticket',
@@ -60,6 +67,22 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/BuyTicketView.vue')
+  },
+  {
+    path: '/:type',
+    name: 'myOrder',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/MyTicketView.vue')
+  },
+  {
+    path: '/a/s',
+    name: 'userInfo',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/MyInfoView.vue')
   }
 ]
 
@@ -91,5 +114,19 @@ const router = new VueRouter({
 // //     next();
 // //   }
 // // });
-
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    // Kiểm tra xem người dùng đã đăng nhập chưa
+    if (!store.state.accessToken) {
+      // Nếu không đăng nhập, chuyển hướng đến trang đăng nhập
+      next({ name: 'login' });
+    } else {
+      // Nếu đã đăng nhập, cho phép tiếp tục chuyển hướng
+      next();
+    }
+  } else {
+    // Nếu không yêu cầu đăng nhập, cho phép tiếp tục chuyển hướng
+    next();
+  }
+});
 export default router

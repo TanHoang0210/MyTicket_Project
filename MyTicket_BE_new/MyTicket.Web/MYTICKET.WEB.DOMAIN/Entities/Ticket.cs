@@ -32,15 +32,8 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public required string SeatCode { get; set; }
 
         /// <summary>
-        /// trạng thái
-        /// <see cref="TicketStatus"/>
-        /// </summary>
-        public int Status { get; set; }
-        /// <summary>
         /// Vé của khách hàng nào
         /// </summary>
         public OrderDetail? OrderDetail { get; set; }
-
-        public int? CustomerId { get; set; }
     }
 }

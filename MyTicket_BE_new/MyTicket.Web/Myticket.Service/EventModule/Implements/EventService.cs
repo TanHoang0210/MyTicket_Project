@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.SERVICE.Common;
@@ -78,7 +79,6 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                                     {
                                         TicketEventId = ticketEventAdd.Id,
                                         SeatCode = "SEAT" + i,
-                                        Status = TicketStatus.ACTIVE,
                                         TicketCode = GenerateCode(5),                                      
                                     });
                                 _dbContext.SaveChanges();
@@ -148,7 +148,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             var eventDetails = _dbContext.EventDetails
                 .Include(s => s.Event)
                 .Include(s => s.TicketEvents.Where(s => !s.Deleted))
-                .ThenInclude(x => x.Tickets.Where(s => s.Status == TicketStatus.ACTIVE))
+                .ThenInclude(x => x.Tickets.Where(s => (!_dbContext.OrderDetails.Any(o => o.TicketId == s.Id))))
                 .Where(s => s.EventId == eventinfo.Id && !s.Deleted)
                 .Select(s => new EventDetailDto
                 {
@@ -184,7 +184,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             var eventDetails = _dbContext.EventDetails
                 .Include(s => s.Event)
                 .Include(s => s.TicketEvents.Where(s => !s.Deleted))
-                .ThenInclude(x => x.Tickets.Where(s => s.Status == TicketStatus.ACTIVE))
+                .ThenInclude(x => x.Tickets.Where(s => (!_dbContext.OrderDetails.Any(o => o.TicketId == s.Id))))
                 .Where(s => s.Id == eventDetailId && !s.Deleted)
                 .Select(s => new EventDetailDto
                 {

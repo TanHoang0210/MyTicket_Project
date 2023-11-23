@@ -65,22 +65,22 @@
                         <div class="user-action">
                             <ul class="user-action-list">
                                 <li class="user-action-item">
-                                    <router-link class="user-action-link" style="text-decoration: none;" to="/event">
+                                    <router-link class="user-action-link" style="text-decoration: none;" to="/user">
                                         Thông tin tài khoản
                                     </router-link>
                                 </li>
                                 <li class="user-action-item">
-                                    <router-link class="user-action-link" style="text-decoration: none;" to="/event">
+                                    <router-link class="user-action-link" style="text-decoration: none;" to="/order">
                                         Vé của bạn
                                     </router-link>
                                 </li>
                                 <li class="user-action-item">
-                                    <router-link class="user-action-link" style="text-decoration: none;" to="/event">
+                                    <router-link class="user-action-link" style="text-decoration: none;" to="/transfer">
                                         Vé chuyển nhượng
                                     </router-link>
                                 </li>
                                 <li class="user-action-item">
-                                    <router-link class="user-action-link" style="text-decoration: none;" to="/event">
+                                    <router-link class="user-action-link" style="text-decoration: none;" to="/refund">
                                         Vé trả
                                     </router-link>
                                 </li>

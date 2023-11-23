@@ -3,161 +3,162 @@
         <div v-if="isLoading">
             <LoadPage />
         </div>
-    <div v-if="isSuccess"  class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-            <div id="pageinfo" class="row py-3">
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 col-3 title-img visible-desktop d-none d-sm-block">
-                    <img class="img-fluid" :src="$fileUrl + currentEvent.eventImage" alt="">
-                </div>
-                <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 col-12">
-                    <div class="page-header">
-                        <h3 id="seatmapEventName">{{ currentEvent.eventName }}</h3>
+        <div v-if="isSuccess" class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
+                <div id="pageinfo" class="row py-3">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 col-3 title-img visible-desktop d-none d-sm-block">
+                        <img class="img-fluid" :src="$fileUrl + currentEvent.eventImage" alt="">
                     </div>
-                    <div>
-                        <select id="gameId" class="form-select" name="gameId">
-                            <option v-for="ticket in currentEvent.eventDetails" :value="ticket.id"
-                                :selected="ticket.id === currentEventselected">
-                                {{ formatDate(ticket.organizationDay) }} -
-                                {{ ticket.venueName }} - {{ currentEvent.eventName }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-heading">
-                <div class="step"></div>
-                <span>Chọn hạng vé của bạn</span>
-            </div>
-            <div class="row" id="step1">
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
-                    <img class="img-seatmap" :src="$fileUrl + currentTicketEvent.eventSeatMapImage" alt="">
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
-                    <form @submit.prevent="submitToCheckout" class="form-ticket-ticket">
-                        <input type="hidden" name="_csrf"
-                            value="U8hsPodpZMCBzx_wnz8ZE3Bjxw9H1nbsaN6JLp4OqRM9nB9s0lww9NiiV576DUpcElaiYyyFHtsZnfxornjiVw==">
-                        <!-- start: Buy Ticket List -->
-                        <table id="ticketPriceList" class="table table-bordered col-xs-12 mgt-10 text-center">
-                            <thead>
-                                <tr>
-                                    <th class="col-sm-3">Hạng Vé</th>
-                                    <th class="col-sm-3">Giá</th>
-                                    <th class="col-sm-3">Số lượng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="ticketnow in currentTicketEvent.ticketEvents" id="pt-001">
-                                    <td class="text-bold ticketpricetext">
-                                        {{ ticketnow.name }}</td>
-                                    <td>
-                                        {{ formatCurrency(ticketnow.price) }}</td>
-                                    <td>
-                                        <select id="TicketForm_ticketPrice_001" class="w100 form-select"
-                                            name="TicketForm[ticketPrice][001]">
-                                            <option value="0">Chọn số lượng
-                                            </option>
-                                            <option v-for="i in ticketnow.quantity" :value="i">{{ i }}
-                                            </option>
-                                        </select> <input type="hidden" id="TicketForm_priceSize_001"
-                                            name="TicketForm[priceSize][001]" value="1">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="row">
-                            <div class="col-8">
-                            </div>
-                            <button type="submit" id="md-viewMap"
-                                class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
-                                Thanh Toán
-                            </button>
+                    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 col-12">
+                        <div class="page-header">
+                            <h3 id="seatmapEventName">{{ currentEvent.eventName }}</h3>
                         </div>
-                    </form>
+                        <div>
+                            <select id="gameId" class="form-select" name="gameId">
+                                <option v-for="ticket in currentEvent.eventDetails" :value="ticket.id"
+                                    :selected="ticket.id === currentEventselected">
+                                    {{ formatDate(ticket.organizationDay) }} -
+                                    {{ ticket.venueName }} - {{ currentEvent.eventName }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-heading">
+                    <div class="step"></div>
+                    <span>Chọn hạng vé của bạn</span>
+                </div>
+                <div class="row" id="step1">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
+                        <img class="img-seatmap" :src="$fileUrl + currentTicketEvent.eventSeatMapImage" alt="">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
+                        <form @submit.prevent="submitToCheckout" class="form-ticket-ticket">
+                            <input type="hidden" name="_csrf"
+                                value="U8hsPodpZMCBzx_wnz8ZE3Bjxw9H1nbsaN6JLp4OqRM9nB9s0lww9NiiV576DUpcElaiYyyFHtsZnfxornjiVw==">
+                            <!-- start: Buy Ticket List -->
+                            <table id="ticketPriceList" class="table table-bordered col-xs-12 mgt-10 text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="col-sm-3">Hạng Vé</th>
+                                        <th class="col-sm-3">Giá</th>
+                                        <th class="col-sm-3">Số lượng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for=" (ticketnow, index) in currentTicketEvent.ticketEvents" id="pt-001">
+                                        <td class="text-bold ticketpricetext">
+                                            {{ ticketnow.name }}</td>
+                                        <td>
+                                            {{ formatCurrency(ticketnow.price) }}</td>
+                                        <td>
+                                            <select @change="handleOrder($event, index)" id="TicketForm_ticketPrice_001"
+                                                class="w100 form-select" name="TicketForm[ticketPrice][001]">
+                                                <option value="0">Chọn số lượng
+                                                </option>
+                                                <option v-for="i in ticketnow.quantity" :value="i">{{ i }}
+                                                </option>
+                                            </select>
+                                            <input type="hidden" id="TicketForm_priceSize_001"
+                                                name="TicketForm[priceSize][001]" value="1">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-8">
+                                </div>
+                                <button type="submit" id="md-viewMap"
+                                    class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
+                                    Thanh Toán
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row" id="step1">
+
                 </div>
             </div>
-            <div class="row" id="step1">
+        </div>
+        <div v-if="isError" class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
+                <div id="pageinfo" class="row py-3">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 col-3 title-img visible-desktop d-none d-sm-block">
+                        <img class="img-fluid" :src="$fileUrl + currentEvent.eventImage" alt="">
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 col-12">
+                        <div class="page-header">
+                            <h3 id="seatmapEventName">{{ currentEvent.eventName }}</h3>
+                        </div>
+                        <div>
+                            <select id="gameId" class="form-select" name="gameId">
+                                <option v-for="ticket in currentEvent.eventDetails" :value="ticket.id"
+                                    :selected="ticket.id === currentEventselected">
+                                    {{ formatDate(ticket.organizationDay) }} -
+                                    {{ ticket.venueName }} - {{ currentEvent.eventName }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-heading">
+                    <div class="step"></div>
+                    <span>Chọn hạng vé của bạn</span>
+                </div>
+                <div class="row" id="step1">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
+                        <img class="img-seatmap" :src="$fileUrl + currentTicketEvent.eventSeatMapImage" alt="">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
+                        <form @submit.prevent="false" class="form-ticket-ticket">
+                            <input type="hidden" name="_csrf"
+                                value="U8hsPodpZMCBzx_wnz8ZE3Bjxw9H1nbsaN6JLp4OqRM9nB9s0lww9NiiV576DUpcElaiYyyFHtsZnfxornjiVw==">
+                            <!-- start: Buy Ticket List -->
+                            <table id="ticketPriceList" class="table table-bordered col-xs-12 mgt-10 text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="col-sm-3">Hạng Vé</th>
+                                        <th class="col-sm-3">Giá</th>
+                                        <th class="col-sm-3">Số lượng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="ticketnow in currentTicketEvent.ticketEvents" id="pt-001">
+                                        <td class="text-bold ticketpricetext">
+                                            {{ ticketnow.name }}</td>
+                                        <td>
+                                            {{ formatCurrency(ticketnow.price) }}</td>
+                                        <td>
+                                            <select id="TicketForm_ticketPrice_001" class="w100 form-select"
+                                                name="TicketForm[ticketPrice][001]">
+                                                <option disabled value="">Chọn số lượng
+                                                </option>
+                                                <option v-for="i in ticketnow.quantity" :value="i">{{ i }}
+                                                </option>
+                                            </select> <input type="hidden" id="TicketForm_priceSize_001"
+                                                name="TicketForm[priceSize][001]" value="1">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-8">
+                                </div>
+                                <button v-on:click="submitToCheckout()" id="md-viewMap"
+                                    class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
+                                    Thanh Toán nhé
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row" id="step1">
 
+                </div>
             </div>
         </div>
     </div>
-    <div v-if="isError" class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-            <div id="pageinfo" class="row py-3">
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 col-3 title-img visible-desktop d-none d-sm-block">
-                    <img class="img-fluid" :src="$fileUrl + currentEvent.eventImage" alt="">
-                </div>
-                <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 col-12">
-                    <div class="page-header">
-                        <h3 id="seatmapEventName">{{ currentEvent.eventName }}</h3>
-                    </div>
-                    <div>
-                        <select id="gameId" class="form-select" name="gameId">
-                            <option v-for="ticket in currentEvent.eventDetails" :value="ticket.id"
-                                :selected="ticket.id === currentEventselected">
-                                {{ formatDate(ticket.organizationDay) }} -
-                                {{ ticket.venueName }} - {{ currentEvent.eventName }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-heading">
-                <div class="step"></div>
-                <span>Chọn hạng vé của bạn</span>
-            </div>
-            <div class="row" id="step1">
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
-                    <img class="img-seatmap" :src="$fileUrl + currentTicketEvent.eventSeatMapImage" alt="">
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
-                    <form @submit.prevent="false" class="form-ticket-ticket">
-                        <input type="hidden" name="_csrf"
-                            value="U8hsPodpZMCBzx_wnz8ZE3Bjxw9H1nbsaN6JLp4OqRM9nB9s0lww9NiiV576DUpcElaiYyyFHtsZnfxornjiVw==">
-                        <!-- start: Buy Ticket List -->
-                        <table id="ticketPriceList" class="table table-bordered col-xs-12 mgt-10 text-center">
-                            <thead>
-                                <tr>
-                                    <th class="col-sm-3">Hạng Vé</th>
-                                    <th class="col-sm-3">Giá</th>
-                                    <th class="col-sm-3">Số lượng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="ticketnow in currentTicketEvent.ticketEvents" id="pt-001">
-                                    <td class="text-bold ticketpricetext">
-                                        {{ ticketnow.name }}</td>
-                                    <td>
-                                        {{ formatCurrency(ticketnow.price) }}</td>
-                                    <td>
-                                        <select id="TicketForm_ticketPrice_001" class="w100 form-select"
-                                            name="TicketForm[ticketPrice][001]">
-                                            <option disabled value="">Chọn số lượng
-                                            </option>
-                                            <option v-for="i in ticketnow.quantity" :value="i">{{ i }}
-                                            </option>
-                                        </select> <input type="hidden" id="TicketForm_priceSize_001"
-                                            name="TicketForm[priceSize][001]" value="1">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="row">
-                            <div class="col-8">
-                            </div>
-                            <button v-on:click="submitToCheckout()" id="md-viewMap"
-                                class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
-                                Thanh Toán nhé
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row" id="step1">
-
-            </div>
-        </div>
-    </div>
-</div>
 </template>
 
 <script>
@@ -166,6 +167,7 @@ import moment from 'moment';
 import numeral from 'numeral';
 import axios from 'axios';
 export default {
+    props: ['isSelect'],
     components: {
         LoadPage
     },
@@ -220,19 +222,34 @@ export default {
                     }
                 ]
             },
-
+            order: {
+                ticketTypes: [],
+                tickets: []
+            }
         }
     },
     mounted() {
         this.fetchDataTicket();
     },
     methods: {
-        submitToCheckout: function () {
-            if(this.$store.state.accessToken != null){
-                this.$router.push({ name: 'orderTicket', params: {  type: 'order'}});
-            }else{
-                this.$router.push({ name: 'login'});
+        handleOrder(event, index) {
+            const orderFind = this.order.ticketTypes
+                .findIndex(item => item.ticketEventId === this.currentTicketEvent.ticketEvents[index].id);
+            if (orderFind !== -1) {
+                // Nếu ID đã tồn tại, xóa nó
+                this.order.ticketTypes.splice(orderFind, 1);
             }
+            this.order.ticketTypes.push({
+                eventDetailId: this.currentTicketEvent.ticketEvents[index].eventDetailId,
+                ticketEventId: this.currentTicketEvent.ticketEvents[index].id,
+                quantity: event.target.value
+            })
+            console.log(this.order.ticketTypes)
+        },
+        submitToCheckout: function () {
+                this.$store.commit('setOrderData', this.order);
+                const routeInfo = { name: 'orderTicket', params: { type: 'order' } };
+                this.$router.push({ name: 'orderTicket' , params: { type: 'order' }, query: { routeInfo } });
         },
         formatDate(date) {
             // Chuyển đổi ngày thành định dạng dd/mm/yyyy
@@ -271,21 +288,23 @@ export default {
             }
         },
         async fetchDataTicket() {
-            try {
-                this.isLoading = true;
-                this.currentTicketEvent = await this.getcurrentTicketEvent();
-                this.currentEvent = await this.getEventDetail();
-                this.currentEventselected = this.$route.params.id;
-                this.$emit('getCurrentEvent', this.currentEvent);
-                this.isLoading = false;
-                this.isSuccess = true;
-            } catch (error) {
-                this.isLoading = false;
-                this.isError = true;
-                this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
-                    position: 'top-right',
-                    duration: 3000, // Thời gian hiển thị toast (ms)
-                });
+            if (this.isSelect) {
+                try {
+                    this.isLoading = true;
+                    this.currentTicketEvent = await this.getcurrentTicketEvent();
+                    this.currentEvent = await this.getEventDetail();
+                    this.currentEventselected = this.$route.params.id;
+                    this.$emit('getCurrentEvent', this.currentEvent);
+                    this.isLoading = false;
+                    this.isSuccess = true;
+                } catch (error) {
+                    this.isLoading = false;
+                    this.isError = true;
+                    this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
+                        position: 'top-right',
+                        duration: 3000, // Thời gian hiển thị toast (ms)
+                    });
+                }
             }
         }
     }

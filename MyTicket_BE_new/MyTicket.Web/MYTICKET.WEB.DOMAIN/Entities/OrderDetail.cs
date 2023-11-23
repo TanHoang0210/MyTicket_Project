@@ -42,6 +42,7 @@ namespace MYTICKET.WEB.DOMAIN.Entities
 
         public int? IsExchange { get; set; }
         public int? ExchangeStatus { get; set; }
+        public string? QrCode { get; set; }
 
         #region fulldaudit
         public DateTime? CreatedDate { get; set; }

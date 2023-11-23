@@ -1,10 +1,5 @@
 ﻿using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.WEB.SERVICE.OrderModule.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
 {
@@ -23,5 +18,26 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
         /// <param name="input"></param>
         /// <returns></returns>
         PagingResult<OrderDetailDto> FindAllOrderByCustomerId(FilterOrderCustomer input);
+
+        /// <summary>
+        /// Xóa 1 vé khỏi đơn đặt vé
+        /// </summary>
+        /// <param name="id"></param>
+        void DeleteOrderDetail(int id);
+
+        void DeleteOrderExpired();
+
+        /// <summary>
+        /// lấy đơn hàng đang thanh toán
+        /// </summary>
+        /// <returns></returns>
+        OrderDto GetOrderReadyToPayByCustomer();
+
+        /// <summary>
+        /// Cập nhật trạng thái đơn hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UpdateOrderStatus(UpdateOrderStatusDto input);
     }
 }

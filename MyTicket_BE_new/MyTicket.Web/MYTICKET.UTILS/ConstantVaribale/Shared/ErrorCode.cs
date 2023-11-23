@@ -17,7 +17,7 @@
         UserNotHavePermission = 1006,
 
         //customer manager 2xxx
-        BusinessCustomerNotFound = 2000,
+        CustomerNotFound = 2000,
         RestaurantNotFound = 2001,
         DeliveryAddressNotFound = 2002,
         GroupCustomerNotFound = 2003,
@@ -46,12 +46,14 @@
         //ShippingProvider 6xxx
         ShippingProviderNotFound = 6000,
         ShippingProviderIsExists= 6001,
-        
+
         //Document 7xxx
         DocumentNotFound = 7000,
 
         //Event 800
         EventDetailNotFound = 8000,
         EventNotFound = 8001,
+
+        TicketNotFound = 9000,
     }
 }
