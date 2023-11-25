@@ -9,6 +9,7 @@
 <script>
 import LoadPage from "@/views/LoadPage.vue"
 import Header from "@/components/Header.vue";
+import store from "@/store";
 import axios from "axios";
 export default {
     name: 'BuyTicketView',
@@ -49,23 +50,28 @@ export default {
     methods: {
         async orderTicket() {
             try {
-                const res = await axios.post('myticket/api/order/create', this.$store.state.orderFormData)
-                return res.data.data;
+                console.log(store.getters.orderFormData)
+                const res = await axios.post('myticket/api/order/create',store.getters.orderFormData)
+                if(res.data.status == 1){
+                    const routeInfo = { name: 'checkout', params: { type: 'checkout', id: res.data.data.id }};
+                    this.$router.push({ name: 'checkout' , params: { type: 'checkout', id: res.data.data.id }, query: { routeInfo } });
+                }else{
+                window.history.back()
+                this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
+                    position: 'top-right',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                });
+                }
             } catch (error) {
                 this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
                     position: 'top-right',
                     duration: 3000, // Thời gian hiển thị toast (ms)
                 });
+                window.history.back()
             }
         },
         async postOrder() {
-            try {
                 this.orderInfo = await this.orderTicket();
-                const routeInfo = { name: 'checkout', params: { type: 'checkout', id: this.orderInfo.id }};
-                this.$router.push({ name: 'checkout' , params: { type: 'checkout', id: this.orderInfo.id }, query: { routeInfo } });
-            } catch (error) {
-                this.$router.push({ name: 'buyTicket', params: { type: 'area', id: this.orderInfo.orderDetails[0].eventDetailId } });
-            }
         }
     }
 }

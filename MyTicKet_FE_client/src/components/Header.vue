@@ -3,7 +3,7 @@
         <div class="header-inner">
             <div class="language-control">
                 <div class="language-control--item">
-                    <img class="language-type" :src="currentLocalization.flagImg" alt="">
+                    <img class="language-type" :src="currentLocalization.flagImg" alt="">           
                     <span class="language-name ">{{ currentLocalization.name.toUpperCase() }}</span>
                     <div class="language-choice">
                         <div class="language-choice--item" v-for="(localData, index) in localizations" :id="index"
@@ -146,10 +146,10 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     }
                 })
-                    localStorage.removeItem('accessToken'),
-                    localStorage.removeItem('refreshToken'),
-                    localStorage.removeItem('currentUser'),
-                    localStorage.removeItem('tokenExpiration'),
+                sessionStorage.removeItem('accessToken'),
+                sessionStorage.removeItem('refreshToken'),
+                sessionStorage.removeItem('currentUser'),
+                sessionStorage.removeItem('tokenExpiration'),
                     this.$store.dispatch('logout');
                     this.$toasted.success('Đăng xuất thành công', {
                     position: 'top-right',
@@ -164,7 +164,7 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$store.getters.tokenExpiration)
+        console.log(this.$store.getters.currentUser)
     },
     computed: {
         currentUser() {

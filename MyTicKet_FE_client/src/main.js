@@ -25,13 +25,13 @@ Vue.prototype.$fileUrl = "http://localhost:5030/myticket/";
 /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('b-spinner', BSpinner)
-const storedUser = localStorage.getItem('currentUser');
+const storedUser = sessionStorage.getItem('currentUser');
 if (storedUser) {
   store.commit('setCurrentUser', JSON.parse(storedUser));
 }
-const token = localStorage.getItem('accessToken');
-const retoken = localStorage.getItem('refreshToken');
-const expiretoken = localStorage.getItem('tokenExpiration');
+const token = sessionStorage.getItem('accessToken');
+const retoken = sessionStorage.getItem('refreshToken');
+const expiretoken = sessionStorage.getItem('tokenExpiration');
 if(token && retoken && expiretoken){
   store.commit('setTokens', {
     accessToken: token,

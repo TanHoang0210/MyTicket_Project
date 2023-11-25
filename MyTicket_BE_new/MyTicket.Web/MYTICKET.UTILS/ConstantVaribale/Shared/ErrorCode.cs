@@ -55,5 +55,6 @@
         EventNotFound = 8001,
 
         TicketNotFound = 9000,
+        TicketInvalid = 9001,
     }
 }

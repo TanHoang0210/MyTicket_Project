@@ -76,6 +76,7 @@
 import axios from 'axios'
 import moment from 'moment'
 import numeral from 'numeral'
+import store from '@/store'
 export default {
     data() {
         return {
@@ -105,6 +106,7 @@ export default {
     },
     methods: {
         async getMyOrderInfo() {
+            console.log(store.state.accessToken)
             try {
                 const res = await axios.get(
                     "/myticket/api/order/find-all",

@@ -12,7 +12,7 @@ using System.Xml.Linq;
 namespace MYTICKET.WEB.DOMAIN.Entities
 {
     [Table(nameof(OrderDetail), Schema = DbSchemas.Default)]
-    [Index(nameof(EventDetailId), nameof(TicketId), Name = $"IX_{nameof(OrderDetail)}")]
+    [Index(nameof(EventDetailId), Name = $"IX_{nameof(OrderDetail)}")]
     public class OrderDetail :IFullAudited
     {
         [Key]

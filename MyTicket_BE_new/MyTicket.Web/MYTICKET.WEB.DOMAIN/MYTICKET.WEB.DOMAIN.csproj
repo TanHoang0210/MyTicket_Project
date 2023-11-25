@@ -24,7 +24,6 @@
 	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
-    <PackageReference Include="ZXing.Net" Version="0.16.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ENTITIES\MYTICKET.BASE.ENTITIES.csproj" />

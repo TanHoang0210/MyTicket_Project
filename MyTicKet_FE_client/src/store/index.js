@@ -16,6 +16,7 @@ export default new Vuex.Store({
     accessToken: state => state.accessToken,
     refreshToken: state => state.refreshToken,
     tokenExpiration: state => state.tokenExpiration,
+    orderFormData: state => state.orderFormData,
   },
   mutations: {
     setOrderData(state, orderFormData) {

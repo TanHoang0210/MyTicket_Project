@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.SERVICE.Common;
@@ -69,7 +68,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                                                               EventDetailId = eventDetailAdd.Id,
                                                               Name = ticket.Name,
                                                               Status = TicketEventStatuses.INIT,
-                                                              Price = ticket.Price,                                                          
+                                                              Price = ticket.Price,
                                                           }).Entity;
                             _dbContext.SaveChanges();
                             for (int i = 1; i <= ticket.Quantity; i++)
@@ -79,7 +78,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                                     {
                                         TicketEventId = ticketEventAdd.Id,
                                         SeatCode = "SEAT" + i,
-                                        TicketCode = GenerateCode(5),                                      
+                                        TicketCode = GenerateCode(5),
                                     });
                                 _dbContext.SaveChanges();
                             }
@@ -148,7 +147,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             var eventDetails = _dbContext.EventDetails
                 .Include(s => s.Event)
                 .Include(s => s.TicketEvents.Where(s => !s.Deleted))
-                .ThenInclude(x => x.Tickets.Where(s => (!_dbContext.OrderDetails.Any(o => o.TicketId == s.Id))))
+                .ThenInclude(x => x.Tickets)
                 .Where(s => s.EventId == eventinfo.Id && !s.Deleted)
                 .Select(s => new EventDetailDto
                 {
@@ -171,7 +170,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                         Name = x.Name,
                         EventDetailId = x.EventDetailId,
                         Price = x.Price,
-                        Quantity = x.Tickets.Count() < 10 ? x.Tickets.Count() : 10,
+                        Quantity = x.Tickets.Where(s => !_dbContext.OrderDetails.Include(t => t.Order)
+                    .Any(o => o.TicketId == s.Id && o.Order.Status != OrderStatuses.CANCEL && !o.Deleted)).Take(10).Count(),
                         Status = x.Status
                     })
                 });
@@ -205,7 +205,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                         Name = x.Name,
                         EventDetailId = x.EventDetailId,
                         Price = x.Price,
-                        Quantity = x.Tickets.Count() < 10 ? x.Tickets.Count() : 10,
+                        Quantity = x.Tickets.Where(s => !_dbContext.OrderDetails.Include(t => t.Order)
+                    .Any(o => o.TicketId == s.Id && o.Order.Status != OrderStatuses.CANCEL && !o.Deleted)).Take(10).Count(),
                         Status = x.Status
                     })
                 }).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.EventDetailNotFound);

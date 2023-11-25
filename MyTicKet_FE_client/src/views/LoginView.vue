@@ -54,7 +54,9 @@
 import { ref } from 'vue'
 import gsap from 'gsap'
 import { useRouter } from "vue-router"
-import axios from 'axios';
+import { getCurrentUser, Login } from '@/service/auth/authService'
+import store from '@/store'
+import { join } from 'vue-carousel-3d'
 export default {
   setup() {
     const beforeEnter = (el) => {
@@ -81,23 +83,20 @@ export default {
       showPassword: false
     }
   },
-  mounted(){
+  mounted() {
     console.log("haha")
     console.log(this.$route.query.routeInfo)
   }
   ,
   methods: {
-    onSubmit(event) {
-      const routeInfo = this.$route.query.routeInfo;
+    async onSubmit(event) {
       event.preventDefault()
-      this.Login();
-      if (routeInfo) {
-      // Nếu có, bạn có thể sử dụng thông tin route đó (ví dụ: chuyển hướng người dùng đến trang order)
-      this.$router.push(routeInfo);
-    } else {
-      // Nếu không, xử lý chuyển hướng mặc định sau khi đăng nhập
-      this.$router.push('/');
-    }
+      await this.onLogin();
+      sessionStorage.setItem("accessToken",store.getters.accessToken)
+      sessionStorage.setItem("refreshToken",store.getters.refreshToken)
+      sessionStorage.setItem("tokenExpiration",store.getters.tokenExpiration)
+      sessionStorage.setItem("currentUser", JSON.stringify(store.getters.currentUser))
+      console.log(store.getters.currentUser)
     },
     onReset(event) {
       event.preventDefault()
@@ -113,49 +112,39 @@ export default {
         this.inputtype = "text"
       }
     },
-    async Login() {
-      try {
-        const requestConfig = {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          paramsSerializer: params => {
-            return new URLSearchParams(params).toString();
-          },
-        };
-        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-        const res = await axios.post('connect/token',
-          {
-            grant_type: 'password',
-            username: this.loginForm.username,
-            password: this.loginForm.password,
-            scope: 'offline_access',
-            client_id: 'client-angular',
-            client_secret: '52F4A9A45C1F21B53B62F56DA52F7',
-          }, requestConfig);
-        localStorage.setItem('accessToken', res.data.access_token)
-        this.$store.commit('setTokens', {
-          accessToken: res.data.access_token,
-          refreshToken: res.data.refresh_token,
-          tokenExpiration: res.data.expires_in,
+    async onLogin() {
+      const res = await Login(this.loginForm.username, this.loginForm.password)
+
+      if (res.status !== 200) {
+        this.$toasted.error(res.response.data.error_description, {
+          position: 'top-center',
+          duration: 3000, // Thời gian hiển thị toast (ms)
+          theme: 'outline', // Theme: 'outline', 'bubble'
+          iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+          icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+          iconColor: 'white', // Màu của icon
+          containerClass: 'custom-toast-container-class', // Thêm class cho container
+          singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
         });
-        localStorage.setItem('refreshToken', res.data.refresh_token)
-        localStorage.setItem('tokenExpiration', res.data.expires_in);
-        const user = await axios.get(
-          "myticket/api/user/current-user"
-        )
-        this.$store.commit('setCurrentUser', user.data.data);
-        localStorage.setItem('currentUser', JSON.stringify(user.data.data));
+      } else {
+         console.log("dang nhap thanh cong")
+        const routeInfo = this.$route.query.routeInfo;
+        if (routeInfo) {
+          this.$router.push(routeInfo);
+        } else {
+          this.$router.push("/");
+        }
         this.$toasted.success('Đăng nhập thành công', {
-          position: 'top-right',
+          position: 'top-center',
           duration: 3000, // Thời gian hiển thị toast (ms)
+          theme: 'outline', // Theme: 'outline', 'bubble'
+          iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+          icon: 'check', // Tên icon, ví dụ: 'check' (cho fontawesome)
+          iconColor: 'white', // Màu của icon
+          containerClass: 'custom-toast-container-class', // Thêm class cho container
+          singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
         });
-      } catch (error) {
-        this.$toasted.error(error, {
-          position: 'top-right',
-          duration: 3000, // Thời gian hiển thị toast (ms)
-        });
+        await getCurrentUser()
       }
     }
   }

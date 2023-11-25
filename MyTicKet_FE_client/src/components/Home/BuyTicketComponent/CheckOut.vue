@@ -186,6 +186,10 @@ export default {
                 else{
                     this.haveOrder = false;
                     this.$router.push('/order')
+                    this.$toasted.info('Hiện tại bạn không có đơn hàng nào', {
+                    position: 'top-right',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                });
                 }
                 return res.data.data
             } catch (error) {
@@ -197,6 +201,7 @@ export default {
             try {
                 const res = await axios.post('api/Vnpay/payment-vn-pay',{orderId: this.order.id})
                 this.payUrl = res.data;
+                await this.payingOrder(this.order.id)
                 window.location.href = this.payUrl
             } catch (error) {
                 this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
@@ -215,6 +220,20 @@ export default {
                 });
             }
             this.fetchData()
+        },
+        async payingOrder(orderId){
+            try {
+                const res = await axios.put('myticket/api/order/update-order-status', 
+                {
+                    id: orderId,
+                    status:3
+                })
+            } catch (error) {
+                this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
+                    position: 'top-right',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                });
+            }
         },
         async fetchData() {
             try {

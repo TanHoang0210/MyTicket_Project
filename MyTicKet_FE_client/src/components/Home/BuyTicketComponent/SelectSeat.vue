@@ -166,6 +166,7 @@ import LoadPage from "@/views/LoadPage.vue"
 import moment from 'moment';
 import numeral from 'numeral';
 import axios from 'axios';
+import store from "@/store";
 export default {
     props: ['isSelect'],
     components: {
@@ -247,7 +248,7 @@ export default {
             console.log(this.order.ticketTypes)
         },
         submitToCheckout: function () {
-                this.$store.commit('setOrderData', this.order);
+                store.commit('setOrderData', this.order);
                 const routeInfo = { name: 'orderTicket', params: { type: 'order' } };
                 this.$router.push({ name: 'orderTicket' , params: { type: 'order' }, query: { routeInfo } });
         },

@@ -32,58 +32,81 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             var currentCustomerId = _dbContext.Customers.Where(s => s.Id == currentUser.CustomerId).Select(s => s.Id).FirstOrDefault();
             _logger.LogInformation($"{nameof(CreateOrder)}: input = {JsonSerializer.Serialize(input)}, currentUser= {currentUser}");
             decimal totalOrder = 0;
-            var transaction = _dbContext.Database.BeginTransaction();
-            var orderAdd = _dbContext.Orders.Add(new Order
+            var orderId = 0;
+            using (var transaction = _dbContext.Database.BeginTransaction())
             {
-                OrderCode = GenOrderCode(10),
-                OrderDate = DateTime.Now,
-                CustomerId = currentCustomerId,
-                Status = OrderStatuses.INIT,
-            }).Entity;
-            _dbContext.SaveChanges();
-            if (input.TicketTypes != null && input.TicketTypes.Count() > 0)
-            {
-                foreach (var ticketType in input.TicketTypes)
+                try
                 {
-                    var ticketList = _dbContext.Tickets
-                                        .Where(s => s.TicketEventId == ticketType.TicketEventId
-                                        && (!_dbContext.OrderDetails.Any(x => x.TicketId == s.Id)))
-                                        .OrderBy(s => s.Id).Take(ticketType.Quantity).ToList();
-                    foreach (var ticket in ticketList)
+                    var orderAdd = _dbContext.Orders.Add(new Order
                     {
-                        _dbContext.OrderDetails.Add(new OrderDetail
-                        {
-                            OrderId = orderAdd.Id,
-                            EventDetailId = ticketType.EventDetailId,
-                            TicketId = ticket.Id,
-                        });
-                        _dbContext.SaveChanges();
-                    }
-                    var subTotal1 = (_dbContext.TicketEvents.Where(s => s.Id == ticketType.TicketEventId).Select(s => s.Price).FirstOrDefault() * ticketType.Quantity);
-                    totalOrder = totalOrder + subTotal1;
-                }
-            }
-            if (input.Tickets != null && input.Tickets.Count() > 0)
-            {
-                foreach (var ticket in input.Tickets)
-                {
-                    _dbContext.OrderDetails.Add(new OrderDetail
-                    {
-                        OrderId = orderAdd.Id,
-                        EventDetailId = ticket.EventDetailId,
-                        TicketId = ticket.TicketId,
-                    });
+                        OrderCode = GenOrderCode(10),
+                        OrderDate = DateTime.Now,
+                        CustomerId = currentCustomerId,
+                        Status = OrderStatuses.INIT,
+                    }).Entity;
                     _dbContext.SaveChanges();
-                    var subTotal2 = _dbContext.TicketEvents.Where(s => s.Id == ticket.TicketEventId).Select(s => s.Price).FirstOrDefault();
-                    totalOrder = totalOrder + subTotal2;
+                    orderId = orderAdd.Id;
+                    if (input.TicketTypes != null && input.TicketTypes.Count() > 0)
+                    {
+                        foreach (var ticketType in input.TicketTypes)
+                        {
+                            var ticketQuery = _dbContext.Tickets
+                                .Where(s => s.TicketEventId == ticketType.TicketEventId
+                                    && (!_dbContext.OrderDetails
+                                        .Any(x => x.TicketId == s.Id && !x.Deleted && (x.Order.Status != OrderStatuses.CANCEL))))
+                                .OrderBy(s => s.Id).Take(ticketType.Quantity);
+                            var ticketIds = ticketQuery.Select(ticket => ticket.Id).ToList();
+                            if (ticketIds.Count() < ticketType.Quantity)
+                            {
+                                throw new UserFriendlyException(ErrorCode.TicketInvalid);
+                            }
+                            foreach (var ticketId in ticketIds)
+                            {
+                                var orderDetail = new OrderDetail
+                                {
+                                    OrderId = orderAdd.Id,
+                                    EventDetailId = ticketType.EventDetailId,
+                                    TicketId = ticketId,
+                                };
+                                _dbContext.OrderDetails.Add(orderDetail);
+                            }
+                            _dbContext.SaveChanges();
+                            var subTotal1 = (_dbContext.TicketEvents.Where(s => s.Id == ticketType.TicketEventId).Select(s => s.Price).FirstOrDefault() * ticketType.Quantity);
+                            totalOrder = totalOrder + subTotal1;
+                        }
+                    }
+                    if (input.Tickets != null && input.Tickets.Count() > 0)
+                    {
+                        foreach (var ticket in input.Tickets)
+                        {
+                            if (_dbContext.OrderDetails.Include(s => s.Order).Any(s => s.TicketId == ticket.TicketId
+                            && s.Order.Status != OrderStatuses.CANCEL && !s.Deleted))
+                            {
+                                throw new UserFriendlyException(ErrorCode.TicketInvalid);
+                            }
+                            _dbContext.OrderDetails.Add(new OrderDetail
+                            {
+                                OrderId = orderAdd.Id,
+                                EventDetailId = ticket.EventDetailId,
+                                TicketId = ticket.TicketId,
+                            });
+                            _dbContext.SaveChanges();
+                            var subTotal2 = _dbContext.TicketEvents.Where(s => s.Id == ticket.TicketEventId).Select(s => s.Price).FirstOrDefault();
+                            totalOrder = totalOrder + subTotal2;
+                        }
+                    }
+                    orderAdd.Total = totalOrder;
+                    orderAdd.Status = OrderStatuses.READY_TO_PAY;
+                    _dbContext.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    // Xử lý ngoại lệ
                 }
             }
-            orderAdd.Total = totalOrder;
-            orderAdd.Status = OrderStatuses.READY_TO_PAY;
-            _dbContext.SaveChanges();
-            transaction.Commit();
             var result = _dbContext.Orders
-                        .Where(s => s.Id == orderAdd.Id)
+                        .Where(s => s.Id == orderId)
                         .Select(s => new OrderDto
                         {
                             Id = s.Id,
@@ -96,7 +119,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             var resultDetail = _dbContext.OrderDetails
                                                     .Include(s => s.EventDetail)
                                                     .Include(s => s.Ticket)
-                                                    .Where(s => s.OrderId == orderAdd.Id)
+                                                    .Where(s => s.OrderId == orderId)
                                                     .Select(s => new OrderDetailDto
                                                     {
                                                         Id = s.Id,
@@ -123,8 +146,6 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                 ?? throw new UserFriendlyException(ErrorCode.CustomerNotFound);
             var currentCustomerId = _dbContext.Customers.Where(s => s.Id == currentUser.CustomerId).Select(s => s.Id).FirstOrDefault();
             _logger.LogInformation($"{nameof(DeleteOrderDetail)}: id = {id}, currentUser= {currentUser}");
-
-            var transaction = _dbContext.Database.BeginTransaction();
             var orderDetails = _dbContext.OrderDetails
                 .Include(s => s.Order)
                 .Where(s => s.Id == id &&
@@ -137,7 +158,6 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             orderDetails.Deleted = true;
             order.Total = order.Total - ticket.TicketEvent!.Price;
             _dbContext.SaveChanges();
-            transaction.Commit();
         }
 
         public void DeleteOrderExpired()
@@ -164,7 +184,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                     .Include(s => s.EventDetail)
                                                     .Include(s => s.Ticket)
                                                     .Include(s => s.Order)
-                                                    .Where(s => s.Order.CustomerId == currentCustomerId && s.Order.Status == OrderStatuses.SUCCESS)
+                                                    .Where(s => s.Order.CustomerId == currentCustomerId && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted)
                                                     .Select(s => new OrderDetailDto
                                                     {
                                                         Id = s.Id,
@@ -247,9 +267,9 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             {
                 throw new UserFriendlyException(ErrorCode.OrderNotFound);
             }
-            order.Status = input.Status;
-            if (input.Status == OrderStatuses.SUCCESS && order.Status == OrderStatuses.SUCCESS)
+            if (input.Status == OrderStatuses.SUCCESS && order.Status == OrderStatuses.PAYING)
             {
+                order.Status = input.Status;
                 try
                 {
                     // Lấy dịch vụ sendmailservice
@@ -258,20 +278,36 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                         To = currentUser.Email,
                         Subject = $"[Chúc mừng bạn đã đặt vé thành công!]",
                         Body = $@"
-    <div style=""background-color: rgb(226, 168, 140);"">
-        <div>
-            <img style=""width: 200px; height: 200px;"" src=""https://i.postimg.cc/jdzQ25TR/logo-pink-textcolor.png"" alt="""">
+        <div  style=""background-color: rgb(226, 168, 140);
+         width: 50%;flex-direction: column; margin: auto;
+         "">
+          <h1 style=""font-weight: bold; width: 100%;
+          text-align: center;
+           background-color:rgb(188, 101, 60) ; 
+           color: white;
+           padding: 10px 0;
+           "">
+           MyTicket - Ứng dụng đặt vé số 1 Việt Nam
+        </h1>
+         <div style="" display: flex; padding: 20px 0;"">
+             <div>
+                 <img style=""width: 200px; height: 200px;"" src=""https://i.postimg.cc/jdzQ25TR/logo-pink-textcolor.png"" alt="""">
+             </div>
+             <div style=""margin: auto; flex-direction: column; text-align: center; color: #555;"">
+     
+ 
+                  <h2>ĐƠN HÀNG #{order.OrderCode} đã được đặt 
+                     <span style=""color: green;"">
+                         thành công!
+                     </span>
+                 </h2>
+                  <button style=""background-color: rgb(188, 101, 60);height: 50px; margin: auto;
+                   font-size: 20px; border-radius: 4px 4px; "">
+                      <a style=""text-decoration: none; color: white;""  href=""http://localhost:8080/order"">Kiểm tra vé của bạn tại đây</a>
+                  </button>
+             </div>
+         </div>
         </div>
-        <div style=""margin: auto;"">
-
-            <h1>MyTicket - Ứng dụng đặt vé số 1 Việt Nam</h1>
-             <h2>ĐƠN HÀNG #{order.OrderCode} đã được đặt thành công!</h2>
-             <button style=""background-color: rgb(188, 101, 60);height: 50px;
-              font-size: 20px; border-radius: 4px 4px; "">
-                 <a style=""text-decoration: none; color: white;""  href=""http://localhost:8080/order"">Kiểm tra vé của bạn tại đây</a>
-             </button>
-        </div>
-    </div>
 "
 
                     };
@@ -281,6 +317,10 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                 {
                     Console.WriteLine("Failed to send email: " + ex.Message);
                 }
+            }
+            else
+            {
+                order.Status = input.Status;
             }
             await _dbContext.SaveChangesAsync();
         }

@@ -1,21 +1,26 @@
 <template>
-    <div style="display: flex;">
-        <!-- Biểu thức hoàn thành sẽ có class "completed" -->
-        <div v-if="isComplete" class="completeInfo" :class="{ completed: isComplete }">
-            <!-- Nội dung của biểu thức -->
-            <b-icon class="circle-border" :style="{ 'border-width': borderWidth }" icon="check-lg"
-                :animation="throbAnimation" font-scale="8"></b-icon>
-            <h2 v-html="expression">
-            </h2>
-            <b-button @click="letgo()" style="width: 20%; margin: auto;" variant="success">Nhận Vé</b-button>
-        </div>
-        <div v-else class="completeInfo" :class="{ completed: isComplete }">
-            <!-- Nội dung của biểu thức -->
-            <b-icon class="circle-border-red" :style="{ 'border-width': borderWidth }" icon="x-lg"
-                :animation="throbAnimation" font-scale="8"></b-icon>
-            <h2 v-html="expression">
-            </h2>
-            <b-button @click="letgo()" style="width: 20%; margin: auto;" variant="secondary">Về trang chủ</b-button>
+    <div>
+        <div v-if="isLoading">
+        <LoadPage/>
+    </div>
+        <div v-else style="display: flex;">
+            <!-- Biểu thức hoàn thành sẽ có class "completed" -->
+            <div v-if="isComplete" class="completeInfo" :class="{ completed: isComplete }">
+                <!-- Nội dung của biểu thức -->
+                <b-icon class="circle-border" :style="{ 'border-width': borderWidth }" icon="check-lg"
+                    :animation="throbAnimation" font-scale="8"></b-icon>
+                <h2 v-html="expression">
+                </h2>
+                <b-button @click="letgo()" style="width: 20%; margin: auto;" variant="success">Nhận Vé</b-button>
+            </div>
+            <div v-else class="completeInfo" :class="{ completed: isComplete }">
+                <!-- Nội dung của biểu thức -->
+                <b-icon class="circle-border-red" :style="{ 'border-width': borderWidth }" icon="x-lg"
+                    :animation="throbAnimation" font-scale="8"></b-icon>
+                <h2 v-html="expression">
+                </h2>
+                <b-button @click="letgo()" style="width: 20%; margin: auto;" variant="secondary">Về trang chủ</b-button>
+            </div>
         </div>
     </div>
 </template>
@@ -31,6 +36,7 @@ export default {
     },
     data() {
         return {
+            isLoading:false,
             isComplete: false,
             drawingInProgress: false,
             borderWidth: 0,
@@ -39,6 +45,7 @@ export default {
         }
     },
     mounted() {
+        this.isLoading = true;
         this.checkOrder()
         this.startDrawing()
         setTimeout(() => {
@@ -62,10 +69,11 @@ export default {
                 }
             }, 20); // Điều chỉnh tốc độ vẽ tùy thuộc vào nhu cầu của bạn
         },
-        checkOrder() {
+        async checkOrder() {
             const params = this.$route.query;
             if (params.vnp_ResponseCode === '00' && params.vnp_TransactionStatus === '00') {
                 // Giao dịch thành công, bạn có thể xử lý dữ liệu khác từ params nếu cần thiết
+                await this.completedOrder(params.vnp_OrderInfo)
                 this.isComplete = true;
                 this.expression = 'Đơn hàng của bạn đã hoàn thành!<br>Vào mục vé của bạn để xem thông tin vé đã đặt nhé!'
             } else {
@@ -74,6 +82,7 @@ export default {
                 this.expression = 'OOPS!<br>Đơn hàng của bạn không thể thoàn thành vui lòng đặt lại vé!'
 
             }
+            this.isLoading = false;
         },
         letgo() {
             if (!this.isComplete) {
@@ -82,6 +91,20 @@ export default {
                 this.$router.push('/order')
             }
 
+        },
+        async completedOrder(orderId){
+            try {
+                const res = await axios.put('myticket/api/order/update-order-status', 
+                {
+                    id: orderId,
+                    status:5
+                })
+            } catch (error) {
+                this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
+                    position: 'top-right',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                });
+            }
         }
     }
 }
