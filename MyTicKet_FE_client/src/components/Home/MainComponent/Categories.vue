@@ -1,6 +1,8 @@
 <template>
     <div class="category">
-        <h2 class="category-title">Thể Loại</h2>
+        <h1 class="black-heading">
+                  Thể loại
+                </h1>
         <div class="category__list row"  >
             <div class="category__item--inner col-sm-6 col-xl-3 col-lg-3" v-for="category in categories">
             <div class="category__item">
@@ -9,7 +11,7 @@
               >
               <div class="category__item--img" style="position: relative;">
                   <b-card-img :src="$fileUrl+category.eventTypeImage" alt="Image"></b-card-img>
-                  <router-link to="/about">
+                  <router-link :to="{name:'event', query:{eventTypeId:category.id}}">
                 <div class="ticket__button--modal">
 
                 </div>
@@ -39,6 +41,7 @@ export default {
 }
 .category{
     padding-top: 20px;
+    padding-bottom: 40px;
 }
 .main__container--inner{
     margin: auto;

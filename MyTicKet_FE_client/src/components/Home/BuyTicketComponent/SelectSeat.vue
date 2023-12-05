@@ -14,9 +14,10 @@
                             <h3 id="seatmapEventName">{{ currentEvent.eventName }}</h3>
                         </div>
                         <div>
-                            <select id="gameId" class="form-select" name="gameId">
+                            <select id="gameId" class="form-select" v-model="currentEventselectNow"
+                                v-on:change="loadEventData" name="gameId">
                                 <option v-for="ticket in currentEvent.eventDetails" :value="ticket.id"
-                                    :selected="ticket.id === currentEventselected">
+                                    :selected="ticket.id === currentEventselectNow">
                                     {{ formatDate(ticket.organizationDay) }} -
                                     {{ ticket.venueName }} - {{ currentEvent.eventName }}
                                 </option>
@@ -28,7 +29,7 @@
                     <div class="step"></div>
                     <span>Chọn hạng vé của bạn</span>
                 </div>
-                <div class="row" id="step1">
+                <div v-if="currentTicketEvent.eventSeatMapImage !== null" class="row" id="step1">
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-6 col-6">
                         <img class="img-seatmap" :src="$fileUrl + currentTicketEvent.eventSeatMapImage" alt="">
                     </div>
@@ -37,6 +38,9 @@
                             <input type="hidden" name="_csrf"
                                 value="U8hsPodpZMCBzx_wnz8ZE3Bjxw9H1nbsaN6JLp4OqRM9nB9s0lww9NiiV576DUpcElaiYyyFHtsZnfxornjiVw==">
                             <!-- start: Buy Ticket List -->
+                            <div style="color: red; float: right;" v-if="!isValueSelected">
+                                {{ validate }}
+                            </div>
                             <table id="ticketPriceList" class="table table-bordered col-xs-12 mgt-10 text-center">
                                 <thead>
                                     <tr>
@@ -51,22 +55,25 @@
                                             {{ ticketnow.name }}</td>
                                         <td>
                                             {{ formatCurrency(ticketnow.price) }}</td>
-                                        <td>
-                                            <select @change="handleOrder($event, index)" id="TicketForm_ticketPrice_001"
-                                                class="w100 form-select" name="TicketForm[ticketPrice][001]">
+                                        <td style="display: flex;">
+                                            <select style="width: 150px; height: 65px; margin: auto;"
+                                                v-if="ticketnow.status === 1" @change="handleOrder($event, index)"
+                                                id="TicketForm_ticketPrice_001" class="w100 form-select"
+                                                name="TicketForm[ticketPrice][001]">
                                                 <option value="0">Chọn số lượng
                                                 </option>
-                                                <option v-for="i in ticketnow.quantity" :value="i">{{ i }}
+                                                <option v-for="(i, index) in ticketnow.quantity + 1" :value="index">{{ index
+                                                }}
                                                 </option>
                                             </select>
-                                            <input type="hidden" id="TicketForm_priceSize_001"
-                                                name="TicketForm[priceSize][001]" value="1">
+                                            <img style="width: 150px; margin: auto;" v-else-if="ticketnow.status === 3"
+                                                :src="$fileUrl + soldOutImg" alt="">
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <div class="row">
-                                <div class="col-8">
+                                <div class="col-8" style="max-width: 63.6666667%;">
                                 </div>
                                 <button type="submit" id="md-viewMap"
                                     class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
@@ -76,8 +83,56 @@
                         </form>
                     </div>
                 </div>
-                <div class="row" id="step1">
-
+                <div v-else class="row" id="step1">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xs-12 col-12">
+                        <form @submit.prevent="submitToCheckout" class="form-ticket-ticket">
+                            <input type="hidden" name="_csrf"
+                                value="U8hsPodpZMCBzx_wnz8ZE3Bjxw9H1nbsaN6JLp4OqRM9nB9s0lww9NiiV576DUpcElaiYyyFHtsZnfxornjiVw==">
+                            <!-- start: Buy Ticket List -->
+                            <div style="color: red; float: right;" v-if="!isValueSelected">
+                                {{ validate }}
+                            </div>
+                            <table id="ticketPriceList" class="table table-bordered col-xs-12 mgt-10 text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="col-sm-3">Hạng Vé</th>
+                                        <th class="col-sm-3">Giá</th>
+                                        <th class="col-sm-3">Số lượng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for=" (ticketnow, index) in currentTicketEvent.ticketEvents" id="pt-001">
+                                        <td class="text-bold ticketpricetext">
+                                            {{ ticketnow.name }}</td>
+                                        <td>
+                                            {{ formatCurrency(ticketnow.price) }}</td>
+                                        <td style="display: flex;">
+                                            <select style="width: 200px; height: 65px; margin: auto;"
+                                                v-if="ticketnow.status === 1" @change="handleOrder($event, index)"
+                                                id="TicketForm_ticketPrice_001" class="w100 form-select"
+                                                name="TicketForm[ticketPrice][001]">
+                                                <option value="0">Chọn số lượng
+                                                </option>
+                                                <option v-for="(i, index) in ticketnow.quantity + 1" :value="index">{{ index
+                                                }}
+                                                </option>
+                                            </select>
+                                            <img style="width: 200px; margin: auto;" v-else-if="ticketnow.status === 3"
+                                                :src="$fileUrl + soldOutImg" alt="">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-8" style="max-width: 65.6666667%;">
+                                </div>
+                                <button type="submit" id="md-viewMap"
+                                    class="btn btn-outline-primary col-4 viewmap-btn payment-btn">
+                                    Thanh Toán
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -167,6 +222,7 @@ import moment from 'moment';
 import numeral from 'numeral';
 import axios from 'axios';
 import store from "@/store";
+import { MyAsset, TicketStatuses, OrderStatuses } from "@/store/const"
 export default {
     props: ['isSelect'],
     components: {
@@ -174,10 +230,14 @@ export default {
     },
     data() {
         return {
+            validate: "",
+            isValueSelected: true,
+            soldOutImg: MyAsset.SOLD_OUT_IMG,
             isLoading: false,
             isSuccess: false,
             isError: false,
-            currentEventselected: 1,
+            currentEventselected: 0,
+            currentEventselectNow: 0,
             selectedEventTicket: null,
             currentTicketEvent: {
                 id: 1,
@@ -209,6 +269,7 @@ export default {
                 status: 1,
                 firstEventDate: "",
                 lastEventDate: "",
+                emittedEvent: false,
                 eventDetails: [
                     {
                         id: 1,
@@ -232,25 +293,54 @@ export default {
     mounted() {
         this.fetchDataTicket();
     },
+    watch: {
+        'this.$route.params.id': 'fetchDataTicket',
+    },
     methods: {
-        handleOrder(event, index) {
-            const orderFind = this.order.ticketTypes
-                .findIndex(item => item.ticketEventId === this.currentTicketEvent.ticketEvents[index].id);
-            if (orderFind !== -1) {
-                // Nếu ID đã tồn tại, xóa nó
-                this.order.ticketTypes.splice(orderFind, 1);
-            }
-            this.order.ticketTypes.push({
-                eventDetailId: this.currentTicketEvent.ticketEvents[index].eventDetailId,
-                ticketEventId: this.currentTicketEvent.ticketEvents[index].id,
-                quantity: event.target.value
-            })
-            console.log(this.order.ticketTypes)
+        async loadEventData() {
+            this.$router.push({ name: 'buyTicket', params: { type: 'area', id: this.currentEventselectNow } });
+            this.fetchDataTicket();
         },
-        submitToCheckout: function () {
-                store.commit('setOrderData', this.order);
-                const routeInfo = { name: 'orderTicket', params: { type: 'order' } };
-                this.$router.push({ name: 'orderTicket' , params: { type: 'order' }, query: { routeInfo } });
+        handleOrder(event, index) {
+            if (event.target.value === "0") {
+                this.isValueSelected = false;
+            } else {
+                const orderFind = this.order.ticketTypes
+                    .findIndex(item => item.ticketEventId === this.currentTicketEvent.ticketEvents[index].id);
+                if (orderFind !== -1) {
+                    // Nếu ID đã tồn tại, xóa nó
+                    this.order.ticketTypes.splice(orderFind, 1);
+                }
+                this.order.ticketTypes.push({
+                    eventDetailId: this.currentTicketEvent.ticketEvents[index].eventDetailId,
+                    ticketEventId: this.currentTicketEvent.ticketEvents[index].id,
+                    quantity: event.target.value
+                })
+            }
+        },
+        async submitToCheckout() {
+            if (!this.order || !this.order.ticketTypes || this.order.ticketTypes.length <= 0) {
+                this.isValueSelected = false;
+                this.validate = "Chọn ít nhất 1 vé";
+            } else {
+                var countTicket = 0;
+                this.order.ticketTypes.forEach(element => {
+                    const quantity = parseInt(element.quantity, 10);
+
+                    // Kiểm tra nếu quantity là một số hợp lệ
+                    if (!isNaN(quantity)) {
+                        countTicket += quantity;
+                    }
+                });
+                if (countTicket > 10) {
+                    this.isValueSelected = false;
+                    this.validate = "Đơn hàng của bạn chỉ được chọn tối đa 10 vé";
+                } else {
+                    await store.commit('setOrderData', this.order);
+                    const routeInfo = { name: 'orderTicket', params: { type: 'order' } };
+                    this.$router.push({ name: 'orderTicket', params: { type: 'order' }, query: { routeInfo } });
+                }
+            }
         },
         formatDate(date) {
             // Chuyển đổi ngày thành định dạng dd/mm/yyyy
@@ -259,12 +349,15 @@ export default {
         formatCurrency(value) {
             return numeral(value).format('0,0') + ' VND';
         },
-        async getcurrentTicketEvent() {
+        async getcurrentTicketEvent(currentDetailId) {
             try {
                 const res = await axios.get(
                     "myticket/api/event/detail/find-by-id", {
                     params: {
-                        id: this.$route.params.id
+                        id: currentDetailId
+                    },
+                    headers: {
+                        'Cache-Control': 'no-cache' // Không lưu trữ cache
                     }
                 })
                 return res.data.data
@@ -273,12 +366,14 @@ export default {
                 throw error;
             }
         },
-        async getEventDetail() {
+        async getEventDetail(currentId) {
             try {
                 const res = await axios.get(
                     "/myticket/api/event/find-by-id", {
                     params: {
-                        id: this.currentTicketEvent.eventId
+                        id: currentId
+                    }, headers: {
+                        'Cache-Control': 'no-cache' // Không lưu trữ cache
                     }
                 }
                 )
@@ -292,18 +387,27 @@ export default {
             if (this.isSelect) {
                 try {
                     this.isLoading = true;
-                    this.currentTicketEvent = await this.getcurrentTicketEvent();
-                    this.currentEvent = await this.getEventDetail();
-                    this.currentEventselected = this.$route.params.id;
-                    this.$emit('getCurrentEvent', this.currentEvent);
+                    this.currentTicketEvent = await this.getcurrentTicketEvent(this.$route.params.id);
+                    this.currentEventselectNow = this.$route.params.id;
+                    this.currentEvent = await this.getEventDetail(this.currentTicketEvent.eventId);
+                    if (!this.emittedEvent) {
+                        this.$emit('getCurrentEvent', this.currentEvent);
+                        this.emittedEvent = true;
+                    }
                     this.isLoading = false;
                     this.isSuccess = true;
                 } catch (error) {
                     this.isLoading = false;
                     this.isError = true;
-                    this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
-                        position: 'top-right',
+                    this.$toasted.error(error.response.data.error_description, {
+                        position: 'top-center',
                         duration: 3000, // Thời gian hiển thị toast (ms)
+                        theme: 'outline', // Theme: 'outline', 'bubble'
+                        iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                        icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                        iconColor: 'white', // Màu của icon
+                        containerClass: 'custom-toast-container-class', // Thêm class cho container
+                        singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
                     });
                 }
             }

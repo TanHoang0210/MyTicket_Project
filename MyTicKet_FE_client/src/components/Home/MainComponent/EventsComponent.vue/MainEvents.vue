@@ -1,89 +1,138 @@
 <template>
-        <div class="event__list row"  >
+    <div>
+        <div v-if="!isList" class="event__list row">
             <div class="event__item--inner col-sm-12 col-xl-4 col-lg-6" v-for="event in events">
-            <div class="event__item">
-                    <b-card  
-              class="mb-3 event__item--info"
-              >
-              <div class="event__item--img" style="position: relative;">
-                  <b-card-img :src="$fileUrl+event.eventImage" alt="Image"></b-card-img>
-                  <router-link :to="{ name: 'eventDetail', query: { id: event.id }} ">
-                <div class="ticket__button--modal">
+                <div class="event__item">
+                    <b-card class="mb-3 event__item--info">
+                        <div class="event__item--img" style="position: relative;">
+                            <b-card-img :src="$fileUrl + event.eventImage" alt="Image"></b-card-img>
+                            <router-link :to="{ name: 'eventDetail', query: { id: event.id } }">
+                                <div class="ticket__button--modal">
 
+                                </div>
+                            </router-link>
+                        </div>
+                        <b-card-sub-title v-if="event.firstEventDate == event.lastEventDate">{{
+                            formatDate(event.firstEventDate)
+                        }}</b-card-sub-title>
+                        <b-card-sub-title v-else-if="event.firstEventDate != event.lastEventDate">{{
+                            formatDate(event.firstEventDate) }} - {{formatDate(event.lastEventDate) }}</b-card-sub-title>
+                        <b-card-sub-title class="event-name">{{ event.eventName }}</b-card-sub-title>
+                    </b-card>
                 </div>
-            </router-link>
-              </div>
-              <b-card-sub-title v-if="event.firstEventDate == event.lastEventDate">{{ formatDate(event.firstEventDate) }}</b-card-sub-title>
-              <b-card-sub-title v-else-if="event.firstEventDate != event.lastEventDate">{{formatDate(event.firstEventDate) }} - {{ formatDate(event.lastEventDate) }}</b-card-sub-title>
-              <b-card-sub-title class="event-name">{{event.eventName}}</b-card-sub-title>
-      </b-card>
-            </div>
             </div>
         </div>
+        <div v-else class="event__list row">
+            <div class="event__item--inner col-sm-12 col-xl-12 col-lg-12" v-for="event in events">
+                <div class="event__item">
+                    <b-card class="mb-3 event__item--info list">
+                        <div style="display: flex;">
+                            <div style="position: relative; width: 250px; margin-right: 10px;">
+                                <b-card-img :src="$fileUrl + event.eventImage" alt="Image"></b-card-img>
+                            </div>
+                            <div>
+                            <b-card-sub-title v-if="event.firstEventDate == event.lastEventDate">{{
+                                formatDate(event.firstEventDate)
+                            }}</b-card-sub-title>
+                            <b-card-sub-title v-else-if="event.firstEventDate != event.lastEventDate">{{
+                                formatDate(event.firstEventDate) }} - {{
+            formatDate(event.lastEventDate) }}</b-card-sub-title>
+                            <b-card-sub-title class="event-name">{{ event.eventName }}</b-card-sub-title>
+                            <b-card-sub-title v-if="event.firstEventDate == event.lastEventDate">{{
+                                event.eventTypeName
+                            }}</b-card-sub-title>
+                            </div>
+                        </div>
+                        <div style="display: flex;">
+                            <b-button class="btn-event" style="margin: auto;" variant="primary">Đặt vé Ngay</b-button>
+                        </div>
+                    </b-card>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 import moment from 'moment';
-export default{
-    props:['events'],
-    methods:{
+export default {
+    props: ['events', 'isList'],
+    methods: {
         formatDate(date) {
-      // Chuyển đổi ngày thành định dạng dd/mm/yyyy
-      return moment(date).format('DD/MM/YYYY');
-    },
+            // Chuyển đổi ngày thành định dạng dd/mm/yyyy
+            return moment(date).format('DD/MM/YYYY');
+        },
     }
 }
 </script>
 <style scoped>
-.main__container{
+.main__container {
     display: flex;
 }
-.main__container--inner{
+.btn-event{
+    background-color: var(--primary-color-bold);
+    border: 1px solid var(--primary-color-bold);
+}
+.btn-event:hover{
+    background-color: var(--primary-color-hover-bold);
+    border: 1px solid var(--primary-color-hover-bold);
+}
+.main__container--inner {
     margin: auto;
     width: 80%;
     display: flex;
 }
-.card-body{
+
+.card-body {
     padding: 0 !important;
     border-radius: 5px 5px !important;
 }
-.card-subtitle{
+.list .card-body{
+    display: flex;
+    justify-content: space-between;
+}
+.card-subtitle {
     margin: 5px 5px !important;
     font-size: 1.2rem !important;
 }
-.event__list{
+
+.event__list {
     padding: 0;
     margin: 0;
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
 }
-.event-name{
+
+.event-name {
     margin: 5px 5px !important;
     font-weight: 600;
     font-size: 1.2rem;
     color: var(--text-color) !important;
 }
-.event__item{
+
+.event__item {
     width: 100%;
     height: 100%;
     overflow: hidden;
     display: flex !important;
     margin: auto !important;
 }
-.event__item--info{
+
+.event__item--info {
     height: 100%;
     margin: auto;
     border: none;
     width: 100%;
     position: relative;
-    margin-bottom: 5px;
 }
-.event__item--img{
+
+.event__item--img {
     overflow: hidden;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
-.ticket__button--modal{
+
+.ticket__button--modal {
     top: 0;
     left: -20%;
     position: absolute;
@@ -92,7 +141,8 @@ export default{
     width: 120%;
     height: 100%;
 }
-.ticket__button{
+
+.ticket__button {
     background-color: var(--primary-color-bold);
     color: var(--primary-color);
     position: absolute;
@@ -109,19 +159,23 @@ export default{
     border-radius: none !important;
     opacity: 0.8;
 }
-.event__item--img:hover .ticket__button--modal{
+
+.event__item--img:hover .ticket__button--modal {
     display: block;
     cursor: pointer;
 }
-.ticket__button--modal:hover .ticket__button{
+
+.ticket__button--modal:hover .ticket__button {
     right: 0;
 }
-.card-img{
+
+.card-img {
     width: 100% !important;
     height: auto !important;
     transition: all ease-out 0.3s !important;
 }
-.event__item--img{
+
+.event__item--img {
     position: relative;
     width: 100%;
     background-color: inherit;
@@ -132,23 +186,27 @@ export default{
     background-position: left top;
     text-align: center;
 }
-.event__item--img:hover .card-img{
+
+.event__item--img:hover .card-img {
     transform: perspective(800px) translateZ(50px) !important;
 }
-.ticket__button--modal:hover .ticket__button{
+
+.ticket__button--modal:hover .ticket__button {
     opacity: 0.8;
     color: var(--primary-color);
 }
-.ticket__button:hover{
+
+.ticket__button:hover {
     opacity: 1;
 }
-.ticket__button:focus{
+
+.ticket__button:focus {
     border: none !important;
     background-color: var(--primary-color) !important;
     text-align: center;
 }
+
 .ticket__button--title {
     font-size: 1.6em;
 }
-
 </style>

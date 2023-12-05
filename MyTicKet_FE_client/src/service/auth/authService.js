@@ -5,36 +5,48 @@ const authService = axios.create({
     baseURL: 'connect/token',
 });
 export const refreshAccessToken = async (refreshTokenNow) => {
-    try {
-        const requestConfig = {
-            withCredentials: true,
+    const xx =5;
+    if (xx == 5) {
+        try {
+            const requestConfig = {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                paramsSerializer: params => {
+                    return new URLSearchParams(params).toString();
+                },
+            };
+            axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+            const res = await axios.post('connect/token',
+                {
+                    grant_type: 'refresh_token',
+                    username: "hello",
+                    password: "hello",
+                    scope: 'offline_access',
+                    client_id: 'client-angular',
+                    client_secret: '52F4A9A45C1F21B53B62F56DA52F7',
+                    refresh_token: refreshTokenNow
+                }, requestConfig);
+            store.commit('setTokens', {
+                accessToken: res.data.access_token,
+                refreshToken: res.data.refresh_token,
+                tokenExpiration: res.data.expires_in,
+            });
+        } catch (error) {
+            this.$toasted.error(error, {
+                position: 'top-right',
+                duration: 3000, // Thời gian hiển thị toast (ms)
+            });
+        }
+    } else {
+        await axios.post('connect/logout', {}, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            paramsSerializer: params => {
-                return new URLSearchParams(params).toString();
-            },
-        };
-        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-        const res = await axios.post('connect/token',
-            {
-                grant_type: 'refresh_token',
-                username: this.loginForm.username,
-                password: this.loginForm.password,
-                scope: 'offline_access',
-                client_id: 'client-angular',
-                client_secret: '52F4A9A45C1F21B53B62F56DA52F7', sto
-            }, requestConfig);
-        store.commit('setTokens', {
-            accessToken: res.data.access_token,
-            refreshToken: res.data.refresh_token,
-            tokenExpiration: res.data.expires_in,
-        });
-    } catch (error) {
-        this.$toasted.error(error, {
-            position: 'top-right',
-            duration: 3000, // Thời gian hiển thị toast (ms)
-        });
+            }
+        })
+        store.dispatch('logout');
+        alert("Phiên hết hạn")
     }
 };
 

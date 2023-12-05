@@ -18,4 +18,14 @@ namespace MYTICKET.UTILS.ConstantVaribale.Shared
 
         public const int SUCCESS = 5;
     }
+    public static class TransferStatuses
+    {
+        public const int INIT = 1;
+
+        public const int READY_TO_TRANSFER = 2;
+
+        public const int CANCEL = 3;
+
+        public const int SUCCESS = 4;
+    }
 }

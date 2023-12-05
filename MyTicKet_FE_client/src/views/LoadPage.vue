@@ -12,9 +12,8 @@
 <style>
 .loading{
     display: flex;
-     background-color: #000;
-      position: relative;
-       height: 100vh;
-       opacity: 0.4;
+    position: relative;
+    height: 100vh;
+    opacity: 0.4;
 }
 </style>

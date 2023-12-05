@@ -30,8 +30,8 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost("create")]
-        public APIResponse<OrderDto> CreateOrder(CreateOrderDto input)
-               => new(_orderService.CreateOrder(input));
+        public async Task<APIResponse<OrderDto>> CreateOrder(CreateOrderDto input)
+               => new(await _orderService.CreateOrder(input));
 
         /// <summary>
         /// Danh sách vé của khách hàng
@@ -39,9 +39,17 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpGet("find-all")]
-        public APIResponse<PagingResult<OrderDetailDto>> FindVenueById([FromQuery]FilterOrderCustomer input)
+        public APIResponse<PagingResult<OrderDetailDto>> FindAllOrderTicket([FromQuery] FilterOrderCustomer input)
                => new(_orderService.FindAllOrderByCustomerId(input));
 
+        /// <summary>
+        /// Danh sách vé của khách hàng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("find-by-id")]
+        public APIResponse<OrderDetailDto> FindOrderTicketById(int id)
+               => new(_orderService.FindOrderTicketById(id));
         /// <summary>
         /// Đơn hàng khách hàng
         /// </summary>
@@ -56,10 +64,17 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("ticket/delete/{id}")]
-        public APIResponse DeleteOrderTicketById(int id)
+        public async Task<IActionResult> DeleteOrderTicketById(int id)
         {
-            _orderService.DeleteOrderDetail(id);
-            return new();
+            try
+            {
+                await _orderService.DeleteOrderDetail(id);
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPut("update-order-status")]
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateOrderStatusDto input)
@@ -72,6 +87,20 @@ namespace MYTICKET.WEB.API.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut("transfer-ticker")]
+        public async Task<IActionResult> TransferTicket([FromBody] TransferTicketDto input)
+        {
+            try
+            {
+                await _orderService.TransferTicket(input);
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
             }
         }
     }

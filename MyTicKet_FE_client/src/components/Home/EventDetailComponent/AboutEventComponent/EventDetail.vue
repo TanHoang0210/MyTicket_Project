@@ -14,7 +14,8 @@
                             <div class="row row-no-gutters">
                                 <div id="left-sidebar-top"
                                     class="col-md-12 col-sm-12 col-xs-12 d-none d-sm-block text-center pb-3">
-                                    <ul class="additional-button list-unstyled p-0">
+                                    <h3 v-if="currentEvent.eventDetails[0].eventSeatMapImage === null"></h3>
+                                    <ul v-else class="additional-button list-unstyled p-0">
                                         <li>
                                             <h1 style="line-height: 1.5;
                                                 position: relative;
@@ -24,9 +25,12 @@
                                                 font-weight: 700;
                                                 text-transform: uppercase;
                                                 padding-bottom: 15px;
-                                                color: var(--text-color);"> Xem vị trí chỗ ngồi</h1>
-                                            <button v-for="item in currentEvent.eventDetails" v-on:click="modalShow = true" id="md-viewMap"
-                                                class="btn btn-outline-primary w-90 mb-3 action-btn viewmap-btn">{{item.venueName}}</button>
+                                                color: var(--text-color);"> Xem vị trí chỗ ngồi
+                                                </h1>
+                                                <div style="display: flex;" v-for= "(item,index) in currentEvent.eventDetails">
+                                                    <button v-on:click="modalShow = true" id="md-viewMap"
+                                                        class="btn btn-outline-primary w-20 mb-3 action-btn viewmap-btn">Ngày {{ index+1 }}: {{item.venueName}}</button>
+                                                </div>
                                         </li>
                                     </ul>
                                 </div>
@@ -101,7 +105,7 @@ p {
 .viewmap-btn {
     color: var(--primary-color-bold) !important;
     border-color: var(--primary-color-bold) !important;
-    width: 90%;
+    width: 100%;
     font-weight: 500 !important;
     transition: all 0.2s ease !important;
 }

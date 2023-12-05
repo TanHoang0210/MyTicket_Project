@@ -77,6 +77,7 @@ export default {
                 this.isComplete = true;
                 this.expression = 'Đơn hàng của bạn đã hoàn thành!<br>Vào mục vé của bạn để xem thông tin vé đã đặt nhé!'
             } else {
+                await this.canceldOrder(params.vnp_OrderInfo)
                 // Giao dịch thất bại hoặc hủy bỏ
                 this.isComplete = false;
                 this.expression = 'OOPS!<br>Đơn hàng của bạn không thể thoàn thành vui lòng đặt lại vé!'
@@ -105,7 +106,22 @@ export default {
                     duration: 3000, // Thời gian hiển thị toast (ms)
                 });
             }
+        },
+        async canceldOrder(orderId){
+            try {
+                const res = await axios.put('myticket/api/order/update-order-status', 
+                {
+                    id: orderId,
+                    status:4
+                })
+            } catch (error) {
+                this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
+                    position: 'top-right',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                });
+            }
         }
+
     }
 }
 </script>

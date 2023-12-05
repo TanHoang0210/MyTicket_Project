@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="  border-top: 1px solid var(--primary-color-bold);">
 <carousel3d :controls-visible="true" :autoplay="true" :autoplay-timeout="5000">
     <slide v-for="(slide, i) in slides" :index="i">
       <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
@@ -27,12 +27,15 @@ export default {
 </script>
 <style>
 .carousel-3d-container{
-  height: 400px !important;
+  height: 410px !important;
   margin: 10px auto !important;
+  padding: 10px;
 }
 .carousel-3d-slide{
   width: 980px !important;
-  height: 400px !important;
+  height: 410px !important;
+  background-color: transparent !important;
+  border: none !important;
 }
 .carousel-3d-slider{
   width: 65% !important;

@@ -5,7 +5,6 @@
                 <thead class="tb_head">
                     <tr>
                         <th class=" tb_col col_1">ID</th>
-                        <th class=" tb_col col_2">Mã Đặt Vé</th>
                         <th class=" tb_col col_4">Thông Tin Sự kiện</th>
                         <th class=" tb_col col_4">Thông Tin Vé</th>
                         <th class=" tb_col col_1">Thao Tác</th>
@@ -17,59 +16,74 @@
                     </tr>
                 </tbody>
                 <tbody v-else>
-                    <tr v-for="(item,index) in tickets">
-                        <td class="">{{ index+1}}</td>
-                        <td class="">{{ item.orderCode }}</td>
-                        <td>
-                            <tr>
-                                <td>Ngày Đặt vé: </td>
-                                <td class="text-center">{{ formatDate(item.orderDate) }}</td>
-                            </tr>
-                            <tr>
-                                <td>Tên sự kiện: </td>
-                                <td class="text-center">{{ item.eventName }}</td>
-                            </tr>
-                            <tr>
-                                <td>Thời gian: </td>
-                                <td class="text-center">{{ formatDate(item.organizationDay) }}</td>
-                            </tr>
-                            <tr>
-                                <td>Địa điểm:</td>
-                                <td class="text-center">{{ item.venueName }} - {{ item.venueAddress }}</td>
-                            </tr>
-                        </td>
-                        <td>
-                            <tr>
-                                <td>Hạng vé:</td>
-                                <td>{{ item.ticketEventName }}</td>
-                                <td rowspan="3">
+                    <tr v-for="(item, index) in tickets">
+                        <td class="ticket-infomation">{{ index + 1 }}</td>
+                        <td class="ticket-infomation">
+                    <tr>
+                        <td>Tên sự kiện: </td>
+                        <td class="text-center">{{ item.eventName }}</td>
+                    </tr>
+                    <tr>
+                        <td>Thời gian: </td>
+                        <td class="text-center">{{ formatDate(item.organizationDay) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Địa điểm:</td>
+                        <td class="text-center">{{ item.venueName }} - {{ item.venueAddress }}</td>
+                    </tr>
+                    </td>
+                    <td class="ticket-infomation">
+                        <tr>
+                            <td>Hạng vé:</td>
+                            <td>{{ item.ticketEventName }}</td>
+                            <!-- <td rowspan="3">
                                     <img class="" style="width:150px;"   :src="$fileUrl+'api/file/get?folder=test&file=testqr.webp'" alt="">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Thông tin vé: </td>
-                                <td>{{ item.ticketCode }} - {{ item.seatCode }}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Giá:</td>
-                                <td>{{ formatCurrency(item.price) }}</td>
-                                <td></td>
-                            </tr>
-                            
-                        </td>
-                        <td class="">
-                            <div class="ticket-action ">
-                                <b-button variant="info">Chuyển Nhượng Vé</b-button>
-                                <b-button variant="warning">Trả Vé</b-button>
-                            </div>
-                        </td>
+                                </td> -->
+                        </tr>
+                        <tr>
+                            <td>Thông tin vé: </td>
+                            <td>{{ item.ticketCode }} - {{ item.seatCode }}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Ngày đặt:</td>
+                            <td>{{ formatDate(item.orderDate) }}</td>
+                            <td></td>
+                        </tr>
+
+                    </td>
+                    <td class="ticket-infomation">
+                        <div class="ticket-action ">
+                            <b-button @click="transferTicket" class="btn-myticket" variant="info">Chuyển Nhượng</b-button>
+                            <b-button @click="exchangeTicket" class="btn-myticket" variant="warning">Trả Vé</b-button>
+                            <b-button id="showDetail" @click="showTicketDetail(item.id)" class="btn-myticket"
+                                variant="secondary">Xem chi
+                                tiết</b-button>
+                        </div>
+                    </td>
                     </tr>
                 </tbody>
             </table>
             <b-pagination v-model="currentPage" :total-rows="totalRows" :per-page="perPage"
                 aria-controls="my-table"></b-pagination>
         </div>
+        <b-modal size="lg" v-if="currentTicket !== null" ref="my-modal" hide-footer title="Chi tiết vé của bạn">
+            <div class="d-block text-center">
+                <h3>{{ currentTicket.eventName }}</h3>
+                <div>
+                    <div>
+                        <ul>
+                            <li>
+
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <img class="qrCode" :src="currentTicket.qrCode" alt="">
+                    </div>
+                </div>
+            </div>
+        </b-modal>
     </div>
 </template>
 <script>
@@ -101,10 +115,32 @@ export default {
                     price: 1000000,
                     qrCode: null
                 }
-            ]
+            ],
+            currentTicket: null
         }
     },
     methods: {
+        async showTicketDetail(id) {
+            this.currentTicket = await this.getOrderTicketDetail(id)
+            console.log(this.currentTicket)
+            this.$refs['my-modal'].toggle('#showDetail')
+        },
+        async getOrderTicketDetail(id) {
+            try {
+                const res = await axios.get(
+                    "/myticket/api/order/find-by-id",
+                    {
+                        params: {
+                            id: id
+                        }
+                    }
+                )
+                return res.data.data;
+            } catch (error) {
+                console.error('API 1 Error:', error);
+                throw error;
+            }
+        },
         async getMyOrderInfo() {
             console.log(store.state.accessToken)
             try {
@@ -157,6 +193,15 @@ export default {
     justify-content: space-between
 }
 
+.modal-header {
+    background-color: var(--primary-color-bold) !important;
+}
+
+.modal-title {
+    font-size: 1.6rem !important;
+    color: #fff !important;
+}
+
 .ticket-action {
     display: flex;
     flex-direction: column;
@@ -168,7 +213,9 @@ table {
     border: 1px solid #ddd;
     /* Màu và độ dày của border cho bảng */
 }
-
+.qrCode{
+    width: 200px;
+}
 th,
 td {
     border: 1px solid #ddd;
@@ -183,4 +230,19 @@ td {
 .tb_col {
     font-weight: bold;
     /* In đậm cho các ô header */
+}
+
+.btn-myticket {
+    margin: auto;
+    width: 90%;
+    margin-bottom: 5px;
+}
+
+tr,
+td {
+    border: none;
+}
+
+.ticket-infomation {
+    border: 1px solid #ccc;
 }</style>

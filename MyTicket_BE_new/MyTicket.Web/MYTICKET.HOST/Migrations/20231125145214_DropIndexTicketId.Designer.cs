@@ -4,6 +4,7 @@ using MYTICKET.WEB.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MYTICKET.Hostconsle.Migrations
 {
     [DbContext(typeof(MyTicketDbContext))]
-    partial class MyTicketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231125145214_DropIndexTicketId")]
+    partial class DropIndexTicketId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -376,9 +379,6 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<int>("EventDetailId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ExchangeCode")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("ExchangeStatus")
                         .HasColumnType("int");
 
@@ -403,9 +403,6 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<int>("TicketId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TransferCode")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("TransferStatus")
                         .HasColumnType("int");
 
@@ -413,7 +410,8 @@ namespace MYTICKET.Hostconsle.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("TicketId");
+                    b.HasIndex("TicketId")
+                        .IsUnique();
 
                     b.HasIndex(new[] { "EventDetailId" }, "IX_OrderDetail");
 
@@ -1077,8 +1075,8 @@ namespace MYTICKET.Hostconsle.Migrations
                         .IsRequired();
 
                     b.HasOne("MYTICKET.WEB.DOMAIN.Entities.Ticket", "Ticket")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("TicketId")
+                        .WithOne("OrderDetail")
+                        .HasForeignKey("MYTICKET.WEB.DOMAIN.Entities.OrderDetail", "TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1195,7 +1193,7 @@ namespace MYTICKET.Hostconsle.Migrations
 
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.Ticket", b =>
                 {
-                    b.Navigation("OrderDetails");
+                    b.Navigation("OrderDetail");
                 });
 
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.TicketEvent", b =>

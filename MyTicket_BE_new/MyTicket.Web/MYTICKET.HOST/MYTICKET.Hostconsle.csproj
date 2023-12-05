@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ENTITIES\MYTICKET.BASE.ENTITIES.csproj" />
-    <ProjectReference Include="..\Myticket.Service\MYTICKET.WEB.SERVICE.csproj" />
     <ProjectReference Include="..\MYTICKET.UTILS\MYTICKET.UTILS.csproj" />
     <ProjectReference Include="..\MYTICKET.WEB.Infrastructure\MYTICKET.WEB.Infrastructure.csproj" />
   </ItemGroup>

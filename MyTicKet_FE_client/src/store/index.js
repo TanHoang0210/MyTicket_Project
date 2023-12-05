@@ -10,6 +10,7 @@ export default new Vuex.Store({
     refreshToken: null,
     tokenExpiration: null,
     orderFormData: null,
+    countdownTime:300,
   },
   getters: {
     currentUser: state => state.currentUser,
@@ -17,10 +18,14 @@ export default new Vuex.Store({
     refreshToken: state => state.refreshToken,
     tokenExpiration: state => state.tokenExpiration,
     orderFormData: state => state.orderFormData,
+    countdownTime: state => state.countdownTime
   },
   mutations: {
     setOrderData(state, orderFormData) {
       state.orderFormData = orderFormData;
+    },
+    setCoutDownOrder(state,countdownTime){
+      state.countdownTime = countdownTime;
     },
     setCurrentUser(state, user) {
       state.currentUser = user;
@@ -31,16 +36,14 @@ export default new Vuex.Store({
       state.tokenExpiration = tokenExpiration;
     },
     logout(state){
+      sessionStorage.removeItem('accessToken'),
+      sessionStorage.removeItem('refreshToken'),
+      sessionStorage.removeItem('currentUser'),
+      sessionStorage.removeItem('tokenExpiration'),
       state.accessToken = null;
       state.refreshToken = null;
       state.tokenExpiration = null;
       state.currentUser = null;
-      if (router.currentRoute.path !== '/') {
-        // Chuyển hướng về trang chủ nếu không ở trên route hiện tại là '/'
-        router.push('/');
-      }else{
-        location.reload()
-      }
     }
   },
   actions: {

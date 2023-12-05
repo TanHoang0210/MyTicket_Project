@@ -1,6 +1,8 @@
 <template>
     <div class="venues">
-        <h2 class="venue-title">Sân vận động</h2>
+        <h1 class="black-heading">
+                  Sân vận động
+                </h1>
         <div class="venue__list row">
             <div class="venue__item--inner col-sm-4 col-xl-2 col-lg-2" v-for="venue in venues">
                 <div class="venue__item">
@@ -35,7 +37,7 @@ export default {
     border: none !important;
 }
 .venues{
-    padding-top: 40px;
+    padding-bottom: 20px;
 }
 .main__container--inner {
     margin: auto;

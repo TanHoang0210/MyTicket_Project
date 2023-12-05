@@ -42,7 +42,7 @@ namespace MYTICKET.WEB.API.Controllers
         }
         [HttpPost("~/connect/token"), IgnoreAntiforgeryToken, Produces("application/json"), Consumes("application/x-www-form-urlencoded")]
         public async Task<IActionResult> Exchange([FromForm] ConnectTokenDto _)
-        {
+       {
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.
             var identity = new ClaimsIdentity(TokenValidationParameters.DefaultAuthenticationType, Claims.Name, Claims.Role);

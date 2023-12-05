@@ -1,0 +1,16 @@
+﻿BEGIN TRANSACTION;
+GO
+
+DROP INDEX [IX_OrderDetail_TicketId] ON [dbo].[OrderDetail];
+GO
+
+CREATE INDEX [IX_OrderDetail_TicketId] ON [dbo].[OrderDetail] ([TicketId]);
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20231125150919_DropIndexTicketIdUniqe', N'7.0.13');
+GO
+
+COMMIT;
+GO
+

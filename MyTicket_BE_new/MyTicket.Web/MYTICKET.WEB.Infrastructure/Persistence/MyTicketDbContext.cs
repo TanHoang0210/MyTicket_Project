@@ -141,8 +141,8 @@ namespace MYTICKET.WEB.Infrastructure.Persistence
 
             modelBuilder.Entity<OrderDetail>()
                         .HasOne(od => od.Ticket)
-                        .WithOne(t => t.OrderDetail)
-                        .HasForeignKey<OrderDetail>(od => od.TicketId);
+                        .WithMany(t => t.OrderDetails)
+                        .HasForeignKey(e => e.TicketId);
             #endregion
             modelBuilder.SeedData();
             base.OnModelCreating(modelBuilder);

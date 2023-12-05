@@ -3,7 +3,7 @@
         <div class="header-inner">
             <div class="language-control">
                 <div class="language-control--item">
-                    <img class="language-type" :src="currentLocalization.flagImg" alt="">           
+                    <img class="language-type" :src="currentLocalization.flagImg" alt="">
                     <span class="language-name ">{{ currentLocalization.name.toUpperCase() }}</span>
                     <div class="language-choice">
                         <div class="language-choice--item" v-for="(localData, index) in localizations" :id="index"
@@ -32,12 +32,12 @@
                             </router-link>
                         </b-nav-item>
                         <b-nav-item class="left-header--item">
-                            <router-link style="text-decoration: none;" to="/event">
+                            <router-link style="text-decoration: none;" to="/venue">
                                 Sân vận động
                             </router-link>
                         </b-nav-item>
                         <b-nav-item class="left-header--item">
-                            <router-link style="text-decoration: none;" to="/event">
+                            <router-link style="text-decoration: none;" to="/about">
                                 Về chúng tôi
                             </router-link>
                         </b-nav-item>
@@ -45,7 +45,7 @@
                 </div>
                 <div class="header-search">
                     <div class="header-search--item">
-                        <router-link class="header-search--link" to="/about">
+                        <router-link class="header-search--link" :to="{name:'event', query:{eventName:text}}">
                             <button class="header-search--button">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="header-search--icon" height="1em"
                                     viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -105,10 +105,12 @@
   
 <script>
 import axios from 'axios'
+import store from '@/store';
 export default {
     name: 'Header',
     data: () => {
         return {
+            text:"",
             isLogin: false,
             currentLocalization: {
                 id: 0,
@@ -146,19 +148,33 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     }
                 })
-                sessionStorage.removeItem('accessToken'),
-                sessionStorage.removeItem('refreshToken'),
-                sessionStorage.removeItem('currentUser'),
-                sessionStorage.removeItem('tokenExpiration'),
-                    this.$store.dispatch('logout');
-                    this.$toasted.success('Đăng xuất thành công', {
-                    position: 'top-right',
+                this.$toasted.success("Đăng xuất thành công", {
+                    position: 'top-center',
                     duration: 3000, // Thời gian hiển thị toast (ms)
+                    theme: 'outline', // Theme: 'outline', 'bubble'
+                    iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                    icon: 'check', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                    iconColor: 'white', // Màu của icon
+                    containerClass: 'custom-toast-container-class', // Thêm class cho container
+                    singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
                 });
+                store.dispatch('logout');
+                if (this.$router.currentRoute.path !== '/') {
+                    // Chuyển hướng về trang chủ nếu không ở trên route hiện tại là '/'
+                    this.$router.push('/');
+                } else {
+                    location.reload()
+                }
             } catch (error) {
-                this.$toasted.error('Đăng xuất thất bại', {
-                    position: 'top-right',
+                this.$toasted.error("Đăng xuất thất bại", {
+                    position: 'top-center',
                     duration: 3000, // Thời gian hiển thị toast (ms)
+                    theme: 'outline', // Theme: 'outline', 'bubble'
+                    iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                    icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                    iconColor: 'white', // Màu của icon
+                    containerClass: 'custom-toast-container-class', // Thêm class cho container
+                    singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
                 });
             }
         }
@@ -234,7 +250,11 @@ export default {
     flex-wrap: nowrap;
     position: relative;
 }
-
+@media only screen and (max-width: 1154px) {
+    .left-header--control {
+        display: none;
+    }
+}
 .left-header--control ul {
     height: 100%;
 }
@@ -260,7 +280,7 @@ export default {
 
 .left-header--item a:hover {
     color: var(--primary-color-bold);
-    -webkit-transform: translateY(-10px);
+    -webkit-transform: translateY(-5px);
 }
 
 .header-search {

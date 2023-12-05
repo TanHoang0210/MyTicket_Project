@@ -22,7 +22,7 @@
                     <div class="masthread-banner my-3">
                       <img class="d-none d-sm-block img-fluid banner__img" :src="$fileUrl + currentEvent.eventImage">
                     </div>
-                    <div style="display: flex; justify-content: space-between;" class="masthread-text">
+                    <div style="display: flex; justify-content: space-between; flex-wrap: wrap;" class="masthread-text">
                       <p v-for="detail in currentEvent.eventDetails " class="noPadding">
                         <span class="event-date">
                           {{ formatDate(detail.organizationDay) }}
@@ -93,8 +93,8 @@
                     <div class="masthread-banner my-3">
                       <img class="d-none d-sm-block img-fluid banner__img" :src="$fileUrl + currentEvent.eventImage">
                     </div>
-                    <div style="display: flex; justify-content: space-between;" class="masthread-text">
-                      <p v-for="detail in currentEvent.eventDetails " class="noPadding">
+                    <div style="display: flex; justify-content: space-between; flex-wrap: wrap;" class="masthread-text">
+                      <p v-for="detail in currentEvent.eventDetails " style="width: 50%;" class="noPadding">
                         <span class="event-date">
                           {{ formatDate(detail.organizationDay) }}
                         </span>
@@ -265,7 +265,11 @@
 .middle-nav .row::after {
   content: "";
 }
-
+@media only screen and (max-width: 1200px){
+  .middle-nav{
+    display: none;
+  }
+}
 .navbar-default {
   border: none;
   background-color: transparent !important;
@@ -462,7 +466,7 @@ export default {
       breadItems: [
         {
           text: 'Home',
-          href: '#'
+          href: '/'
         },
         {
           text: 'Event',

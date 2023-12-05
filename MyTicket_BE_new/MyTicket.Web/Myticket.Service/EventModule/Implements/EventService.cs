@@ -80,7 +80,6 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                                         SeatCode = "SEAT" + i,
                                         TicketCode = GenerateCode(5),
                                     });
-                                _dbContext.SaveChanges();
                             }
                         }
                     }
@@ -96,20 +95,41 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
         {
             _logger.LogInformation($"{nameof(FindAll)}: input = {JsonSerializer.Serialize(input)}");
             var result = new PagingResult<EventDto>();
-            var query = _dbContext.Events.Where(p => !p.Deleted
-                                                      && (input.EventName == null || p.EventName.ToLower().Contains(input.EventName.ToLower())))
-                .Select(s => new EventDto
-                {
-                    Id = s.Id,
-                    EventName = s.EventName,
-                    EventDescription = s.EventDescription,
-                    EventImage = s.EventImage,
-                    EventTypeId = s.EventTypeId,
-                    EventTypeName = _dbContext.EventTypes.Where(x => x.Id == s.EventTypeId).Select(x => x.Name).FirstOrDefault(),
-                    FirstEventDate = _dbContext.EventDetails.Where(o => o.EventId == s.Id).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay).First().Date,
-                    LastEventDate = _dbContext.EventDetails.Where(o => o.EventId == s.Id).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay).Last().Date,
-                    Status = s.Status
-                });
+
+            var query = from ev in _dbContext.Events
+                        join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
+                        join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
+                        where (!ev.Deleted
+                               && (input.Keyword == null || ev.EventName.ToLower().Contains(input.Keyword.ToLower()))
+                               && (input.EventTypeId == null || evType.Id == input.EventTypeId)
+                               && ((input.StartDate == null || evDetails.Any(ed => ed.OrganizationDay.Date >= input.StartDate.Value.Date))
+                               && (input.EndDate == null || evDetails.Any(ed => ed.OrganizationDay.Date <= input.EndDate.Value.Date))))
+                        select new EventDto
+                        {
+                            Id = ev.Id,
+                            EventName = ev.EventName,
+                            EventDescription = ev.EventDescription,
+                            EventImage = ev.EventImage,
+                            EventTypeId = ev.EventTypeId,
+                            EventTypeName = evType.Name,
+                            FirstEventDate = evDetails.OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
+                            LastEventDate = evDetails.OrderByDescending(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
+                            Status = evDetails.Select(s => s.Status).FirstOrDefault() // Assuming Status is a property of EventDetail
+                        };
+            //var query = _dbContext.Events.Where(p => !p.Deleted
+            //                                          && (input.Keyword == null || p.EventName.ToLower().Contains(input.Keyword.ToLower())))
+            //    .Select(s => new EventDto
+            //    {
+            //        Id = s.Id,
+            //        EventName = s.EventName,
+            //        EventDescription = s.EventDescription,
+            //        EventImage = s.EventImage,
+            //        EventTypeId = s.EventTypeId,
+            //        EventTypeName = _dbContext.EventTypes.Where(x => x.Id == s.EventTypeId).Select(x => x.Name).FirstOrDefault(),
+            //        FirstEventDate = _dbContext.EventDetails.Where(o => o.EventId == s.Id).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay).First().Date,
+            //        LastEventDate = _dbContext.EventDetails.Where(o => o.EventId == s.Id).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay).Last().Date,
+            //        Status = s.Status
+            //    });
 
 
             result.TotalItems = query.Count();
@@ -172,7 +192,12 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                         Price = x.Price,
                         Quantity = x.Tickets.Where(s => !_dbContext.OrderDetails.Include(t => t.Order)
                     .Any(o => o.TicketId == s.Id && o.Order.Status != OrderStatuses.CANCEL && !o.Deleted)).Take(10).Count(),
-                        Status = x.Status
+                        Status = (x.Tickets
+        .Where(ticket => !_dbContext.OrderDetails
+            .Include(orderDetail => orderDetail.Order)
+            .Any(order => order.TicketId == ticket.Id && order.Order.Status != OrderStatuses.CANCEL && !order.Deleted))
+        .Take(10)
+        .Count() < 1) ? 3 : x.Status
                     })
                 });
             eventinfo.EventDetails = eventDetails;
@@ -207,7 +232,12 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                         Price = x.Price,
                         Quantity = x.Tickets.Where(s => !_dbContext.OrderDetails.Include(t => t.Order)
                     .Any(o => o.TicketId == s.Id && o.Order.Status != OrderStatuses.CANCEL && !o.Deleted)).Take(10).Count(),
-                        Status = x.Status
+                        Status = (x.Tickets
+        .Where(ticket => !_dbContext.OrderDetails
+            .Include(orderDetail => orderDetail.Order)
+            .Any(order => order.TicketId == ticket.Id && order.Order.Status != OrderStatuses.CANCEL && !order.Deleted))
+        .Take(10)
+        .Count() < 1) ? 3 : x.Status
                     })
                 }).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.EventDetailNotFound);
             return eventDetails;

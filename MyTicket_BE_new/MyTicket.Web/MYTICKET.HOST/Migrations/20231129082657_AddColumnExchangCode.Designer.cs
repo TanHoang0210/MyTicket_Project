@@ -4,6 +4,7 @@ using MYTICKET.WEB.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MYTICKET.Hostconsle.Migrations
 {
     [DbContext(typeof(MyTicketDbContext))]
-    partial class MyTicketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231129082657_AddColumnExchangCode")]
+    partial class AddColumnExchangCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -402,9 +405,6 @@ namespace MYTICKET.Hostconsle.Migrations
 
                     b.Property<int>("TicketId")
                         .HasColumnType("int");
-
-                    b.Property<string>("TransferCode")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TransferStatus")
                         .HasColumnType("int");

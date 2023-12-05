@@ -25,8 +25,7 @@ export default {
         firstEventDate: '',
         lastEventDate: '',
         status: 1
-      },
-      ],
+      }],
       categories: [
         {
           id: 1,
@@ -93,7 +92,7 @@ export default {
           "myticket/api/event/find",
           {
             params: {
-              pageSize: 6,
+              pageSize: 9,
               pageNumber: 1,
             },
           }

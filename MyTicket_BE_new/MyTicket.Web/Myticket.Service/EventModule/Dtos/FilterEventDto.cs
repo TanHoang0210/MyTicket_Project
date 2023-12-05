@@ -10,12 +10,12 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
 {
     public class FilterEventDto : PagingRequestBaseDto
     {
-        private string? _eventName;
-        [FromQuery(Name = "eventName")]
-        public  string? EventName 
-        {
-            get => _eventName;
-            set => _eventName = value?.Trim();
-        }
+        [FromQuery(Name = "eventTypeId")]
+        public int? EventTypeId { get; set; }
+        [FromQuery(Name = "startDate")]
+        public DateTime? StartDate { get; set; }
+
+        [FromQuery(Name = "endDate")]
+        public DateTime? EndDate { get; set; }
     }
 }
