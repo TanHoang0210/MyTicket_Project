@@ -1,4 +1,5 @@
-﻿using MYTICKET.BASE.SERVICE.Common;
+﻿using Microsoft.AspNetCore.Http;
+using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.WEB.SERVICE.OrderModule.Dtos;
 
 namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
@@ -52,5 +53,8 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
         /// <param name="input"></param>
         /// <returns></returns>
         Task TransferTicket(TransferTicketDto input);
+
+
+        IFormFile CreateQr(string input);
     }
 }

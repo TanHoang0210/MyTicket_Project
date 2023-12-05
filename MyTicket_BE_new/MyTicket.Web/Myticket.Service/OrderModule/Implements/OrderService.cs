@@ -21,6 +21,7 @@ using System.Text.Json;
 using Order = MYTICKET.WEB.DOMAIN.Entities.Order;
 using SixLabors.ImageSharp;
 using MYTICKET.WEB.SERVICE.FileModule.Abstracts;
+using QRCoder;
 
 namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
 {
@@ -199,6 +200,19 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             result.OrderDetails = resultDetail;
 
             return result;
+        }
+
+        public IFormFile CreateQr(string input)
+        {
+            QRCodeGenerator qrGenerator = new();
+            using FileStream fileTemplate = new("D:\\", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using MemoryStream ms = new();
+            fileTemplate.CopyTo(ms);
+            QRCode qrCode = new QRCode(qrGenerator.CreateQrCode(input, QRCodeGenerator.ECCLevel.Q));
+            var image = qrCode.GetGraphic(20);
+            using MemoryStream msQrCode = new();
+            image.SaveAsPng(msQrCode);
+            return (IFormFile)image;
         }
 
         public async Task DeleteOrderDetail(int id)
