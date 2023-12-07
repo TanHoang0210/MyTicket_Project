@@ -42,6 +42,10 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// </summary>
         public string? TransferCode { get; set; }
         /// <summary>
+        /// ngay chuyen nhuong
+        /// </summary>
+        public DateTime? TransferDate { get; set; }
+        /// <summary>
         /// người được chuyển nhượng
         /// </summary>
         public int? CustomerTransfer {  get; set; }
@@ -50,7 +54,11 @@ namespace MYTICKET.WEB.DOMAIN.Entities
 
         public int? ExchangeStatus { get; set; }
         public string? ExchangeCode { get; set; }
+
+        public DateTime? ExchangeDate { get; set; }
         public string? QrCode { get; set; }
+
+        public int Status { get; set; }
 
         #region fulldaudit
         public DateTime? CreatedDate { get; set; }

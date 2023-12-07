@@ -43,7 +43,7 @@ namespace MYTICKET.WEB.API.Controllers
                => new(_orderService.FindAllOrderByCustomerId(input));
 
         /// <summary>
-        /// Danh sách vé của khách hàng
+        /// Thong tin ve khach hang
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -95,6 +95,85 @@ namespace MYTICKET.WEB.API.Controllers
             try
             {
                 await _orderService.TransferTicket(input);
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+        [AllowAnonymous]
+        [HttpGet("tess")]
+        public APIResponse<string>geeee(string id)
+       => new(_orderService.QrTest(id));
+
+        /// <summary>
+        /// Danh sách vé chuyen nhuong của khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("transfer/find-all")]
+        public APIResponse<PagingResult<TicketTransferDto>> FindAllTransferTicket([FromQuery] FilterOrderCustomer input)
+               => new(_orderService.FindAllTransferCustomerId(input));
+
+        /// <summary>
+        /// Danh sách vé của khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("exchange/find-all")]
+        public APIResponse<PagingResult<TicketExchangeDto>> FindAllExchangeTicket([FromQuery] FilterOrderCustomer input)
+               => new(_orderService.FindAllExchangeCustomerId(input));
+
+        /// <summary>
+        /// Thong tin ve chuyen nhuong khach hang
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("find-by-id")]
+        public APIResponse<TicketTransferDto> FindTransferTicketById(int id)
+               => new(_orderService.FindTransferTicketById(id));
+        /// <summary>
+        /// Thong tin ve tra lai khach hang
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("find-by-id")]
+        public APIResponse<TicketExchangeDto> FindExchangeTicketById(int id)
+               => new(_orderService.FindExchangeTicketById(id));
+
+        /// <summary>
+        /// Huy chuyne nhuong ve
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPut("cancel-tranfer")]
+        public async Task<IActionResult> CancelTransferTicket( int id)
+        {
+            try
+            {
+                await _orderService.CancelTransferTicket(id);
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+        /// <summary>
+        /// Huy tra lai ve
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPut("cancel-exchange")]
+        public async Task<IActionResult> CancelExchangeTicket(int id)
+        {
+            try
+            {
+                await _orderService.CancelExchangeTicket(id);
                 return Ok("Success");
             }
             catch (Exception ex)

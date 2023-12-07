@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.SERVICE.Common;
@@ -8,20 +9,16 @@ using MYTICKET.UTILS.CustomException;
 using MYTICKET.UTILS.Linq;
 using MYTICKET.WEB.DOMAIN.Entities;
 using MYTICKET.WEB.SERVICE.Common;
+using MYTICKET.WEB.SERVICE.FileModule.Abstracts;
+using MYTICKET.WEB.SERVICE.FileModule.Dtos.UploadFile;
 using MYTICKET.WEB.SERVICE.MailService.Abstracts;
 using MYTICKET.WEB.SERVICE.MailService.Dtos;
 using MYTICKET.WEB.SERVICE.OrderModule.Abstracts;
 using MYTICKET.WEB.SERVICE.OrderModule.Dtos;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.IO;
-using System.Drawing;
-using System.Text.Json;
-
-using Order = MYTICKET.WEB.DOMAIN.Entities.Order;
-using SixLabors.ImageSharp;
-using MYTICKET.WEB.SERVICE.FileModule.Abstracts;
 using QRCoder;
+using SixLabors.ImageSharp;
+using System.Linq;
+using System.Text.Json;
 
 namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
 {
@@ -92,7 +89,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                     OrderId = orderId,
                                     EventDetailId = ticketType.EventDetailId,
                                     TicketId = ticketId,
-                                    QrCode = null,
+                                    Status = OrderDetailStatuses.INIT,
                                 };
                                 _dbContext.OrderDetails.Add(orderDetail);
                             }
@@ -202,17 +199,33 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             return result;
         }
 
-        public IFormFile CreateQr(string input)
+        private async Task<string> CreateQr(QRCodeDto input)
         {
+            var currentUserId = CommonUtils.GetCurrentUserId(_httpContext);
+            var currentUser = await _dbContext.Users.FirstOrDefaultAsync(s => s.Id == currentUserId)
+                ?? throw new UserFriendlyException(ErrorCode.CustomerNotFound);
+            var currentCustomerId = await _dbContext.Customers
+                .Where(s => s.Id == currentUser.CustomerId)
+                .Select(s => s.Id)
+                .FirstOrDefaultAsync();
+            var qrInfo = JsonSerializer.Serialize(input);
             QRCodeGenerator qrGenerator = new();
-            using FileStream fileTemplate = new("D:\\", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using MemoryStream ms = new();
-            fileTemplate.CopyTo(ms);
-            QRCode qrCode = new QRCode(qrGenerator.CreateQrCode(input, QRCodeGenerator.ECCLevel.Q));
+            QRCode qrCode = new QRCode(qrGenerator.CreateQrCode(qrInfo, QRCodeGenerator.ECCLevel.Q));
             var image = qrCode.GetGraphic(20);
+
             using MemoryStream msQrCode = new();
             image.SaveAsPng(msQrCode);
-            return (IFormFile)image;
+
+            // Convert MemoryStream to byte array
+            byte[] imageBytes = msQrCode.ToArray();
+
+            // Create FormFile from byte array
+            IFormFile formFile = new FormFile(new MemoryStream(imageBytes), 0, imageBytes.Length, "QrCode", "TK" + GenOrderCode(5) + ".png");
+
+            UploadFileModel qr = new UploadFileModel { File = formFile, Folder = "QRCode" };
+            var result = _file.UploadFile(qr);
+
+            return result;
         }
 
         public async Task DeleteOrderDetail(int id)
@@ -267,7 +280,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
         {
             var currentUserId = CommonUtils.GetCurrentUserId(_httpContext);
             var currentUser = _dbContext.Users.FirstOrDefault(s => s.Id == currentUserId)
-    ?? throw new UserFriendlyException(ErrorCode.CustomerNotFound);
+                               ?? throw new UserFriendlyException(ErrorCode.CustomerNotFound);
             var currentCustomerId = _dbContext.Customers.Where(s => s.Id == currentUser.CustomerId).Select(s => s.Id).FirstOrDefault();
             _logger.LogInformation($"{nameof(FindAllOrderByCustomerId)}: input = {JsonSerializer.Serialize(input)}, currentUser= {currentUser}");
             var result = new PagingResult<OrderDetailDto>();
@@ -275,7 +288,10 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                     .Include(s => s.EventDetail)
                                                     .Include(s => s.Ticket)
                                                     .Include(s => s.Order)
-                                                    .Where(s => s.Order.CustomerId == currentCustomerId && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted)
+                                                    .Where(s => s.Order.CustomerId == currentCustomerId
+                                                    && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted
+                                                    && (s.IsTransfer == null || (s.IsTransfer != null && s.TransferStatus == TransferStatuses.CANCEL))
+                                                    && (s.IsExchange == null || (s.IsExchange != null && s.ExchangeStatus == ExchangeStatuses.CANCEL)))
                                                     .Select(s => new OrderDetailDto
                                                     {
                                                         Id = s.Id,
@@ -318,7 +334,10 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                     .Include(s => s.EventDetail)
                                                     .Include(s => s.Ticket)
                                                     .Include(s => s.Order)
-                                                    .Where(s => s.Order.CustomerId == currentCustomerId && s.Id == id && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted)
+                                                    .Where(s => s.Order.CustomerId == currentCustomerId && s.Id == id
+                                                    && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted
+                                                    && (s.IsTransfer == null || ( s.IsTransfer != null && s.TransferStatus != TransferStatuses.CANCEL))
+                                                    && (s.IsExchange == null || (s.IsExchange != null && s.ExchangeStatus != ExchangeStatuses.CANCEL)))
                                                     .Select(s => new OrderDetailDto
                                                     {
                                                         Id = s.Id,
@@ -335,7 +354,8 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         TicketEventName = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Name).FirstOrDefault(),
                                                         VenueName = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Name).FirstOrDefault(),
                                                         VenueAddress = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Address).FirstOrDefault(),
-                                                        QrCode = s.QrCode
+                                                        QrCode = s.QrCode,
+                                                        IsExchange = _dbContext.Events.Where(x => x.Id == s.EventDetail.EventId).Select(x => x.IsExChange).FirstOrDefault(),
                                                     })).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.OrderDetailNotFound);
             return query;
         }
@@ -348,7 +368,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             var currentCustomerId = _dbContext.Customers.Where(s => s.Id == currentUser.CustomerId).Select(s => s.Id).FirstOrDefault();
             _logger.LogInformation($"{nameof(GetOrderReadyToPayByCustomer)}: currentUser= {currentUser}");
             var result = _dbContext.Orders
-            .Where(s => s.CustomerId == currentCustomerId && s.Status == OrderStatuses.READY_TO_PAY)
+            .Where(s => s.CustomerId == currentCustomerId && new int[] { OrderStatuses.READY_TO_PAY, OrderStatuses.PAYING }.Contains(s.Status)) 
             .Select(s => new OrderDto
             {
                 Id = s.Id,
@@ -393,10 +413,10 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             {
                 throw new UserFriendlyException(ErrorCode.OrderDetailNotFound);
             }
-            orderDetail.IsExchange = 1;
+            orderDetail.IsTransfer = 1;
             orderDetail.TransferStatus = TransferStatuses.INIT;
-            orderDetail.ExchangeCode = GenOrderCode(4);
-            orderDetail.CustomerTransfer = input.CustomerTransferId;
+            orderDetail.TransferCode = GenOrderCode(4);
+            orderDetail.TransferDate = DateTime.Now;
             await _dbContext.SaveChangesAsync();
             if (orderDetail.TransferStatus == TransferStatuses.INIT)
             {
@@ -429,7 +449,6 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                  </div>
                                 </div>
                                 "
-
                     };
                     await _mail.SendMail(content);
                 }
@@ -454,6 +473,20 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             if (input.Status == OrderStatuses.SUCCESS && order.Status == OrderStatuses.PAYING)
             {
                 order.Status = input.Status;
+                var orderDetails = await _dbContext.OrderDetails.Include(s => s.Ticket).ThenInclude(s => s.TicketEvent).Where(s => s.OrderId == input.Id && !s.Deleted).ToListAsync();
+                foreach(var item in orderDetails)
+                {
+                    item.QrCode = await CreateQr(new QRCodeDto
+                    {
+                        TicketId = item.TicketId,
+                        OrderDetailId= item.Id,
+                        SeatCode = item.Ticket.SeatCode,
+                        TicketCode = item.Ticket.TicketCode,
+                        Status = item.ExchangeStatus,
+                        TicketEventId = item.Ticket.TicketEventId,
+                        TicketEventName = item.Ticket.TicketEvent.Name
+                    });
+                }
                 try
                 {
                     // Lấy dịch vụ sendmailservice
@@ -519,6 +552,139 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                 .Select(s => s[random.Next(s.Length)]).ToArray());
 
             return randomString;
+        }
+
+        public string QrTest(string input)
+        {
+            QRCodeGenerator qrGenerator = new();
+            QRCode qrCode = new QRCode(qrGenerator.CreateQrCode(input, QRCodeGenerator.ECCLevel.Q));
+            var image = qrCode.GetGraphic(20);
+
+            using MemoryStream msQrCode = new();
+            image.SaveAsPng(msQrCode);
+
+            // Convert MemoryStream to byte array
+            byte[] imageBytes = msQrCode.ToArray();
+
+            // Create FormFile from byte array
+            IFormFile formFile = new FormFile(new MemoryStream(imageBytes), 0, imageBytes.Length, "QrCode", "QrCode.png");
+
+            UploadFileModel qr = new UploadFileModel { File = formFile, Folder = "QRCode" };
+            var result = _file.UploadFile(qr);
+
+            return result;
+        }
+
+        public PagingResult<TicketTransferDto> FindAllTransferCustomerId(FilterOrderCustomer input)
+        {
+            var currentUserId = CommonUtils.GetCurrentUserId(_httpContext);
+            var currentUser = _dbContext.Users.FirstOrDefault(s => s.Id == currentUserId)
+                               ?? throw new UserFriendlyException(ErrorCode.CustomerNotFound);
+            var currentCustomerId = _dbContext.Customers.Where(s => s.Id == currentUser.CustomerId).Select(s => s.Id).FirstOrDefault();
+            _logger.LogInformation($"{nameof(FindAllOrderByCustomerId)}: input = {JsonSerializer.Serialize(input)}, currentUser= {currentUser}");
+            var result = new PagingResult<TicketTransferDto>();
+            var query = _dbContext.OrderDetails
+                                                    .Include(s => s.EventDetail)
+                                                    .Include(s => s.Ticket)
+                                                    .Include(s => s.Order)
+                                                    .Where(s => s.Order.CustomerId == currentCustomerId
+                                                    && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted
+                                                    && s.IsTransfer != null && new int[] { TransferStatuses.INIT, TransferStatuses.READY_TO_TRANSFER,TransferStatuses.SUCCESS }.Contains(s.TransferStatus.Value))
+                                                    .Select(s => new TicketTransferDto
+                                                    {
+                                                        Id = s.Id,
+                                                        OrderId = s.OrderId,
+                                                        OrderCode = s.Order.OrderCode,
+                                                        OrderDate = s.Order.OrderDate,
+                                                        EventDetailId = s.EventDetailId,
+                                                        EventName = _dbContext.Events.Where(x => x.Id == s.EventDetail.EventId).Select(x => x.EventName).FirstOrDefault(),
+                                                        OrganizationDay = s.EventDetail.OrganizationDay,
+                                                        SeatCode = s.Ticket.SeatCode,
+                                                        TicketCode = s.Ticket.TicketCode,
+                                                        TicketId = s.TicketId,
+                                                        Price = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Price).FirstOrDefault(),
+                                                        TicketEventName = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Name).FirstOrDefault(),
+                                                        VenueName = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Name).FirstOrDefault(),
+                                                        VenueAddress = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Address).FirstOrDefault(),
+                                                        TransferDate = s.TransferDate,
+                                                        TransferStatus = s.TransferStatus
+                                                    });
+            result.TotalItems = query.Count();
+            query = query.OrderDynamic(input.Sort);
+
+            if (input.PageSize != -1)
+            {
+                query = query.Skip(input.GetSkip()).Take(input.PageSize);
+            }
+
+            result.Items = query;
+            return result;
+        }
+
+        public PagingResult<TicketExchangeDto> FindAllExchangeCustomerId(FilterOrderCustomer input)
+        {
+            var currentUserId = CommonUtils.GetCurrentUserId(_httpContext);
+            var currentUser = _dbContext.Users.FirstOrDefault(s => s.Id == currentUserId)
+                               ?? throw new UserFriendlyException(ErrorCode.CustomerNotFound);
+            var currentCustomerId = _dbContext.Customers.Where(s => s.Id == currentUser.CustomerId).Select(s => s.Id).FirstOrDefault();
+            _logger.LogInformation($"{nameof(FindAllOrderByCustomerId)}: input = {JsonSerializer.Serialize(input)}, currentUser= {currentUser}");
+            var result = new PagingResult<TicketExchangeDto>();
+            var query = _dbContext.OrderDetails
+                                                    .Include(s => s.EventDetail)
+                                                    .Include(s => s.Ticket)
+                                                    .Include(s => s.Order)
+                                                    .Where(s => s.Order.CustomerId == currentCustomerId
+                                                    && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted
+                                                    && s.IsExchange != null && new int[] { ExchangeStatuses.INIT, ExchangeStatuses.READY_TO_EXCHANGE, TransferStatuses.SUCCESS }.Contains(s.ExchangeStatus.Value))
+                                                    .Select(s => new TicketExchangeDto
+                                                    {
+                                                        Id = s.Id,
+                                                        OrderId = s.OrderId,
+                                                        OrderCode = s.Order.OrderCode,
+                                                        OrderDate = s.Order.OrderDate,
+                                                        EventDetailId = s.EventDetailId,
+                                                        EventName = _dbContext.Events.Where(x => x.Id == s.EventDetail.EventId).Select(x => x.EventName).FirstOrDefault(),
+                                                        OrganizationDay = s.EventDetail.OrganizationDay,
+                                                        SeatCode = s.Ticket.SeatCode,
+                                                        TicketCode = s.Ticket.TicketCode,
+                                                        TicketId = s.TicketId,
+                                                        Price = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Price).FirstOrDefault(),
+                                                        TicketEventName = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Name).FirstOrDefault(),
+                                                        VenueName = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Name).FirstOrDefault(),
+                                                        VenueAddress = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Address).FirstOrDefault(),
+                                                        ExchangeDate = s.ExchangeDate,
+                                                        ExchangeStatus = s.ExchangeStatus
+                                                    });
+            result.TotalItems = query.Count();
+            query = query.OrderDynamic(input.Sort);
+
+            if (input.PageSize != -1)
+            {
+                query = query.Skip(input.GetSkip()).Take(input.PageSize);
+            }
+
+            result.Items = query;
+            return result;
+        }
+
+        public TicketTransferDto FindTransferTicketById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TicketExchangeDto FindExchangeTicketById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CancelTransferTicket(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CancelExchangeTicket(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

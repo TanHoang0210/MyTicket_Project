@@ -28,4 +28,24 @@ namespace MYTICKET.UTILS.ConstantVaribale.Shared
 
         public const int SUCCESS = 4;
     }
+
+    public static class ExchangeStatuses
+    {
+        public const int INIT = 1;
+
+        public const int READY_TO_EXCHANGE = 2;
+
+        public const int CANCEL = 3;
+
+        public const int SUCCESS = 4;
+    }
+
+    public static class OrderDetailStatuses
+    {
+        public const int INIT = 1;
+
+        public const int COMPLETE = 2;
+
+        public const int RECEIVED = 3;
+    }
 }

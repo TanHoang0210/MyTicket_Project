@@ -22,10 +22,6 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
 
         public int OrderDetailId { get; set; }
 
-        public int Status { get; set; }
-
-        public int EventId { get; set; }
-
-        public string? EventName { get; set; }
+        public int? Status { get; set; }
     }
 }

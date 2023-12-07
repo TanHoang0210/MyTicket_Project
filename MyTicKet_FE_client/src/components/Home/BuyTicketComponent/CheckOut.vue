@@ -5,7 +5,7 @@
                 <div id="cancelTimeCountdown" class="alert alert-danger h4"
                     style="display: flex; justify-content: space-around; font-size: 1.2rem; letter-spacing: 1px;">
                     <span>
-                        Chúng tôi sẽ giữ vé giúp bạn trong vòng 10 phút!
+                        Chúng tôi sẽ giữ vé giúp bạn trong vòng 5 phút!
                         Kiểm tra lại thông tin vé đã đặt nhé!
                         <br>
                         Sau 5 phút bạn chưa tiến hành thanh toán chúng tôi sẽ tự động hủy vé của bạn
@@ -329,7 +329,7 @@ export default {
             }
             const orderDateInSeconds = (new Date(this.order.orderDate).getTime() / 1000) + 300; // Thêm 300 giây vào thời gian đặt hàng
             const currentSeconds = Math.floor(new Date().getTime() / 1000);
-            this.countdownTime = Math.floor(150 - (currentSeconds - orderDateInSeconds), 0);
+            this.countdownTime = Math.floor(orderDateInSeconds-currentSeconds, 0);
             // Thiết lập một interval để giảm giá trị của countdownTime mỗi giây
             this.countdownInterval = setInterval(() => {
                 if (this.order.status != 3 || this.order.status != 4) {

@@ -139,9 +139,11 @@ namespace MYTICKET.WEB.SERVICE.FileModule.Implements
                 try
                 {
                     //tạo đường dẫn lưu ảnh dạng webp
+                    //ImageUtils.ResizeImage(file, Path.ChangeExtension(filePath, FileTypes.PNG));
                     ImageUtils.ResizeImage(file, Path.ChangeExtension(filePath, FileTypes.WEBP));
                     tryResize = true;
                     //nếu nén thành công thì chuyển extension ảnh thành webp
+                    //fileName = Path.ChangeExtension(file.FileName, FileTypes.PNG);
                     fileName = Path.ChangeExtension(file.FileName, FileTypes.WEBP);
                 }
                 catch (Exception ex)

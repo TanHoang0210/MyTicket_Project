@@ -9,7 +9,5 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
     public class TransferTicketDto
     {
         public int OrderDetailId { get; set; }
-
-        public int CustomerTransferId { get; set; }
     }
 }

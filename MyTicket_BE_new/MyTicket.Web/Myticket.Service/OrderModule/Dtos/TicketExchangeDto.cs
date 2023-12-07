@@ -1,5 +1,4 @@
-﻿using MYTICKET.WEB.DOMAIN.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
 {
-    public class OrderDetailDto
+    public class TicketExchangeDto
     {
         public int Id { get; set; }
 
@@ -34,7 +33,8 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
 
         public decimal Price { get; set; }
 
-        public string? QrCode { get; set; }
-        public bool IsExchange { get; set; }
+        public int? ExchangeStatus { get; set; }
+
+        public DateTime? ExchangeDate { get; set; }
     }
 }

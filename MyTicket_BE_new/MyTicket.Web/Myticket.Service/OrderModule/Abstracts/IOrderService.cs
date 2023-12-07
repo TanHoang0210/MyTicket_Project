@@ -55,6 +55,44 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
         Task TransferTicket(TransferTicketDto input);
 
 
-        IFormFile CreateQr(string input);
+        string QrTest(string input);
+
+        /// <summary>
+        /// Danh sách vé chuyển nhượng của khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        PagingResult<TicketTransferDto> FindAllTransferCustomerId(FilterOrderCustomer input);
+        /// <summary>
+        /// thoong tin ve chuyen nhuong
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        TicketTransferDto FindTransferTicketById(int id);
+        /// <summary>
+        /// Danh sách vé trả lại của khác hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        PagingResult<TicketExchangeDto> FindAllExchangeCustomerId(FilterOrderCustomer input);
+        /// <summary>
+        /// Thong tin ve tra lai
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        TicketExchangeDto FindExchangeTicketById (int id);
+        /// <summary>
+        /// huy chuyen nhuong ve
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task CancelTransferTicket(int id);
+
+        /// <summary>
+        /// huy tra ve
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task CancelExchangeTicket(int id);
     }
 }

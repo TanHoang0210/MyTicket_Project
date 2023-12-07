@@ -4,6 +4,7 @@ using MYTICKET.WEB.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MYTICKET.Hostconsle.Migrations
 {
     [DbContext(typeof(MyTicketDbContext))]
-    partial class MyTicketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231205084216_AddColumnStatusOrderDetail")]
+    partial class AddColumnStatusOrderDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -379,9 +382,6 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<string>("ExchangeCode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ExchangeDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int?>("ExchangeStatus")
                         .HasColumnType("int");
 
@@ -411,9 +411,6 @@ namespace MYTICKET.Hostconsle.Migrations
 
                     b.Property<string>("TransferCode")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("TransferDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<int?>("TransferStatus")
                         .HasColumnType("int");
