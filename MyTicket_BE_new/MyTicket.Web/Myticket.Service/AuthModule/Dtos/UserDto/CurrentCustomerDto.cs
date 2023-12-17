@@ -20,9 +20,9 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto
 
         public string? LastName { get; set; }
 
-        public int Country { get; set; }
+        public string? Country { get; set; }
 
-        public int Nationality { get; set; }
+        public string? Nationality { get; set; }
 
         public string? Address { get; set; }
 

@@ -40,16 +40,26 @@
                             {{ item.ticketEventName }}
                         </td>
                         <td class="ticket-infomation">
-                            {{ item.ticketEventName }}
+                            <span style="color: blue; font-weight: 600;" v-if="item.status === 1">
+                                Chưa thanh toán
+                            </span>
+                            <span style="color: orange; font-weight: 600;" v-if="item.status === 2">
+                                Đã thanh toán
+                            </span>
+                            <span style="color: green; font-weight: 600;" v-if="item.status === 3">
+                                Đã nhận vé
+                            </span>
                         </td>
                         <td class="lastCol ticket-infomation">
-                            <div class="ticket-action ">
-                                <b-button id="showTransfer" @click="showTranferModal(item.id)" class="btn-myticket"
-                                    variant="info">Chuyển
-                                    Nhượng</b-button>
-                                <b-button v-if="item.isExchange == true" id="showTransfer"
-                                    @click="showExchangeModal(item.id)" class="btn-myticket" variant="warning">Trả
-                                    Vé</b-button>
+                            <div  class="ticket-action ">
+                                <div v-if="item.status !== 10">
+                                    <b-button id="showTransfer" @click="showTranferModal(item.id)" class="btn-myticket"
+                                        variant="info">Chuyển
+                                        Nhượng</b-button>
+                                    <b-button v-if="item.isExchange == true" id="showTransfer"
+                                        @click="showExchangeModal(item.id)" class="btn-myticket" variant="warning">Trả
+                                        Vé</b-button>
+                                </div>
                                 <b-button id="showDetail" @click="showTicketDetail(item.id)" class="btn-myticket"
                                     variant="secondary">Xem chi
                                     tiết</b-button>
@@ -61,7 +71,7 @@
         </div>
         <div>
             <b-modal v-if="currentTicket !== null" ref="modal-transfer" centered title="Xác nhận chuyển nhượng vé">
-                <h4 class="my-4">Bạn có chắc chắn muốn trả lại vé đi xem {{ currentTicket.eventName }} không?</h4>
+                <h4 class="my-4">Bạn có chắc chắn muốn chuyển nhượng lại vé đi xem {{ currentTicket.eventName }} không?</h4>
                 <template #modal-footer="{ ok, cancel }">
                     <b-button size="lg" variant="success" @click="confirmTransferTicket(currentTicket.id)">
                         OK
@@ -76,7 +86,7 @@
             <b-modal v-if="currentTicket !== null" ref="modal-exchange" centered title="Xác nhận trả vé">
                 <h4 class="my-4">Bạn có chắc chắn muốn trả lại vé đi xem {{ currentTicket.eventName }} không?</h4>
                 <template #modal-footer="{ ok, cancel }">
-                    <b-button size="lg" variant="success" @click="confirmExchange()">
+                    <b-button size="lg" variant="success" @click="confirmExchange(currentTicket.id)">
                         OK
                     </b-button>
                     <b-button size="lg" variant="secondary" @click="cancel()">
@@ -233,28 +243,10 @@ export default {
     data() {
         return {
             noData: false,
-            pageSize: 5,
+            pageSize: 10,
             pageNumber: 1,
             total: 0,
-            tickets: [
-                {
-                    id: 11,
-                    orderId: 2,
-                    orderCode: "",
-                    orderDate: "",
-                    eventDetailId: 1,
-                    eventName: "Sự kiện tổ chức",
-                    organizationDay: "2023-11-25T07:27:57.066",
-                    venueName: "Sân vận động Nhà Bè",
-                    venueAddress: "12 Nhà Bè",
-                    ticketId: 43,
-                    ticketEventName: "CAT 3",
-                    ticketCode: "CWT9R",
-                    seatCode: "SEAT3",
-                    price: 1000000,
-                    qrCode: null
-                }
-            ],
+            tickets: null,
             currentTicket: null
         }
     },
@@ -295,28 +287,43 @@ export default {
             }
         },
         async confirmTransferTicket(id) {
-                await axios.put('myticket/api/order/transfer-ticker',
-                    {
-                        orderDetailId: id
-                    }, 
-                    {
+            await axios.put('myticket/api/order/transfer-ticker',
+                {
+                    orderDetailId: id
+                },
+                {
                     headers: {
                         'Content-Type': 'application/json',
                     }
-                }).then(res => 
+                }).then(res =>
+                    this.$refs['modal-transfer'].hide(),
+                    this.$router.push('/transfer'),
+                    this.$toasted.success("Yêu cầu chuyển nhượng vé thành công", {
+                        position: 'top-center',
+                        duration: 3000, // Thời gian hiển thị toast (ms)
+                        theme: 'outline', // Theme: 'outline', 'bubble'
+                        iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                        icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                        iconColor: 'white', // Màu của icon
+                        containerClass: 'custom-toast-container-class', // Thêm class cho container
+                        singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
+
+                    })
+                ).catch(err =>
+                    this.$toasted.error(err.response.data.error_description, {
+                        position: 'top-center',
+                        duration: 3000, // Thời gian hiển thị toast (ms)
+                        theme: 'outline', // Theme: 'outline', 'bubble'
+                        iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                        icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                        iconColor: 'white', // Màu của icon
+                        containerClass: 'custom-toast-container-class', // Thêm class cho container
+                        singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
+
+                    }),
                     this.$refs['modal-transfer'].hide()
-                ).catch(err => 
-                this.$toasted.error(err.response.data.error_description, {
-                    position: 'top-center',
-                    duration: 3000, // Thời gian hiển thị toast (ms)
-                    theme: 'outline', // Theme: 'outline', 'bubble'
-                    iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
-                    icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
-                    iconColor: 'white', // Màu của icon
-                    containerClass: 'custom-toast-container-class', // Thêm class cho container
-                    singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
-                }))
-                this.$refs['modal-transfer'].hide()
+                )
+            this.fetchData()
         },
         async showExchangeModal(id) {
             try {
@@ -328,6 +335,47 @@ export default {
             } catch (error) {
                 console.error("Error fetching ticket details:", error);
             }
+        },
+        async confirmExchange(id) {
+            try {
+                await axios.put('myticket/api/order/exchange-ticker',
+                    {
+                        orderDetailId: id
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                this.$refs['modal-exchange'].hide(),
+                    this.$router.push('/refund'),
+                    this.$toasted.success("Yêu cầu trả vé thành công", {
+                        position: 'top-center',
+                        duration: 3000, // Thời gian hiển thị toast (ms)
+                        theme: 'outline', // Theme: 'outline', 'bubble'
+                        iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                        icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                        iconColor: 'white', // Màu của icon
+                        containerClass: 'custom-toast-container-class', // Thêm class cho container
+                        singleton: true // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
+                    })
+            } catch (error) {
+                this.$toasted.error(err.response.data.error_description, {
+                    position: 'top-center',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                    theme: 'outline', // Theme: 'outline', 'bubble'
+                    iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                    icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                    iconColor: 'white', // Màu của icon
+                    containerClass: 'custom-toast-container-class', // Thêm class cho container
+                    singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
+                })
+            }
+
+
+
+
+            this.fetchData()
         },
         async showTranferModal(id) {
             try {
@@ -483,4 +531,5 @@ td {
     border-bottom: 1px solid #ccc;
 }
 
-.ticket-infomation {}</style>
+.ticket-infomation {}
+</style>

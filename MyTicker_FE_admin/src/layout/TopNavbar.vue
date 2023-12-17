@@ -1,7 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Dashboard</a>
       <button type="button"
               class="navbar-toggler navbar-toggler-right"
               :class="{toggled: $sidebar.showSidebar}"
@@ -41,23 +40,12 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              Account
+            <a v-if="currentUser === null" href="#/login" class="nav-link">
+              Log in
             </a>
-          </li>
-          <base-dropdown title="Dropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something</a>
-            <div class="divider"></div>
-            <a class="dropdown-item" href="#">Separated link</a>
-          </base-dropdown>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              Log out
-            </a>
+            <span v-else class="nav-link">
+              Xin chào {{currentUser.username}}!
+            </span>
           </li>
         </ul>
       </div>
@@ -65,6 +53,7 @@
   </nav>
 </template>
 <script>
+import store from '@/store'
   export default {
     computed: {
       routeName () {
@@ -72,8 +61,15 @@
         return this.capitalizeFirstLetter(name)
       }
     },
+    mounted(){
+      this.currentUser = store.getters.currentUser
+      console.log(store.getters.tokenExpiration)
+      console.log(store.getters.refreshToken)
+      console.log(store.getters.accessToken)
+    },
     data () {
       return {
+        currentUser:null,
         activeNotifications: false
       }
     },

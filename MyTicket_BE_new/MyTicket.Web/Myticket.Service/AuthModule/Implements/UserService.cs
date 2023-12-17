@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS.ConstantVariables.Shared;
@@ -200,7 +201,7 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
             var user = _dbContext.Users.FirstOrDefault(e => e.Id == userId && !e.Deleted)
                 ?? throw new UserFriendlyException(ErrorCode.UserNotFound);
 
-            if (CryptographyUtils.CreateMD5(user.Password) != CryptographyUtils.CreateMD5(input.OldPassword))
+            if (user.Password != CryptographyUtils.CreateMD5(input.OldPassword))
             {
                 throw new UserFriendlyException(ErrorCode.UserOldPasswordIncorrect);
             }
@@ -231,6 +232,12 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
                              Username = user.Username                          
                          }).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.UserNotFound) ;
             return result;
+        }
+
+        public User CurrentUser()
+        {
+            var user = _dbContext.Users.FirstOrDefault(u => u.Id == CommonUtils.GetCurrentUserId(_httpContext) && u.Status == UserStatus.ACTIVE && !u.Deleted);
+            return user ?? throw new UserFriendlyException(ErrorCode.UserNotFound);
         }
     }
 }

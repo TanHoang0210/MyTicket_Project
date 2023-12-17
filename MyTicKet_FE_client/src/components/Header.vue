@@ -45,7 +45,7 @@
                 </div>
                 <div class="header-search">
                     <div class="header-search--item">
-                        <router-link class="header-search--link" :to="{name:'event', query:{eventName:text}}">
+                        <router-link class="header-search--link" :to="{ name: 'event', query: { eventName: text } }">
                             <button class="header-search--button">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="header-search--icon" height="1em"
                                     viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -97,6 +97,15 @@
                         <b-icon style="margin-right: 5px;" icon="person-fill"></b-icon>
                         Đăng Nhập
                     </router-link>
+                    <div v-if="currentUser !== null">
+                        <router-link class="cart-link" style="text-decoration: none; color: #555;" :to="{ name: 'checkout', params: { type: 'checkout'} }">
+                            <b-icon icon="card-heading" aria-hidden="true"></b-icon>
+                        </router-link>
+                        <div class="cart-notification">
+                            <span v-if="totalOrderNotPay !== 0">{{ totalOrderNotPay }}</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -110,7 +119,8 @@ export default {
     name: 'Header',
     data: () => {
         return {
-            text:"",
+            totalOrderNotPay:null,
+            text: "",
             isLogin: false,
             currentLocalization: {
                 id: 0,
@@ -177,10 +187,26 @@ export default {
                     singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
                 });
             }
-        }
+        },
+        async getOrderInfo() {
+            try {
+                if(store.getters.currentUser != null){
+                    const res = await axios.get("myticket/api/order/find-order/for-pay")
+                    if (res.data.status == 1) {
+                        this.totalOrderNotPay = res.data.data.orderDetails.length;
+                    }
+                    else {
+                        this.totalOrderNotPay = 0;
+                    }
+                }
+            } catch (error) {
+                console.error('API 1 Error:', error);
+                throw error;
+            }
+        },
     },
     mounted() {
-        console.log(this.$store.getters.currentUser)
+        this.getOrderInfo();
     },
     computed: {
         currentUser() {
@@ -250,11 +276,13 @@ export default {
     flex-wrap: nowrap;
     position: relative;
 }
+
 @media only screen and (max-width: 1154px) {
     .left-header--control {
         display: none;
     }
 }
+
 .left-header--control ul {
     height: 100%;
 }
@@ -419,6 +447,30 @@ input:focus {
     margin-left: 20px;
     color: var(--primary-color-bold) !important;
     transition: background-color ease-in 0.1s;
+}
+
+.cart-link {
+    display: flex;
+    align-items: center;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 2rem;
+    margin-left: 20px;
+    color: var(--primary-color-bold) !important;
+    transition: background-color ease-in 0.1s;
+}
+
+
+.cart-notification {
+    width: 20px;
+    border-radius: 20px 20px;
+    text-align: center;
+    font-size: 0.8rem;
+    top: 20px;
+    right: -5px;
+    position: absolute;
+    background-color: red;
+    color: #fff;
 }
 
 .user-info {

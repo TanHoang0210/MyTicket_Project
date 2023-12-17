@@ -57,7 +57,13 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
         /// Ngày bắt đầu sự kiện
         /// </summary>
         public DateTime? LastEventDate { get; set; }
+        public int? SupplierId { get; set; }
+        public string? Supllier { get; set; }
+
+        public string? Address { get; set; }
 
         public IEnumerable<EventDetailDto>? EventDetails { get; set; }
+
+        public double? PercentSaleTicket {get;set;}
     }
 }

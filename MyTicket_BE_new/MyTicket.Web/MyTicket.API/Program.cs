@@ -17,6 +17,8 @@ using MYTICKET.WEB.SERVICE.MailService.Abstracts;
 using MYTICKET.WEB.SERVICE.MailService.Implements;
 using MYTICKET.WEB.SERVICE.OrderModule.Abstracts;
 using MYTICKET.WEB.SERVICE.OrderModule.Implements;
+using MYTICKET.WEB.SERVICE.TicketModule.Abstracts;
+using MYTICKET.WEB.SERVICE.TicketModule.Implements;
 using MYTICKET.WEB.SERVICE.VenueModule.Abstracts;
 using MYTICKET.WEB.SERVICE.VenueModule.Implements;
 using MYTICKET.WEB.SERVICE.VnPayService.Abstracts;
@@ -50,6 +52,7 @@ namespace MyTicket.API
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IVnpayService, VnpayService>();
             builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
+            builder.Services.AddScoped<ITicketService, TicketService>();
 
 
             var app = builder.Build();

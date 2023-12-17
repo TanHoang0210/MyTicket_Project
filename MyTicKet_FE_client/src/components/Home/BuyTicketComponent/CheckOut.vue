@@ -190,7 +190,7 @@ export default {
                 }
                 else {
                     this.haveOrder = false;
-                    this.$router.push('/order')
+                    await this.$router.push('/order')
                     this.$toasted.info('Hiện tại bạn không có đơn hàng nào', {
                         position: 'top-right',
                         duration: 3000, // Thời gian hiển thị toast (ms)
@@ -337,7 +337,7 @@ export default {
                         this.countdownTime--;
                         store.commit('setCoutDownOrder', this.countdownTime)
                     } else {
-                        // Hủy đơn hàng khi hết thời gian
+                        //Hủy đơn hàng khi hết thời gian
                         this.cancelOrder();
                     }
                 }
@@ -347,6 +347,9 @@ export default {
     mounted() {
         this.fetchData();
         this.countdownTime = store.getters.countdownTime;
+        if(this.countdownTime <= 0 ){
+            this.cancelOrder();
+        }
     },
     computed: {
         currentUser() {

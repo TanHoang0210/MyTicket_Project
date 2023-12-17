@@ -4,6 +4,7 @@ using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS.ConstantVariables.Shared;
 using MYTICKET.UTILS.ConstantVariables.User;
 using MYTICKET.UTILS.CustomException;
+using MYTICKET.UTILS.Linq;
 using MYTICKET.UTILS.Security;
 using MYTICKET.WEB.DOMAIN.Entities;
 using MYTICKET.WEB.SERVICE.AuthModule.Abstracts;
@@ -43,6 +44,23 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
             _dbContext.SaveChanges();
 
             transaction.Commit();
+        }
+
+        public PagingResult<SupplierDto> GetAll(FilerSupplierDto input)
+        {
+            _logger.LogInformation($"{nameof(GetAll)}: input = {JsonSerializer.Serialize(input)}");
+            var result = new PagingResult<SupplierDto>();
+            var supplliers = _dbContext.Suppilers.Where(u => !u.Deleted && (input.Keyword == null || (u.FullName.Contains(input.Keyword) || (u.ShortName.Contains(input.Keyword)))));
+            // đếm tổng trước khi phân trang
+            result.TotalItems = supplliers.Count();
+            supplliers = supplliers.OrderDynamic(input.Sort);
+
+            if (input.PageSize != -1)
+            {
+                supplliers = supplliers.Skip(input.GetSkip()).Take(input.PageSize);
+            }
+            result.Items = _mapper.Map<List<SupplierDto>>(supplliers);
+            return result;
         }
     }
 }

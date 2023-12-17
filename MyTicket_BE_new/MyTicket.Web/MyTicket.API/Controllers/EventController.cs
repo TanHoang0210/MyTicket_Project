@@ -43,6 +43,27 @@ namespace MYTICKET.WEB.API.Controllers
                => new(_eventService.FindAll(input));
 
         /// <summary>
+        /// lây danh sách sự kiện mới nhất
+        /// </summary>
+        [HttpGet("find-top-new")]
+        public APIResponse<List<EventDto>> FindAllNewEvent()
+               => new(_eventService.FindAllNewEvent());
+
+        /// <summary>
+        /// lây danh sách sự kiện nổi bật
+        /// </summary>
+        [HttpGet("find-top-standing")]
+        public APIResponse<List<EventDto>> FindAllOutStandingEvent()
+               => new(_eventService.FindAllOutStandingEvent());
+
+        /// <summary>
+        /// lây danh sách bán chạy
+        /// </summary>
+        [HttpGet("find-top-sale")]
+        public APIResponse<List<EventDto>> FindAllTopSaleEvent()
+               => new(_eventService.FindAllTopSaleEvent());
+
+        /// <summary>
         /// lấy chi tiết sự kiện
         /// </summary>
         /// <param name="id"></param>

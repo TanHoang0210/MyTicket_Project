@@ -11,6 +11,7 @@ export default new Vuex.Store({
     tokenExpiration: null,
     orderFormData: null,
     countdownTime:300,
+    totalOrderNotPay:10,
   },
   getters: {
     currentUser: state => state.currentUser,
@@ -18,7 +19,8 @@ export default new Vuex.Store({
     refreshToken: state => state.refreshToken,
     tokenExpiration: state => state.tokenExpiration,
     orderFormData: state => state.orderFormData,
-    countdownTime: state => state.countdownTime
+    countdownTime: state => state.countdownTime,
+    totalOrderNotPay: state => state.totalOrderNotPay
   },
   mutations: {
     setOrderData(state, orderFormData) {
@@ -29,6 +31,9 @@ export default new Vuex.Store({
     },
     setCurrentUser(state, user) {
       state.currentUser = user;
+    },
+    setTotalOrderNoPay(state, totalOrderNotPay) {
+      state.totalOrderNotPay = totalOrderNotPay;
     },
      setTokens(state, { accessToken, refreshToken ,tokenExpiration}) {
       state.accessToken = accessToken;

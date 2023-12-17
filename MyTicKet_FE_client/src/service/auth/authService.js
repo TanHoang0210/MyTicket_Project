@@ -5,8 +5,7 @@ const authService = axios.create({
     baseURL: 'connect/token',
 });
 export const refreshAccessToken = async (refreshTokenNow) => {
-    const xx =5;
-    if (xx == 5) {
+    if (store.getters.currentUser !== null) {
         try {
             const requestConfig = {
                 withCredentials: true,

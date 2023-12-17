@@ -11,6 +11,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
 {
     public class CreateEventDetailDto
     {
+        public int EventId {  get; set; }
         /// <summary>
         /// Id sân vận động, truyền vào nếu tổ chức ở svd
         /// </summary>
@@ -44,6 +45,5 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
         public bool HavingSeatMap {  get; set; }
 
         public int SelectSeatType { get; set; }
-        public List<CreateTicketEventDto>? TicketEvents { get; set; }
     }
 }

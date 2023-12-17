@@ -45,6 +45,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
         /// </summary>
         public bool HavingSeatMap { get; set; }
         public int Status { get; set; }
+
+        public string? VenueAddress { get; set; }
         public IEnumerable<TicketEventDto>? TicketEvents { get; set; }
     }
 }

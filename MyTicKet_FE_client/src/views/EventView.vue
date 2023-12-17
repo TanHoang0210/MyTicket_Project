@@ -96,6 +96,7 @@ export default {
   },
   data() {
     return {
+      search:"",
       isShowCalendar:false,
       noMoreData: false,
       pageSize: 9,
@@ -139,7 +140,15 @@ export default {
     }
   },
   mounted() {
-    this.getAllData();
+    this.searchEvent();
+  },
+  watch:{
+    search: function (newSearch, oldSearch) {
+      // Hành động nào đó khi biến search thay đổi
+      this.searchEvent();
+      // Thực hiện các hành động khác tùy thuộc vào sự thay đổi của biến
+      // Ví dụ: Gọi một hàm khác, cập nhật dữ liệu khác, vv.
+    }
   },
   methods: {
     renderCard() {
@@ -158,8 +167,7 @@ export default {
     handleBlur(){
     this.isShowCalendar = false;   
     },
-    async searchEvent(event){
-      event.preventDefault()
+    async searchEvent(){
       this.isShowCalendar = false
       await this.getAllData()
     },
@@ -208,6 +216,11 @@ export default {
     },
     async getEvent() {
       try {
+        if(this.startDate != null && this.endDate != null){
+          this.search = null
+        }else{
+          this.search = this.$route.query.eventName
+        }
         const res = await axios.get(
           "myticket/api/event/find",
           {
@@ -216,7 +229,7 @@ export default {
               pageNumber: this.pageNumber,
               startDate: this.startDate,
               endDate: this.endDate,
-              keyword:this.$route.query.eventName,
+              keyword:this.search,
               eventTypeId:this.$route.query.eventTypeId,
             },
           }

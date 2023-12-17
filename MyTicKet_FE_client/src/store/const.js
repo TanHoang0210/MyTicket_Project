@@ -16,3 +16,15 @@ export const TicketStatuses = Object.freeze({
 export const MyAsset = Object.freeze({
   SOLD_OUT_IMG: 'api/file/get?folder=asset&file=soldout.webp'
 });
+
+export const TransferStatus = Object.freeze({
+  INIT: 1,
+  PROGRESS:2,
+  DONE:3,
+})
+
+export const ExchangeStatus = Object.freeze({
+  INIT: 1,
+  PROGRESS:2,
+  DONE:3,
+})

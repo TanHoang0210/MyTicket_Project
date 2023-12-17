@@ -13,8 +13,8 @@
                         <th class="text-center firstCol">#ID</th>
                         <th>Tên Sự Kiện</th>
                         <th>Hạng vé</th>
-                        <th>Ngày yêu cầu chuyển nhượng</th>
-                        <th>Trạng thái chuyển nhượng</th>
+                        <th>Ngày yêu cầu</th>
+                        <th>Trạng thái</th>
                         <th class="lastCol">Thao Tác</th>
                     </tr>
                 </thead>
@@ -24,23 +24,34 @@
                     </tr>
                 </tbody>
                 <tbody v-else>
-                    <tr v-for="(item, index) in tickets">
+                    <tr :style="statusTransfer !== 3 ? { color: 'black' } : { color: 'var(--text-color)' }"
+                        v-for="(item, index) in tickets">
                         <td class="firstCol text-center ticket-infomation">{{ index + 1 }}</td>
                         <td class="ticket-infomation">
                             {{ item.eventName }}
                         </td>
                         <td class="ticket-infomation">
-                            {{ item.ticketEventName}}
+                            {{ item.ticketEventName }}
                         </td>
                         <td class="ticket-infomation">
                             {{ formatDate(item.transferDate) }}
                         </td>
                         <td class="ticket-infomation">
-                            {{ item.ticketEventName }}
+                            <span style="color: blue; font-weight: 600;" v-if="item.transferStatus === 1">
+                                Khởi tạo
+                            </span>
+                            <span style="color: orange; font-weight: 600;" v-if="item.transferStatus === 2 || item.transferStatus === 4">
+                                Đang xử lý
+                            </span>
+                            <span style="color: green; font-weight: 600;" v-if="item.transferStatus === 5">
+                                Đã chuyển nhượng
+                            </span>
                         </td>
                         <td class="lastCol ticket-infomation">
-                            <div class="ticket-action ">
-                                <b-button id="showTransfer" @click="showTranferModal(item.id)" class="btn-myticket"
+                            <div class="ticket-action " v-if="statusTransfer !== 3">
+                                <b-button v-if="item.transferStatus === 1" id="showTransfer" @click="showConfirmToTranferModal(item.id)" class="btn-myticket"
+                                    variant="success">Xác nhận</b-button>
+                                <b-button v-if="item.transferStatus !== 5" id="showTransfer" @click="showCancelTranferModal(item.id)" class="btn-myticket"
                                     variant="danger">Hủy Yêu cầu</b-button>
                                 <b-button id="showDetail" @click="showTicketDetail(item.id)" class="btn-myticket"
                                     variant="secondary">Xem chi
@@ -51,35 +62,20 @@
                 </tbody>
             </table>
         </div>
-        <b-modal v-if="currentTicket !== null" ref="modal-transfer" centered title="Xác nhận chuyển nhượng vé">
-            <h4 class="my-4">Bạn có chắc chắn muốn chuyển nhượng lại vé đi xem {{currentTicket.eventName}} không?</h4>
-            <template #modal-footer="{ ok, cancel }">
-                <b-button size="lg" variant="success" @click="ok()">
-                    OK
-                </b-button>
-                <b-button size="lg" variant="secondary" @click="cancel()">
-                    Cancel
-                </b-button>
-            </template>
-        </b-modal>
-        <div>
-            <b-modal v-if="currentTicket !== null" ref="modal-exchange" centered title="Xác nhận trả vé">
-                <h4 class="my-4">Bạn có chắc chắn muốn trả lại vé đi xem {{currentTicket.eventName}} không?</h4>
-                <template #modal-footer="{ ok, cancel }">
-                    <b-button size="lg" variant="success" @click="ok()">
-                        OK
-                    </b-button>
-                    <b-button size="lg" variant="secondary" @click="cancel()">
-                        Cancel
-                    </b-button>
-                </template>
-            </b-modal>
-        </div>
-        <b-modal size="xl" centered v-if="currentTicket !== null" ref="modal-myticket" hide-footer
-            title="Chi tiết vé của bạn">
+        <b-modal size="lg" centered v-if="currentTicket !== null" ref="modal-myticket" hide-footer
+            title="Thông tin chuyển nhượng">
             <div class="d-block text-center">
                 <div style="display: flex;">
-                    <div style="width: 80%;">
+                    <div style="width: 100%;">
+                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                            <h4>Ngày yêu cầu: {{ formatDate(currentTicket.transferDate) }}</h4>
+                            <h4 v-if="currentTicket.transferStatus === 1">Trạng thái chuyển nhượng: <span
+                                    style="color: blue;">Khởi tạo</span></h4>
+                            <h4 v-if="currentTicket.transferStatus === 2">Trạng thái chuyển nhượng: <span
+                                    style="color: orange;">Đang xử lý</span></h4>
+                            <h4 v-if="currentTicket.transferStatus === 5">Trạng thái chuyển nhượng: <span
+                                    style="color: #888;">Đã chuyển nhượng</span></h4>
+                        </div>
                         <table style="border: none; text-align: left; font-size: 1.2rem;">
                             <tr style="border: none;">
                                 <td class="title-ticket">
@@ -200,18 +196,34 @@
                             </tr>
                         </table>
                     </div>
-                    <div style="display: flex; flex-direction: column;">
-                        <div style="margin: auto;">
-                            <span>
-                                Bấm vào để lưu QR về máy
-                            </span>
-                            <img ref="myQR" @click="downloadImage" style="cursor: pointer;" class="qrCode"
-                                :src="$fileUrl + currentTicket.qrCode" alt="">
-                        </div>
-                    </div>
                 </div>
             </div>
         </b-modal>
+        <div>
+            <b-modal v-if="currentTicket !== null" ref="modal-transfer" centered title="Xác nhận hủy chuyển nhượng vé">
+                <h4 class="my-4">Bạn có chắc chắn muốn hủy chuyển nhượng vé đi xem {{ currentTicket.eventName }} không?</h4>
+                <template #modal-footer="{ ok, cancel }">
+                    <b-button size="lg" variant="success" @click="confirmCancelTransferTicket(currentTicket.id)">
+                        OK
+                    </b-button>
+                    <b-button size="lg" variant="secondary" @click="cancel()">
+                        Cancel
+                    </b-button>
+                </template>
+            </b-modal>
+            <b-modal v-if="currentTicket !== null" ref="modal-confirm" centered title="Nhập mã xác nhận chuyển nhượng vé">
+                <h4 class="my-4">Vui lòng nhập mã chuyển nhượng vé đã được gửi tới email của bạn để xác nhận việc chuyển nhượng!</h4>
+                <b-form-input v-model="confirmCode" type="text"></b-form-input>
+                <template #modal-footer="{ ok, cancel }">
+                    <b-button size="lg" variant="success" @click="confirmTransferCode(currentTicket.id)">
+                        OK
+                    </b-button>
+                    <b-button size="lg" variant="secondary" @click="cancel()">
+                        Cancel
+                    </b-button>
+                </template>
+            </b-modal>
+        </div>
     </div>
 </template>
 <script>
@@ -219,31 +231,17 @@ import axios from 'axios'
 import moment from 'moment'
 import numeral from 'numeral'
 import store from '@/store'
+import { TransferStatus } from '@/store/const'
 export default {
     data() {
         return {
+            statusTransfer: "",
             noData: false,
             pageSize: 5,
             pageNumber: 1,
+            confirmCode:"",
             total: 0,
-            tickets: [
-                {
-                    id: 11,
-                    orderId: 2,
-                    orderCode: "",
-                    orderDate: "",
-                    eventDetailId: 1,
-                    eventName: "Sự kiện tổ chức",
-                    organizationDay: "2023-11-25T07:27:57.066",
-                    venueName: "Sân vận động Nhà Bè",
-                    venueAddress: "12 Nhà Bè",
-                    ticketId: 43,
-                    ticketEventName: "CAT 3",
-                    ticketCode: "CWT9R",
-                    seatCode: "SEAT3",
-                    price: 1000000
-                }
-            ],
+            tickets: null,
             currentTicket: null
         }
     },
@@ -273,22 +271,31 @@ export default {
                 });
         },
         async showTicketDetail(id) {
-            this.currentTicket = await this.getOrderTicketDetail(id)
-            console.log(this.currentTicket)
-            this.$refs['modal-myticket'].toggle('#showDetail')
+            try {
+                this.currentTicket = await this.getOrderTicketDetail(id)
+                this.$nextTick(() => {
+                    // Using $nextTick to ensure the modal component is updated
+                    this.$refs['modal-myticket'].show();
+                });
+            } catch (error) {
+                console.error("Error fetching ticket details:", error);
+            }
         },
-        async showExchangeModal(id) {
-            this.currentTicket = await this.getOrderTicketDetail(id)
-            this.$refs['modal-exchange'].toggle('#showExChange')
-        },
-        async showTranferModal(id) {
-            this.currentTicket = await this.getOrderTicketDetail(id)
-            this.$refs['modal-transfer'].toggle('#showTransfer')
+        async showCancelTranferModal(id) {
+            try {
+                this.currentTicket = await this.getOrderTicketDetail(id)
+                this.$nextTick(() => {
+                    // Using $nextTick to ensure the modal component is updated
+                    this.$refs['modal-transfer'].show();
+                });
+            } catch (error) {
+                console.error("Error fetching ticket details:", error);
+            }
         },
         async getOrderTicketDetail(id) {
             try {
                 const res = await axios.get(
-                    "/myticket/api/order/find-by-id",
+                    "myticket/api/order/transfer/find-by-id",
                     {
                         params: {
                             id: id
@@ -300,6 +307,96 @@ export default {
                 console.error('API 1 Error:', error);
                 throw error;
             }
+        },
+        async confirmTransferCode(id){
+            try {
+                await axios.put('myticket/api/order/confirm-transfer',
+                    {
+                        id: id,
+                        confirmCode: this.confirmCode
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                this.$refs['modal-confirm'].hide(),
+                this.$router.push('/order')
+                this.$toasted.success("Xác nhận yêu cầu chuyển nhượng vé thành công", {
+                    position: 'top-center',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                    theme: 'outline', // Theme: 'outline', 'bubble'
+                    iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                    icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                    iconColor: 'white', // Màu của icon
+                    containerClass: 'custom-toast-container-class', // Thêm class cho container
+                    singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
+                })
+            } catch (error) {
+                this.$toasted.error(error.response.data.error_description, {
+                    position: 'top-center',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                    theme: 'outline', // Theme: 'outline', 'bubble'
+                    iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                    icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                    iconColor: 'white', // Màu của icon
+                    containerClass: 'custom-toast-container-class', // Thêm class cho container
+                    singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
+
+                }),
+                    this.$refs['modal-confirm'].hide()
+            }
+            this.fetchData()
+        },
+        async showConfirmToTranferModal(id){
+            try {
+                this.currentTicket = await this.getOrderTicketDetail(id)
+                this.$nextTick(() => {
+                    // Using $nextTick to ensure the modal component is updated
+                    this.$refs['modal-confirm'].show();
+                });
+            } catch (error) {
+                console.error("Error fetching ticket details:", error);
+            }
+        },
+        async confirmCancelTransferTicket(id) {
+            try {
+                await axios.put('myticket/api/order/cancel-tranfer',
+                    {
+                        orderDetailId: id
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                this.$refs['modal-transfer'].hide(),
+                    this.$router.push('/order')
+                this.$toasted.success("Hủy chuyển nhượng vé thành công", {
+                    position: 'top-center',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                    theme: 'outline', // Theme: 'outline', 'bubble'
+                    iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                    icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                    iconColor: 'white', // Màu của icon
+                    containerClass: 'custom-toast-container-class', // Thêm class cho container
+                    singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
+                })
+            } catch (error) {
+                this.$toasted.error(error.response.data.error_description, {
+                    position: 'top-center',
+                    duration: 3000, // Thời gian hiển thị toast (ms)
+                    theme: 'outline', // Theme: 'outline', 'bubble'
+                    iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                    icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                    iconColor: 'white', // Màu của icon
+                    containerClass: 'custom-toast-container-class', // Thêm class cho container
+                    singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
+
+                }),
+                    this.$refs['modal-transfer'].hide()
+            }
+            this.fetchData()
         },
         async getMyOrderInfo() {
             console.log(store.state.accessToken)
@@ -327,6 +424,16 @@ export default {
                     this.noData = true
                 } else {
                     this.noData = false
+                    this.tickets.forEach(element => {
+                        if (element.transferStatus === 1) {
+                            this.statusTransfer = 1
+                        } else if (element.transferStatus === 2) {
+                            this.statusTransfer = 2
+                        }
+                        else if (element.transferStatus === 3) {
+                            this.statusTransfer = 3
+                        }
+                    });
                 }
             } catch (error) {
                 this.$toasted.error(error.message, {
@@ -345,6 +452,7 @@ export default {
     },
     mounted() {
         this.fetchData()
+        this.handleStatus()
     },
 }
 </script>

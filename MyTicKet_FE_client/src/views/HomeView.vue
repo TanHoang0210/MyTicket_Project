@@ -8,7 +8,7 @@ import LoadPage from "@/views/LoadPage.vue"
 export default {
   name: 'HomeView',
   components: {
-    Header, HomeFooter, HomeMain,LoadPage
+    Header, HomeFooter, HomeMain, LoadPage
   },
   data() {
     return {
@@ -16,15 +16,52 @@ export default {
       isSuccess: false,
       isError: false,
       events: [{
-        id: 1,
-        eventName: '',
-        eventTypeId: 1,
-        eventTypeName: "",
-        eventDescription: '',
-        eventImage: '',
-        firstEventDate: '',
-        lastEventDate: '',
-        status: 1
+        id: 0,
+        eventName: "string",
+        eventTypeId: 0,
+        eventTypeName: "string",
+        eventDescription: "string",
+        eventImage: "string",
+        admissionPolicy: "string",
+        exchangePolicy: "string",
+        status: 0,
+        firstEventDate: "2023-12-16T09:07:24.982Z",
+        lastEventDate: "2023-12-16T09:07:24.982Z",
+        supplierId: 0,
+        supllier: "string",
+        address: "string",
+      }],
+      eventTopSales: [{
+        id: 0,
+        eventName: "string",
+        eventTypeId: 0,
+        eventTypeName: "string",
+        eventDescription: "string",
+        eventImage: "string",
+        admissionPolicy: "string",
+        exchangePolicy: "string",
+        status: 0,
+        firstEventDate: "2023-12-16T09:07:24.982Z",
+        lastEventDate: "2023-12-16T09:07:24.982Z",
+        supplierId: 0,
+        supllier: "string",
+        address: "string",
+      }],
+      eventNews: [{
+        id: 0,
+        eventName: "string",
+        eventTypeId: 0,
+        eventTypeName: "string",
+        eventDescription: "string",
+        eventImage: "string",
+        admissionPolicy: "string",
+        exchangePolicy: "string",
+        status: 0,
+        firstEventDate: "2023-12-16T09:07:24.982Z",
+        lastEventDate: "2023-12-16T09:07:24.982Z",
+        supplierId: 0,
+        supllier: "string",
+        address: "string",
       }],
       categories: [
         {
@@ -54,20 +91,21 @@ export default {
     async getAllData() {
       this.isLoading = true;
       try {
-      // Gọi nhiều API sử dụng async/await
-      this.venues = await this.getVenue();
-      this.events = await this.getEvent();
-      this.categories = await this.getCategories();
-      this.isSuccess = true;
-      this.isLoading = false;
-    } catch (error) {
-      this.isError = true;
-      this.isLoading = false;
-      this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
+        // Gọi nhiều API sử dụng async/await
+        this.eventNews = await this.getEventNew();
+        this.venues = await this.getVenue();
+        this.events = await this.getEvent();
+        this.categories = await this.getCategories();
+        this.isSuccess = true;
+        this.isLoading = false;
+      } catch (error) {
+        this.isError = true;
+        this.isLoading = false;
+        this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
           position: 'top-right',
           duration: 3000, // Thời gian hiển thị toast (ms)
         });
-    }
+      }
     },
     async getVenue() {
       try {
@@ -103,6 +141,34 @@ export default {
         throw error;
       }
     },
+    async getEventTopSale() {
+      try {
+        const res = await axios.get(
+          "myticket/api/event/find",
+          {
+            params: {
+              pageSize: 9,
+              pageNumber: 1,
+            },
+          }
+        )
+        return res.data.data.items;
+      } catch (error) {
+        console.error('API 1 Error:', error);
+        throw error;
+      }
+    },
+    async getEventNew() {
+      try {
+        const res = await axios.get(
+          "myticket/api/event/find-top-new"
+        )
+        return res.data.data;
+      } catch (error) {
+        console.error('API 1 Error:', error);
+        throw error;
+      }
+    },
     async getCategories() {
       try {
         const res = await axios.get(
@@ -126,12 +192,12 @@ export default {
 <template>
   <div>
     <div v-if="isLoading">
-        <LoadPage/>
+      <LoadPage />
     </div>
     <div v-if="isSuccess" style="overflow: hidden;">
       <Header :isLogin="!isLogin"></Header>
       <div>
-        <home-main :categories="categories" :venues="venues" :events="events">
+        <home-main :categories="categories" :venues="venues" :events="events" :eventNews="eventNews">
         </home-main>
       </div>
       <div>

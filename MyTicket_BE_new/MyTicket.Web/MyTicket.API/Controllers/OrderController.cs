@@ -103,6 +103,21 @@ namespace MYTICKET.WEB.API.Controllers
 
             }
         }
+
+        [HttpPut("exchange-ticker")]
+        public async Task<IActionResult> ExchangeTicket([FromBody] TransferTicketDto input)
+        {
+            try
+            {
+                await _orderService.ExchangeTicket(input);
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
         [AllowAnonymous]
         [HttpGet("tess")]
         public APIResponse<string>geeee(string id)
@@ -131,7 +146,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("find-by-id")]
+        [HttpGet("transfer/find-by-id")]
         public APIResponse<TicketTransferDto> FindTransferTicketById(int id)
                => new(_orderService.FindTransferTicketById(id));
         /// <summary>
@@ -139,21 +154,40 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("find-by-id")]
+        [HttpGet("exchange/find-by-id")]
         public APIResponse<TicketExchangeDto> FindExchangeTicketById(int id)
                => new(_orderService.FindExchangeTicketById(id));
 
         /// <summary>
         /// Huy chuyne nhuong ve
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("cancel-tranfer")]
-        public async Task<IActionResult> CancelTransferTicket( int id)
+        public async Task<IActionResult> CancelTransferTicket([FromBody] TransferTicketDto input)
         {
             try
             {
-                await _orderService.CancelTransferTicket(id);
+                await _orderService.CancelTransferTicket(input);
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Huy tra lai ve
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPut("cancel-exchange")]
+        public async Task<IActionResult> CancelExchangeTicket([FromBody] TransferTicketDto input)
+        {
+            try
+            {
+                await _orderService.CancelExchangeTicket(input);
                 return Ok("Success");
             }
             catch (Exception ex)
@@ -164,16 +198,56 @@ namespace MYTICKET.WEB.API.Controllers
         }
 
         /// <summary>
-        /// Huy tra lai ve
+        /// Nhập mã xác nhận trả vé
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPut("cancel-exchange")]
-        public async Task<IActionResult> CancelExchangeTicket(int id)
+        [HttpPut("confirm-exchange")]
+        public async Task<IActionResult> ConfirmExchangeTicket([FromBody] ConfirmExchangeTransferDto input)
         {
             try
             {
-                await _orderService.CancelExchangeTicket(id);
+                await _orderService.ConfirmExchange(input);
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+        /// <summary>
+        /// Nhập mã xác nhận chuyển nhượng vé
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPut("confirm-transfer")]
+        public async Task<IActionResult> ConfirmTransferTicket([FromBody] ConfirmExchangeTransferDto input)
+        {
+            try
+            {
+                await _orderService.ConfirmTransfer(input);
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+        /// <summary>
+        /// Cập nhật trạng thái chuyển nhượng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPut("transfer/update-status")]
+        public async Task<IActionResult> UpdateTransferStatus([FromBody] UpdateTransferStatusDto input)
+        {
+            try
+            {
+                await _orderService.UpdateTransferStatus(input);
                 return Ok("Success");
             }
             catch (Exception ex)

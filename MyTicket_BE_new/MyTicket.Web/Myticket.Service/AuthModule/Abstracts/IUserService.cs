@@ -62,5 +62,11 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Abstracts
         /// Lấy user hiên tại
         /// </summary>
         CurrentCustomerDto GetCurentUser();
+
+        /// <summary>
+        /// nguoi dung hien tai
+        /// </summary>
+        /// <returns></returns>
+        User CurrentUser();
     }
 }

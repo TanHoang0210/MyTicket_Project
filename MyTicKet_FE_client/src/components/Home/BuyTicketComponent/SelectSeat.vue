@@ -50,13 +50,47 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for=" (ticketnow, index) in currentTicketEvent.ticketEvents" id="pt-001">
+                                    <tr v-for=" (ticketnow, index) in currentTicketEvent.ticketEvents" :key="index"
+                                        id="pt-001">
                                         <td class="text-bold ticketpricetext">
                                             {{ ticketnow.name }}</td>
                                         <td>
                                             {{ formatCurrency(ticketnow.price) }}</td>
                                         <td style="display: flex;">
-                                            <select style="width: 150px; height: 65px; margin: auto;"
+                                            <b-input-group v-if="ticketnow.status === 1">
+                                                <b-input-group-prepend>
+                                                    <b-button variant="outline-secondary" @click="decrement(ticketnow,index)">
+                                                        <b-icon icon="dash-lg"></b-icon>
+                                                    </b-button>
+                                                </b-input-group-prepend>
+
+                                                <b-form-input type="number"
+                                                    class="text-center" style="font-size: 1.2rem;" :min="0"
+                                                    :value="order.ticketTypes[index].quantity" disabled
+                                                    :max="ticketnow.quantity"></b-form-input>
+
+                                                <b-input-group-append>
+                                                    <b-button variant="outline-success" @click="increment(ticketnow,index)">
+                                                        <b-icon icon="plus-lg"></b-icon>
+                                                    </b-button>
+                                                </b-input-group-append>
+                                            </b-input-group>
+                                            <!-- <b-input-group v-if="ticketnow.status === 1">
+                                                <b-input-group-prepend>
+                                                    <b-button variant="outline-secondary">
+                                                        <b-icon  icon="dash-lg"></b-icon>
+                                                    </b-button>
+                                                </b-input-group-prepend>
+
+                                                <b-form-input type="number" class="text-center" style="font-size: 1.2rem;"
+                                                 :min="0" :max="ticketnow.quantity"></b-form-input>
+                                                <b-input-group-append>
+                                                    <b-button variant="outline-success">
+                                                        <b-icon  icon="plus-lg"></b-icon>
+                                                    </b-button>
+                                                </b-input-group-append>
+                                            </b-input-group> -->
+                                            <!-- <select style="width: 200px; height: 65px; margin: auto;"
                                                 v-if="ticketnow.status === 1" @change="handleOrder($event, index)"
                                                 id="TicketForm_ticketPrice_001" class="w100 form-select"
                                                 name="TicketForm[ticketPrice][001]">
@@ -65,8 +99,8 @@
                                                 <option v-for="(i, index) in ticketnow.quantity + 1" :value="index">{{ index
                                                 }}
                                                 </option>
-                                            </select>
-                                            <img style="width: 150px; margin: auto;" v-else-if="ticketnow.status === 3"
+                                            </select> -->
+                                            <img style="width: 200px; margin: auto;" v-else-if="ticketnow.status === 3"
                                                 :src="$fileUrl + soldOutImg" alt="">
                                         </td>
                                     </tr>
@@ -101,13 +135,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for=" (ticketnow, index) in currentTicketEvent.ticketEvents" id="pt-001">
+                                    <tr v-for=" (ticketnow, index) in currentTicketEvent.ticketEvents" :key="index"
+                                        id="pt-001">
                                         <td class="text-bold ticketpricetext">
                                             {{ ticketnow.name }}</td>
                                         <td>
                                             {{ formatCurrency(ticketnow.price) }}</td>
                                         <td style="display: flex;">
-                                            <select style="width: 200px; height: 65px; margin: auto;"
+                                            <b-input-group v-if="ticketnow.status === 1">
+                                                <b-input-group-prepend>
+                                                    <b-button variant="outline-secondary" @click="decrement(ticketnow,index)">
+                                                        <b-icon icon="dash-lg"></b-icon>
+                                                    </b-button>
+                                                </b-input-group-prepend>
+
+                                                <b-form-input type="number"
+                                                    class="text-center" style="font-size: 1.2rem;" :min="0"
+                                                    :value="order.ticketTypes[index].quantity" disabled
+                                                    :max="ticketnow.quantity"></b-form-input>
+
+                                                <b-input-group-append>
+                                                    <b-button variant="outline-success" @click="increment(ticketnow,index)">
+                                                        <b-icon icon="plus-lg"></b-icon>
+                                                    </b-button>
+                                                </b-input-group-append>
+                                            </b-input-group>
+                                            <!-- <select style="width: 200px; height: 65px; margin: auto;"
                                                 v-if="ticketnow.status === 1" @change="handleOrder($event, index)"
                                                 id="TicketForm_ticketPrice_001" class="w100 form-select"
                                                 name="TicketForm[ticketPrice][001]">
@@ -116,7 +169,7 @@
                                                 <option v-for="(i, index) in ticketnow.quantity + 1" :value="index">{{ index
                                                 }}
                                                 </option>
-                                            </select>
+                                            </select> -->
                                             <img style="width: 200px; margin: auto;" v-else-if="ticketnow.status === 3"
                                                 :src="$fileUrl + soldOutImg" alt="">
                                         </td>
@@ -230,6 +283,7 @@ export default {
     },
     data() {
         return {
+            quantityTicketType: 0,
             validate: "",
             isValueSelected: true,
             soldOutImg: MyAsset.SOLD_OUT_IMG,
@@ -285,13 +339,18 @@ export default {
                 ]
             },
             order: {
-                ticketTypes: [],
-                tickets: []
+                ticketTypes: [
+
+                ],
+                tickets: [
+
+                ]
             }
         }
     },
     mounted() {
         this.fetchDataTicket();
+        console.log(this.order);
     },
     watch: {
         'this.$route.params.id': 'fetchDataTicket',
@@ -300,6 +359,16 @@ export default {
         async loadEventData() {
             this.$router.push({ name: 'buyTicket', params: { type: 'area', id: this.currentEventselectNow } });
             this.fetchDataTicket();
+        },
+        increment(ticketnow,index) {
+            if (this.order.ticketTypes[index].quantity < ticketnow.quantity) {
+                this.order.ticketTypes[index].quantity++;
+            }
+        },
+        decrement(ticketnow,index) {
+            if (this.order.ticketTypes[index].quantity > 0) {
+                this.order.ticketTypes[index].quantity--;
+            }
         },
         handleOrder(event, index) {
             if (event.target.value === "0") {
@@ -316,13 +385,10 @@ export default {
                     ticketEventId: this.currentTicketEvent.ticketEvents[index].id,
                     quantity: event.target.value
                 })
+                console.log(this.order);
             }
         },
         async submitToCheckout() {
-            if (!this.order || !this.order.ticketTypes || this.order.ticketTypes.length <= 0) {
-                this.isValueSelected = false;
-                this.validate = "Chọn ít nhất 1 vé";
-            } else {
                 var countTicket = 0;
                 this.order.ticketTypes.forEach(element => {
                     const quantity = parseInt(element.quantity, 10);
@@ -335,12 +401,15 @@ export default {
                 if (countTicket > 10) {
                     this.isValueSelected = false;
                     this.validate = "Đơn hàng của bạn chỉ được chọn tối đa 10 vé";
-                } else {
+                } else if(countTicket <= 0){
+                    this.isValueSelected = false;
+                    this.validate = "Chọn ít nhất 1 vé";
+                }
+                else{
                     await store.commit('setOrderData', this.order);
                     const routeInfo = { name: 'orderTicket', params: { type: 'order' } };
                     this.$router.push({ name: 'orderTicket', params: { type: 'order' }, query: { routeInfo } });
                 }
-            }
         },
         formatDate(date) {
             // Chuyển đổi ngày thành định dạng dd/mm/yyyy
@@ -394,6 +463,13 @@ export default {
                         this.$emit('getCurrentEvent', this.currentEvent);
                         this.emittedEvent = true;
                     }
+                    this.currentTicketEvent.ticketEvents.forEach(element => {
+                        this.order.ticketTypes.push({
+                            eventDetailId: this.currentTicketEvent.id,
+                            ticketEventId: element.id,
+                            quantity: 0
+                        })
+                    });
                     this.isLoading = false;
                     this.isSuccess = true;
                 } catch (error) {

@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MYTICKET.BASE.API.Controller;
 using MYTICKET.BASE.SERVICE.Common;
@@ -141,5 +139,39 @@ namespace MYTICKET.WEB.API.Controllers
         [HttpGet("current-user")]
         public APIResponse GetMe()
             => new(_userService.GetCurentUser());
+
+        /// <summary>
+        /// Danh sach nha cc
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("supplier/find-all")]
+        public APIResponse<PagingResult<SupplierDto>> GetAllSupllier([FromQuery]FilerSupplierDto input)
+            => new(_supplierService.GetAll(input));
+
+        /// <summary>
+        /// Danh sach nha cc
+        /// </summary>
+        [Authorize]
+        [HttpGet("now")]
+        public APIResponse<User> Getcurrent()
+            => new(_supplierService.CurrentUser());
+
+        [Authorize]
+        [HttpPut("customer/update")]
+        public APIResponse UpdateCustomer(UpdateCustomerUserDto input)
+        {
+            _customerService.UpdateCustomerUser(input);
+            return new();
+        }
+
+        [Authorize]
+        [HttpPut("change-password")]
+        public APIResponse ChangePassword(ChangePasswordDto input)
+        {
+            _userService.ChangePassword(input);
+            return new();
+        }
     }
 }

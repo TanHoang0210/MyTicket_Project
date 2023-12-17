@@ -31,16 +31,14 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// <summary>
         /// Quê quán
         /// </summary>
-        [MaxLength(128)]
-        [Unicode(false)]
-        public int Country { get; set; }
+        [MaxLength(512)]
+        public string? Country { get; set; }
 
         /// <summary>
         /// Quốc tịch
         /// </summary>
-        [MaxLength(128)]
-        [Unicode(false)]
-        public int Nationality { get; set; }
+        [MaxLength(512)]
+        public string? Nationality { get; set; }
 
         /// <summary>
         /// Địa chỉ

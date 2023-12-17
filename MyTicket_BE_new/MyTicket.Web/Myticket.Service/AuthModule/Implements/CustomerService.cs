@@ -42,5 +42,42 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
 
             transaction.Commit();
         }
+
+        public void UpdateCustomerUser(UpdateCustomerUserDto input)
+        {
+            var currentUserId = CommonUtils.GetCurrentUserId(_httpContext);
+            _logger.LogInformation($"{nameof(UpdateCustomerUser)}: input = {JsonSerializer.Serialize(input)}, currentUserId = {currentUserId}");
+            var currentUser = _dbContext.Users.FirstOrDefault(s => s.Id == currentUserId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.UserNotFound);
+            var currentCustomer = _dbContext.Customers.FirstOrDefault(s => s.Id == currentUser.CustomerId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.CustomerNotFound);
+            if(input.FirstName != null)
+            {
+            currentCustomer.FirstName = input.FirstName;
+            }
+            if (input.LastName != null)
+            {
+                currentCustomer.LastName = input.LastName;
+            }
+            if (input.Address != null)
+            {
+                currentCustomer.Address = input.Address;
+            }
+            if (input.DateOfBirth != null)
+            {
+                currentCustomer.DateOfBirth = input.DateOfBirth;
+            }
+            if (input.Country != null)
+            {
+                currentCustomer.Country = input.Country;
+            }
+            if (input.Nationality != null)
+            {
+                currentCustomer.Nationality = input.Nationality;
+            }
+            if (input.Gender != 0)
+            {
+                currentCustomer.Gender = input.Gender.Value;
+            }
+            _dbContext.SaveChanges();
+        }
     }
 }

@@ -5,6 +5,7 @@ import EventDetailView from '../views/EventDetailView.vue'
 import PageNotFound from '../views/NotFound.vue'
 import BuyTicket from '../views/BuyTicketView.vue'
 import store from '../store';
+import VenueDetailView from '../views/VenueDetailView.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -77,6 +78,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/VenueView.vue')
   },
   {
+    path: '/venue/detail',
+    name: 'VenueDetail',
+    component:VenueDetailView,
+  },
+  {
     path: '/:type',
     name: 'myOrder',
     // route level code-splitting
@@ -92,6 +98,14 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/MyInfoView.vue')
+  },
+  {
+    path: '/transfer/ticket/complete',
+    name: 'CompleteTransfer',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../components/Home/BuyTicketComponent/CompleteTransfer.vue')
   }
 ]
 

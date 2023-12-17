@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.WEB.SERVICE.OrderModule.Dtos;
 
@@ -32,8 +33,6 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
         /// <param name="id"></param>
         Task DeleteOrderDetail(int id);
 
-        Task DeleteOrderExpired();
-
         /// <summary>
         /// lấy đơn hàng đang thanh toán
         /// </summary>
@@ -55,6 +54,12 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
         Task TransferTicket(TransferTicketDto input);
 
 
+        /// <summary>
+        /// trả vé
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task ExchangeTicket(TransferTicketDto input);
         string QrTest(string input);
 
         /// <summary>
@@ -84,15 +89,35 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
         /// <summary>
         /// huy chuyen nhuong ve
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        Task CancelTransferTicket(int id);
+        Task CancelTransferTicket(TransferTicketDto input);
 
         /// <summary>
         /// huy tra ve
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task CancelExchangeTicket(int id);
+        Task CancelExchangeTicket(TransferTicketDto input);
+
+        /// <summary>
+        /// Xác nhận yêu cầu khách hàng trả vé
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task ConfirmExchange(ConfirmExchangeTransferDto input);
+
+        /// <summary>
+        /// xác nhận yêu cầu chuyển nhượng vé
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task ConfirmTransfer(ConfirmExchangeTransferDto input);
+        /// <summary>
+        /// Cập nhật trạng thái chuyển nhượng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UpdateTransferStatus(UpdateTransferStatusDto input);
     }
 }

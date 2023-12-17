@@ -9,7 +9,7 @@
                     <b-card class="mb-0 venue__item--info">
                         <div class="venue__item--img" style="position: relative;">
                             <b-card-img :src="$fileUrl+venue.image" alt="Image"></b-card-img>
-                            <router-link to="/about">
+                            <router-link :to="{ name: 'VenueDetail', query: { id: venue.id } }">
                                 <div class="ticket__button--modal">
                                 </div>
                             </router-link>

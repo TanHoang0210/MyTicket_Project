@@ -41,8 +41,8 @@ namespace MYTICKET.WEB.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("find/{id}")]
-        public APIResponse<VenueDetailDto> FindVenueById(int id)
+        [HttpGet("find-by-id")]
+        public APIResponse<VenueDetailDto> FindVenueById([FromQuery]int id)
                => new(_venueService.GetById(id));
 
         /// <summary>

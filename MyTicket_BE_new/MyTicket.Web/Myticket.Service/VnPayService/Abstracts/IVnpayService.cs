@@ -11,5 +11,7 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Abstracts
     public interface IVnpayService
     {
         public string CreatePaymentUrl(PaymentInformationDto model, HttpContext context);
+
+        public string CreatePaymentTransferUrl(TransferPaymentDto model, HttpContext context);
     }
 }

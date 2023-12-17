@@ -26,7 +26,10 @@ namespace MYTICKET.UTILS.ConstantVaribale.Shared
 
         public const int CANCEL = 3;
 
-        public const int SUCCESS = 4;
+        public const int TRANSFERING = 4;
+
+        public const int SUCCESS = 5;
+
     }
 
     public static class ExchangeStatuses

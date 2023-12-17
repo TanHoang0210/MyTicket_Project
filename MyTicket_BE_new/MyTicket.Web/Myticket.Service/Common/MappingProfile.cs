@@ -51,6 +51,7 @@ namespace MYTICKET.WEB.SERVICE.Common
             //EventType
             CreateMap<EventType, EventTypeDto>().ReverseMap();
             CreateMap<Event, EventDto>().ReverseMap();
+            CreateMap<Suppiler, SupplierDto>().ReverseMap();
         }
 
     }

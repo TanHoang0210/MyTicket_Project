@@ -46,11 +46,15 @@
                             <my-ticket v-if="isMyTicket"></my-ticket>
                             <ticket-exchange v-if="isExchangeTicket"></ticket-exchange>
                             <ticket-transfer v-if="isTransferTicket"></ticket-transfer>
+                            <my-info-view  v-if="isUserInfo"></my-info-view>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
+        <div>
+        <home-footer :categories="categories"></home-footer>
+      </div>
     </div>
 </template>
 
@@ -58,16 +62,20 @@
 import MyTicket from "@/components/Home/MyTicketComponent/MyTicket.vue"
 import TicketExchange from "@/components/Home/MyTicketComponent/TicketExchange.vue"
 import TicketTransfer from "@/components/Home/MyTicketComponent/TicketTransfer.vue"
+import MyInfoView from '@/views/MyInfoView.vue'
 import Header from "@/components/Header.vue";
+import HomeFooter from "@/components/Home/HomeFooter.vue";
 export default {
     components: {
-        MyTicket, Header, TicketExchange, TicketTransfer
+        MyTicket, Header, TicketExchange, TicketTransfer,MyInfoView,HomeFooter
     },
     data() {
         return {
+            categories:null,
             isMyTicket: false,
             isTransferTicket: false,
             isExchangeTicket: false,
+            isUserInfo: false,
         }
     },
     mounted() {
@@ -85,16 +93,28 @@ export default {
                 this.isMyTicket = true;
                 this.isTransferTicket = false;
                 this.isExchangeTicket = false;
+                this.isUserInfo = false;
+
             }
             else if (this.$route.params.type == 'transfer') {
                 this.isMyTicket = false;
                 this.isTransferTicket = true;
                 this.isExchangeTicket = false;
+                this.isUserInfo = false;
+
             }
             else if (this.$route.params.type == 'refund') {
                 this.isMyTicket = false;
                 this.isTransferTicket = false;
                 this.isExchangeTicket = true;
+                this.isUserInfo = false;
+                
+            }
+            else if (this.$route.params.type == 'user') {
+                this.isMyTicket = false;
+                this.isTransferTicket = false;
+                this.isExchangeTicket = false;
+                this.isUserInfo = true;
             }
         }
     }

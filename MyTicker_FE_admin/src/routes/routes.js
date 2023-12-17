@@ -11,8 +11,18 @@ import Icons from 'src/pages/Icons.vue'
 import Maps from 'src/pages/Maps.vue'
 import Notifications from 'src/pages/Notifications.vue'
 import Upgrade from 'src/pages/Upgrade.vue'
+import Event from 'src/pages/Event/Event.vue'
+import EventDetail from 'src/pages/Event/Detail/EventDetail.vue'
+import CreateEvent from 'src/pages/Event/Detail/CreateEvent.vue'
+import CreateEventDetail from 'src/pages/Event/Detail/CreateEventDetail.vue'
+import Login from 'src/pages/Login.vue'
 
 const routes = [
+  {
+    name: 'Login',
+    component: Login,
+    path: '/login'
+  },
   {
     path: '/',
     component: DashboardLayout,
@@ -62,6 +72,30 @@ const routes = [
         path: 'upgrade',
         name: 'Upgrade to PRO',
         component: Upgrade
+      },
+      {
+        path: 'event',
+        name: 'Event',
+        component: Event,
+        // children: [
+        //   {
+
+        // ]
+      },
+      {
+        path: 'event/detail',
+        name: 'EventDetail',
+        component: EventDetail
+      },
+      {
+        path: 'event/create',
+        name: 'CreateEvent',
+        component: CreateEvent
+      },
+      {
+        path: 'event/detail/create',
+        name: 'CreateEventDetail',
+        component: CreateEventDetail
       }
     ]
   },

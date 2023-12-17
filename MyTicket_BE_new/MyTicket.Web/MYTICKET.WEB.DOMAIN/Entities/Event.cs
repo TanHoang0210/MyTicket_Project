@@ -70,6 +70,9 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// </summary>
         public bool IsExChange { get; set; }
 
+        public bool IsOutStanding { get; set; }
+
+
         /// <summary>
         /// Ngày sự kiện bắt đầu tổ chức
         /// </summary>

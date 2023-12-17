@@ -12,7 +12,7 @@
                                 </div>
                             </router-link>
                         </div>
-                        <b-card-sub-title v-if="event.firstEventDate == event.lastEventDate">{{
+                        <b-card-sub-title v-if="event.firstEventDate == event.lastEventDate || event.lastEventDate == null ||event.firstEventDate == null">{{
                             formatDate(event.firstEventDate)
                         }}</b-card-sub-title>
                         <b-card-sub-title v-else-if="event.firstEventDate != event.lastEventDate">{{
@@ -59,7 +59,7 @@ export default {
     methods: {
         formatDate(date) {
             // Chuyển đổi ngày thành định dạng dd/mm/yyyy
-            return moment(date).format('DD/MM/YYYY');
+            return moment(date).format('hh:mm  DD/MM/YYYY');
         },
     }
 }
@@ -90,19 +90,6 @@ export default {
     display: flex;
     justify-content: space-between;
 }
-.card-subtitle {
-    margin: 5px 5px !important;
-    font-size: 1.2rem !important;
-}
-
-.event__list {
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-}
-
 .event-name {
     margin: 5px 5px !important;
     font-weight: 600;
@@ -159,43 +146,6 @@ export default {
     border-radius: none !important;
     opacity: 0.8;
 }
-
-.event__item--img:hover .ticket__button--modal {
-    display: block;
-    cursor: pointer;
-}
-
-.ticket__button--modal:hover .ticket__button {
-    right: 0;
-}
-
-.card-img {
-    width: 100% !important;
-    height: auto !important;
-    transition: all ease-out 0.3s !important;
-}
-
-.event__item--img {
-    position: relative;
-    width: 100%;
-    background-color: inherit;
-    background-size: 100%;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px;
-    border-radius: 2px;
-    overflow: hidden;
-    background-position: left top;
-    text-align: center;
-}
-
-.event__item--img:hover .card-img {
-    transform: perspective(800px) translateZ(50px) !important;
-}
-
-.ticket__button--modal:hover .ticket__button {
-    opacity: 0.8;
-    color: var(--primary-color);
-}
-
 .ticket__button:hover {
     opacity: 1;
 }

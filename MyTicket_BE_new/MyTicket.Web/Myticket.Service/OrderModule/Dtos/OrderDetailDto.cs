@@ -36,5 +36,6 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
 
         public string? QrCode { get; set; }
         public bool IsExchange { get; set; }
+        public int status { get; set; }
     }
 }

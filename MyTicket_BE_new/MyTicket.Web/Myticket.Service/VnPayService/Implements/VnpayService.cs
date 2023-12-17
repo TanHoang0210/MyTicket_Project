@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS.ConstantVariables.Shared;
+using MYTICKET.UTILS.ConstantVaribale.Shared;
 using MYTICKET.UTILS.CustomException;
 using MYTICKET.WEB.SERVICE.Common;
 using MYTICKET.WEB.SERVICE.VnPayService.Abstracts;
@@ -17,6 +18,48 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
         public VnpayService(IOptions<VNPaySettings> appSettings, ILogger<VnpayService> logger, IHttpContextAccessor httpContext) : base(logger, httpContext)
         {
             _appSettings = appSettings;
+        }
+
+        public string CreatePaymentTransferUrl(TransferPaymentDto model, HttpContext context)
+        {
+            var tick = DateTime.Now.Ticks.ToString();
+            var ticketTemp = (from ticket in _dbContext.Tickets
+                              join ticketEvent in _dbContext.TicketEvents on ticket.TicketEventId equals ticketEvent.Id
+                              join orderDetail in _dbContext.OrderDetails on ticket.Id equals orderDetail.TicketId
+                              join od in _dbContext.Orders on orderDetail.OrderId equals od.Id into orders
+                              from od in orders.DefaultIfEmpty()
+                             where ticket.Id == model.TicketId && od.Status == OrderStatuses.SUCCESS && !od.Deleted
+                             select new
+                             {
+                                 TicketId = ticket.Id,
+                                 CustomerTransferOwnerId = od.CustomerId,
+                                 TotalAmount = ticketEvent.Price,
+                                 test = orderDetail
+                             }).FirstOrDefault();
+            var transfer = new
+            {
+                TicketId = ticketTemp.TicketId,
+                CustomerTransferOwnerId = ticketTemp.CustomerTransferOwnerId,
+                TotalAmount = ticketTemp.TotalAmount
+            };
+            var orderInfo = transfer.TicketId.ToString() +"_"+ transfer.CustomerTransferOwnerId.ToString();
+            var pay = new VnPayLibrary();
+            pay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
+            pay.AddRequestData("vnp_Command", _appSettings.Value.Vnp_Command);
+            pay.AddRequestData("vnp_TmnCode", _appSettings.Value.Vnp_TmnCode);
+            pay.AddRequestData("vnp_Amount", ((long)transfer.TotalAmount * 100).ToString());
+            pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            pay.AddRequestData("vnp_CurrCode", _appSettings.Value.Vnp_CurrCode);
+            pay.AddRequestData("vnp_IpAddr", "127.0.0.1");
+            pay.AddRequestData("vnp_Locale", _appSettings.Value.Vnp_Locale);
+            pay.AddRequestData("vnp_OrderInfo", orderInfo.ToString());
+            pay.AddRequestData("vnp_OrderType", transfer.CustomerTransferOwnerId.ToString());
+            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8080/transfer/ticket/complete");
+            pay.AddRequestData("vnp_TxnRef", tick);
+            var paymentUrl =
+            pay.CreateRequestUrl("https://sandbox.vnpayment.vn/paymentv2/vpcpay.html", _appSettings.Value.Vnp_SecureHash);
+
+            return paymentUrl;
         }
 
         public string CreatePaymentUrl(PaymentInformationDto model, HttpContext context)

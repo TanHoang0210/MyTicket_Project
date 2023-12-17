@@ -35,10 +35,9 @@ namespace MYTICKET.Hostconsle.Migrations
                         .HasMaxLength(2024)
                         .HasColumnType("nvarchar(2024)");
 
-                    b.Property<int>("Country")
-                        .HasMaxLength(128)
-                        .IsUnicode(false)
-                        .HasColumnType("int");
+                    b.Property<string>("Country")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -79,10 +78,9 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Nationality")
-                        .HasMaxLength(128)
-                        .IsUnicode(false)
-                        .HasColumnType("int");
+                    b.Property<string>("Nationality")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.HasKey("Id");
 
@@ -141,6 +139,9 @@ namespace MYTICKET.Hostconsle.Migrations
                         .HasColumnType("nvarchar(1024)");
 
                     b.Property<bool>("IsExChange")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOutStanding")
                         .HasColumnType("bit");
 
                     b.Property<int?>("ModifiedBy")

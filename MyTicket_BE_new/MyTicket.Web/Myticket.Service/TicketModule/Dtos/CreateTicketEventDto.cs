@@ -9,11 +9,12 @@ namespace MYTICKET.WEB.SERVICE.TicketModule.Dtos
 {
     public class CreateTicketEventDto
     {
+        public int EventDetailId { get; set; }
         private string _name = null!;
         public string Name
         {
             get => _name;
-            set => _name = value;
+            set => _name = value.Trim();
         }
 
         public decimal Price { get; set; }

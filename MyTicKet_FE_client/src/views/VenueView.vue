@@ -87,7 +87,7 @@ export default {
           href: '/'
         },
         {
-          text: 'Event',
+          text: 'Venue',
           active: true
         },
       ]

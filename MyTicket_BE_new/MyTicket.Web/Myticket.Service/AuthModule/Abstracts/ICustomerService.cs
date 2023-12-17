@@ -15,5 +15,14 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Abstracts
         /// <param name="input"></param>
         /// <returns></returns>
         void CreateCustomerUser(CreateCustomerUserDto input);
+
+        /// <summary>
+        /// Thêm user kh
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        void UpdateCustomerUser(UpdateCustomerUserDto input);
+
+
     }
 }

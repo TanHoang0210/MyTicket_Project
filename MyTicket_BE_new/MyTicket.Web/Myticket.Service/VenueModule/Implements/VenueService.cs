@@ -81,8 +81,7 @@ namespace MYTICKET.WEB.SERVICE.VenueModule.Implements
                              EventImage = myevent.EventImage,
                              EventTypeId = myevent.EventTypeId,
                              EventTypeName = _dbContext.EventTypes.Where(x => x.Id == myevent.EventTypeId).Select(x => x.Name).FirstOrDefault(),
-                             FirstEventDate = _dbContext.EventDetails.Where(o => o.EventId == myevent.Id).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay).First().Date,
-                             LastEventDate = _dbContext.EventDetails.Where(o => o.EventId == myevent.Id).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay).Last().Date,
+                             FirstEventDate = eventVenue.OrganizationDay.Date,
                              Status = myevent.Status
                          }) ?? throw new UserFriendlyException(ErrorCode.NotFound);
             var result = new VenueDetailDto

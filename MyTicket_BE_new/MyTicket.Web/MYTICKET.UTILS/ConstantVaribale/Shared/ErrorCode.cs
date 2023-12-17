@@ -56,5 +56,8 @@
 
         TicketNotFound = 9000,
         TicketInvalid = 9001,
+        CannotCancelTransfer = 9002,
+        CannotCancelExchange = 9003,
+        OrderIsFullNow = 9004,
     }
 }

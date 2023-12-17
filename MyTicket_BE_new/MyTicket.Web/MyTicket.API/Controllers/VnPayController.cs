@@ -22,5 +22,11 @@ namespace MYTICKET.WEB.API.Controllers
         {
             return Ok(_service.CreatePaymentUrl(input, HttpContext));
         }
+
+        [HttpPost("transfer/payment-vn-pay")]
+        public IActionResult CreateTransferUrl([FromBody] TransferPaymentDto input)
+        {
+            return Ok(_service.CreatePaymentTransferUrl(input, HttpContext));
+        }
     }
 }

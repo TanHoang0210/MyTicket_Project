@@ -16,10 +16,11 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import App from "./App.vue";
-
+import store from './store'
 // LightBootstrap plugin
 import LightBootstrap from "./light-bootstrap-main";
-
+import './data/axios'
+import axios  from 'axios'
 // router setup
 import routes from "./routes/routes";
 
@@ -40,7 +41,22 @@ const router = new VueRouter({
     }
   },
 });
-
+const storedUser = sessionStorage.getItem('currentUser');
+if (storedUser) {
+  store.commit('setCurrentUser', JSON.parse(storedUser));
+}
+const token = sessionStorage.getItem('accessToken');
+const retoken = sessionStorage.getItem('refreshToken');
+const expiretoken = sessionStorage.getItem('tokenExpiration');
+if(token && retoken && expiretoken){
+  store.commit('setTokens', {
+    accessToken: token,
+    refreshToken: retoken,
+    tokenExpiration: expiretoken,
+  });
+}
+Vue.prototype.$fileUrl = "http://localhost:5030/myticket/";
+Vue.prototype.$axios = axios;
 /* eslint-disable no-new */
 new Vue({
   el: "#app",
