@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS;
 using MYTICKET.WEB.SERVICE.EventModule.Abstracts;
+using MYTICKET.WEB.SERVICE.EventModule.Dtos;
+using MYTICKET.WEB.SERVICE.EventModule.Implements;
 using MYTICKET.WEB.SERVICE.OrderModule.Dtos;
 using MYTICKET.WEB.SERVICE.TicketModule.Abstracts;
 using MYTICKET.WEB.SERVICE.TicketModule.Dtos;
@@ -30,5 +32,17 @@ namespace MYTICKET.WEB.API.Controllers
         [HttpGet("find-all-transfer")]
         public APIResponse<PagingResult<TicketEventTransferDto>> FindAllTransferTicket([FromQuery] FilterTicketDto input)
                => new(_ticketService.GetAllTicketTransfer(input));
+        /// <summary>
+        /// thêm sự kiện
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost("create")]
+        public APIResponse CreateTicket([FromBody] CreateTicketEventDto input)
+        {
+            _ticketService.CreateTicketEvent(input);
+            return new();
+        }
     }
 }

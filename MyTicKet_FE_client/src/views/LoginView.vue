@@ -33,11 +33,7 @@
                 icon="eye"></b-icon>
               <b-icon v-else class="show-password-btn" @click="showPassword = !showPassword" icon="eye-slash"></b-icon>
             </div>
-            <div>
-              <b-form-checkbox class="checkbox-me" value="remember">
-                <span>Ghi nhớ mật khẩu lần sau</span>
-              </b-form-checkbox>
-            </div>
+            <router-link class="forgot-password" to="/">Quên mật khẩu</router-link>
           </b-form-group>
 
           <b-button class="login-btn" type="submit">Đăng Nhập</b-button>
@@ -180,7 +176,15 @@ export default {
   display: flex;
   height: 100vh;
 }
-
+.forgot-password{
+  float: right;
+  display: block;
+  margin: 5px 5px;
+  color: var(--primary-color-bold);
+}
+.forgot-password:hover{
+  color: var(--primary-color-hover-bold);
+}
 .login-content-right {
   width: 50%;
   background-color: #fff;

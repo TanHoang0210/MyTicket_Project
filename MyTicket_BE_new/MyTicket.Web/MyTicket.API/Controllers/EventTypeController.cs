@@ -42,5 +42,26 @@ namespace MYTICKET.WEB.API.Controllers
             _eventTypeService.Create(input);
             return new();
         }
+
+        /// <summary>
+        /// lây danh sách loại sự kiện
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("find-by-id")]
+        public APIResponse<EventTypeDto> FindEventTypeById([FromQuery] int id)
+               => new(_eventTypeService.FindById(id));
+
+        /// <summary>
+        /// thêm loại sự kiện
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPut("update")]
+        public APIResponse UpdateEventType([FromBody] UpdateEventTypeDto input)
+        {
+            _eventTypeService.Update(input);
+            return new();
+        }
     }
 }

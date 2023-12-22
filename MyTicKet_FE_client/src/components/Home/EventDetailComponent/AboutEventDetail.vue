@@ -1,6 +1,6 @@
 <template>
     <div class="aboutEvent">
-        <ticket-list :currentEvent="currentEvent" :listTickets="listTickets"></ticket-list>
+        <ticket-list v-show="isShowList" :currentEvent="currentEvent" :listTickets="listTickets"></ticket-list>
         <event-detail :currentEvent="currentEvent"></event-detail>
         <ticket-price :currentEvent="currentEvent"></ticket-price>
         <event-refund :currentEvent="currentEvent"></event-refund>
@@ -15,9 +15,12 @@ import EventRefund from '@/components/Home/EventDetailComponent/AboutEventCompon
 import EventPolicy from '@/components/Home/EventDetailComponent/AboutEventComponent/EventPolicy.vue'
 export default {
   name: 'EventDetailView',
-  props:['currentEvent','listTickets'],
+  props:['currentEvent','listTickets','isShowList'],
   components:{
     TicketList,EventDetail,TicketPrice,EventRefund,EventPolicy
+  },
+  mounted(){
+    console.log(this.show + "haha")
   }
 }
 </script>

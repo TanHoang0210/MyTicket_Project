@@ -3,10 +3,10 @@
         <div>
             <Header :isLogin="!isLogin"></Header>
         </div>
-        <div style="display: block; height: 50px; background-color: var(--primary-color-bold); margin-bottom:20px ;">
+        <div style="display: block; height: 50px; background-color: var(--primary-color-bold);">
             <b-breadcrumb class="event-breadcrumb black-breadcrumb" :items="breadItems"></b-breadcrumb>
         </div>
-        <main class="main" style="margin-bottom: 30px;">
+        <main class="main" style="padding: 30px; 0">
             <div class="main__container">
                 <div class="home__container">
                     <div class="container">

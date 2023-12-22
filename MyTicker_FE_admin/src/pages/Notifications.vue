@@ -75,18 +75,18 @@
               <button class="btn btn-default btn-block" @click="notifyVue('top', 'center')">Top Center</button>
             </div>
             <div class="col-md-3">
-              <button class="btn btn-default btn-block" @click="notifyVue('top', 'right')">Top Right</button>
+              <button class="btn btn-default btn-block" @click="notifyVue('top', 'right',4)">Top Right</button>
             </div>
           </div>
           <div class="row justify-content-center">
             <div class="col-md-3 col-md-offset-1">
-              <button class="btn btn-default btn-block" @click="notifyVue('bottom', 'left')">Bottom Left</button>
+              <button class="btn btn-default btn-block" @click="notifyVue('bottom', 'left',3)">Bottom Left</button>
             </div>
             <div class="col-md-3">
-              <button class="btn btn-default btn-block" @click="notifyVue('bottom', 'center')">Bottom Center</button>
+              <button class="btn btn-default btn-block" @click="notifyVue('bottom', 'center',2)">Bottom Center</button>
             </div>
             <div class="col-md-3">
-              <button class="btn btn-default btn-block" @click="notifyVue('bottom', 'right')">Bottom Right</button>
+              <button class="btn btn-default btn-block" @click="notifyVue('bottom', 'right',1)">Bottom Right</button>
             </div>
 
           </div>
@@ -111,8 +111,7 @@
       }
     },
     methods: {
-      notifyVue (verticalAlign, horizontalAlign) {
-        const color = Math.floor((Math.random() * 4) + 1)
+      notifyVue (verticalAlign, horizontalAlign,color) {
         this.$notifications.notify(
           {
             message: `<span>Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer.</span>`,

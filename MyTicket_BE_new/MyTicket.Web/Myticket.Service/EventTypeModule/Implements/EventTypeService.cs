@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.SERVICE.Common;
+using MYTICKET.UTILS.ConstantVariables.Shared;
+using MYTICKET.UTILS.CustomException;
 using MYTICKET.UTILS.Linq;
 using MYTICKET.WEB.DOMAIN.Entities;
 using MYTICKET.WEB.SERVICE.Common;
@@ -47,7 +50,7 @@ namespace MYTICKET.WEB.SERVICE.EventTypeModule.Implements
                 Name = s.Name,
                 Description= s.Description,
                 Id = s.Id,
-                EventTypeImage = s.EventTypeImage
+                Image = s.EventTypeImage
             });
             result.TotalItems = query.Count();
             query = query.OrderDynamic(input.Sort);
@@ -59,6 +62,27 @@ namespace MYTICKET.WEB.SERVICE.EventTypeModule.Implements
             result.Items =query;
             return result;
 
+        }
+
+        public EventTypeDto FindById(int id)
+        {
+            var query = _dbContext.EventTypes.Where(s => s.Id == id && !s.Deleted).Select(s => new EventTypeDto
+            {
+                Name = s.Name,
+                Description = s.Description,
+                Id = s.Id,
+                Image = s.EventTypeImage
+            }).FirstOrDefault();
+            return query;
+        }
+
+        public void Update(UpdateEventTypeDto input)
+        {
+            var query = _dbContext.EventTypes.Where(s => s.Id == input.Id && !s.Deleted).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
+            query.Name = input.Name;
+            query.Description = input.Description;
+            query.EventTypeImage = input.Image;
+            _dbContext.SaveChanges();
         }
     }
 }

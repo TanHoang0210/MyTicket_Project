@@ -6,29 +6,45 @@
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Tổng quan</p>
       </sidebar-link>
-      <sidebar-link to="/admin/user">
-        <i class="nc-icon nc-circle-09"></i>
+      <sidebar-link to="/admin/customer">
+        <i class="nc-icon nc-single-02"></i>
         <p>Khách hàng</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/supplier">
+        <i class="nc-icon nc-circle-09"></i>
+        <p>Nhà cung cấp</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/eventtype">
+        <i class="nc-icon nc-circle-09"></i>
+        <p>Loại sự kiện</p>
       </sidebar-link>
       <sidebar-link to="/admin/event">
         <i class="nc-icon nc-notes"></i>
         <p>Sự kiện</p>
       </sidebar-link>
-      <sidebar-link to="/admin/typography">
+      <sidebar-link to="/admin/venue">
         <i class="nc-icon nc-pin-3"></i>
         <p>Sân vận động</p>
       </sidebar-link>
-      <sidebar-link to="/admin/icons">
+      <sidebar-link to="/admin/order">
+        <i class="nc-icon nc-atom"></i>
+        <p>Đơn đặt vé</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/transfer">
+        <i class="nc-icon nc-refresh-02"></i>
+        <p>Đơn chuyển nhượng</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/exchange">
+        <i class="nc-icon nc-send"></i>
+        <p>Yêu cầu trả vé</p>
+      </sidebar-link>
+      <!-- <sidebar-link to="/admin/icons">
         <i class="nc-icon nc-atom"></i>
         <p>Quản lý vé</p>
-      </sidebar-link>
+      </sidebar-link> -->
       <sidebar-link to="/admin/maps">
         <i class="nc-icon nc-paper-2"></i>
         <p>Thống kê</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/notifications">
-        <i class="nc-icon nc-bell-55"></i>
-        <p>Thông báo</p>
       </sidebar-link>
     </side-bar>
     <div class="main-panel">
@@ -43,7 +59,9 @@
   </div>
 </template>
 <style lang="scss">
-
+.sidebar-wrapper{
+  background-color: var(--primary-color-bold) !important;
+}
 </style>
 <script>
   import TopNavbar from './TopNavbar.vue'

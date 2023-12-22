@@ -27,12 +27,47 @@ namespace MYTICKET.WEB.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost("create")]
-        public APIResponse CreateVenue([FromBody] CreateEventDto input)
+        public APIResponse CreateEvent([FromBody] CreateEventDto input)
         {
             _eventService.CreateEvent(input);
             return new();
         }
-
+        /// <summary>
+        /// cap nhat su kien
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut("update")]
+        public APIResponse UpdateEvent([FromBody] UpdateEventDto input)
+        {
+            _eventService.UpdateEvent(input);
+            return new();
+        }
+        /// <summary>
+        /// cap nhat su kien
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut("detail/update")]
+        public APIResponse UpdateEventDetail([FromBody] UpdateEventDetailDto input)
+        {
+            _eventService.UpdateEventDetail(input);
+            return new();
+        }
+        /// <summary>
+        /// thêm sự kiện
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost("create-detail")]
+        public APIResponse CreateDetail([FromBody] CreateEventDetailDto input)
+        {
+            _eventService.CreateEventDetail(input);
+            return new();
+        }
         /// <summary>
         /// lây danh sách sự kiện
         /// </summary>

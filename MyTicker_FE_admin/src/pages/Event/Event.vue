@@ -5,11 +5,30 @@
         <div class="col-12">
           <card class="strpied-tabled-with-hover" body-classes="table-full-width table-responsive">
             <template slot="header">
-              <div style="display: flex; justify-content: space-between;">
-                <h4 class="card-title">Danh sách sự kiện</h4>
-                <router-link class="btn btn-success btn-fill" style= "color: #fff; margin-right: 30px;" :to="{ name: 'CreateEvent' }">
-                 Thêm mới
-                </router-link>
+              <div class="row" style="display: flex; justify-content: space-between;">
+                <div class="col-md-3">
+                  <h4 class="card-title">Danh sách sự kiện</h4>
+                </div>
+                <div class="col-md-5">
+                  <b-input-group class="float-right">
+                    <b-form-input v-model="search.keyword"></b-form-input>
+                    <b-input-group-append>
+                      <b-button @click="getAllData()" variant="outline-success">Tìm kiếm</b-button>
+                    </b-input-group-append>
+                  </b-input-group>
+                </div>
+                <div class="col-md-2">
+                  <b-form-select v-model="search.status" @change="getAllData()">
+                    <b-form-select-option :value="null">Tất cả</b-form-select-option>
+                    <b-form-select-option v-for="item in eventStatuses" :value="item.id">{{ item.name }}</b-form-select-option>
+                  </b-form-select>
+                </div>
+                <div class="col-md-2">
+                  <router-link class="btn btn-success btn-fill float-right" style="color: #fff; margin-right: 30px;"
+                    :to="{ name: 'CreateEvent' }">
+                    Thêm mới
+                  </router-link>
+                </div>
               </div>
             </template>
             <l-table class="table-hover table-striped" :columns="table1.columns" :data="formattedData"
@@ -45,8 +64,34 @@ export default {
   },
   data() {
     return {
+      search:{
+        keyword:null,
+        status:null
+      },
+      eventStatuses:[
+          {
+            id:1,
+            name:"Khởi tạo"
+          },
+          {
+            id:2,
+            name:"Mở bán vé"
+          },
+          {
+            id:3,
+            name:"Ngừng bán vé"
+          },
+          {
+            id:4,
+            name:"Đang diễn ra"
+          },
+          {
+            id:5,
+            name:"Đã hủy"
+          },
+      ],
       id: 1,
-      pageSize: 10,
+      pageSize: 100,
       pageNumber: 1,
       table1: {
         columns: tableColumns,
@@ -66,8 +111,9 @@ export default {
               pageNumber: this.pageNumber,
               startDate: this.startDate,
               endDate: this.endDate,
-              keyword: this.$route.query.eventName,
-              eventTypeId: this.$route.query.eventTypeId
+              keyword: this.search.keyword,
+              eventTypeId: this.$route.query.eventTypeId,
+              status:this.search.status
             },
           }
         )

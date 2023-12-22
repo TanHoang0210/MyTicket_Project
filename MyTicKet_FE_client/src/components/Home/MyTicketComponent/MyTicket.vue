@@ -43,7 +43,7 @@
                             <span style="color: blue; font-weight: 600;" v-if="item.status === 1">
                                 Chưa thanh toán
                             </span>
-                            <span style="color: orange; font-weight: 600;" v-if="item.status === 2">
+                            <span style="color: orange; font-weight: 600;" v-if="item.status === 2 || item.status === 10">
                                 Đã thanh toán
                             </span>
                             <span style="color: green; font-weight: 600;" v-if="item.status === 3">

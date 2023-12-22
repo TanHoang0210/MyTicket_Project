@@ -4,6 +4,7 @@ using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS.ConstantVariables.Shared;
 using MYTICKET.UTILS.ConstantVariables.User;
 using MYTICKET.UTILS.CustomException;
+using MYTICKET.UTILS.Linq;
 using MYTICKET.UTILS.Security;
 using MYTICKET.WEB.DOMAIN.Entities;
 using MYTICKET.WEB.SERVICE.AuthModule.Abstracts;
@@ -41,6 +42,39 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
             _dbContext.SaveChanges();
 
             transaction.Commit();
+        }
+
+        public PagingResult<CurrentCustomerDto> GetAll(FilterCustomerDto input)
+        {
+            var result = new PagingResult<CurrentCustomerDto>();
+            var query = (from user in _dbContext.Users
+                         join customer in _dbContext.Customers on user.CustomerId equals customer.Id
+                         where !user.Deleted && !customer.Deleted
+                         && (input.Keyword == null || (customer.FirstName.Contains(input.Keyword)|| customer.LastName.Contains(input.Keyword)))
+                         select new CurrentCustomerDto
+                         {
+                             Id = user.Id,
+                             Address = customer.Address,
+                             Country = customer.Country,
+                             DateOfBirth = customer.DateOfBirth,
+                             Email = user.Email,
+                             FirstName = customer.FirstName,
+                             Gender = customer.Gender,
+                             LastName = customer.LastName,
+                             Nationality = customer.Nationality,
+                             Password = user.Password,
+                             Phone = user.Phone,
+                             Username = user.Username
+                         });
+            result.TotalItems = query.Count();
+            query = query.OrderDynamic(input.Sort);
+
+            if (input.PageSize != -1)
+            {
+                query = query.Skip(input.GetSkip()).Take(input.PageSize);
+            }
+            result.Items = query;
+            return result;
         }
 
         public void UpdateCustomerUser(UpdateCustomerUserDto input)

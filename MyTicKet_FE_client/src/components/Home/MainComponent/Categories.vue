@@ -10,7 +10,7 @@
               class="mb-0 category__item--info"
               >
               <div class="category__item--img" style="position: relative;">
-                  <b-card-img :src="$fileUrl+category.eventTypeImage" alt="Image"></b-card-img>
+                  <b-card-img :src="$fileUrl+category.image" alt="Image"></b-card-img>
                   <router-link :to="{name:'event', query:{eventTypeId:category.id}}">
                 <div class="ticket__button--modal">
 

@@ -1,4 +1,5 @@
-﻿using MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto;
+﻿using MYTICKET.BASE.SERVICE.Common;
+using MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,12 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Abstracts
         /// <returns></returns>
         void UpdateCustomerUser(UpdateCustomerUserDto input);
 
+        /// <summary>
+        /// Danh sasch ncc
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        PagingResult<CurrentCustomerDto> GetAll(FilterCustomerDto input);
 
     }
 }

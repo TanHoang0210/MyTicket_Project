@@ -199,4 +199,7 @@ export default {
     right: -110%;
     border-radius: 88px;
 }
+.event__item--inner{
+    margin-bottom: 10px;
+}
 </style>

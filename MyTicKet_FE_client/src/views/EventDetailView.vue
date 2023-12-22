@@ -65,7 +65,7 @@
               </div>
             </div>
           </section>
-          <about-event-detail :currentEvent="currentEvent" :listTickets="listTickets" :modalShow="modalShow">
+          <about-event-detail :isShowList="isShowList" :currentEvent="currentEvent" :listTickets="listTickets" :modalShow="modalShow">
           </about-event-detail>
         </div>
       </div>
@@ -136,7 +136,7 @@
               </div>
             </div>
           </section>
-          <about-event-detail :currentEvent="currentEvent" :modalShow="modalShow">
+          <about-event-detail :isShowList="isShowList" :currentEvent="currentEvent" :modalShow="modalShow">
           </about-event-detail>
         </div>
       </div>
@@ -369,8 +369,12 @@ export default {
   components: {
     Header, HomeFooter, AboutEventDetail,LoadPage
   },
+  computed(){
+
+  },
   data() {
     return {
+      isShowList:false,
       isLoading: false,
       isSuccess: false,
       isError: false,
@@ -476,8 +480,9 @@ export default {
     }
   },
   mounted() {
+    this.isShowList = false;
     this.fetchData();
-    console.log(this.currentEvent.eventName);
+    console.log(this.isShowList+ "hit ke");
   },
   methods: {
     myChoice: function (index) {
@@ -487,6 +492,7 @@ export default {
     },
     gotoBuy: function () {
       this.currentAction = 4;
+      this.isShowList = true;
       // some code to filter users
     },
     async getEventDetail() {

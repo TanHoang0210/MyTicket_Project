@@ -28,31 +28,33 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr v-for="ticket in currentEvent.eventDetails" class="text-center">
+                                                                <tr v-for="ticket in currentEvent.eventDetails"
+                                                                    class="text-center">
                                                                     <td>{{ formatDate(ticket.organizationDay) }}</td>
                                                                     <td> {{ currentEvent.eventName }}</td>
                                                                     <td> {{ ticket.venueName }}</td>
                                                                     <td>
-                                                                        <b-button
-                                                                            v-if="ticket.status == 1"
+                                                                        <span style="color: blue;" v-if="ticket.status === 1"> Mở bán vé vào {{ formatDate(ticket.startSaleTicketDate) }}</span>
+                                                                        <b-button v-if="ticket.status == 2"
                                                                             variant="primary" class="button-event ">
                                                                             <router-link class="buy-btn"
-                                                                            :to="{ name: 'buyTicket', params: {  type: 'area', id:ticket.id}}"
-                                                                              style="color: #fff; !important">
+                                                                                :to="{ name: 'buyTicket', params: { type: 'area', id: ticket.id } }"
+                                                                                style="color: #fff; !important">
                                                                                 Mua
                                                                                 vé
                                                                             </router-link>
                                                                         </b-button>
 
-                                                                        <b-button
-                                                                            v-else-if="ticket.status == 2"
+                                                                        <b-button v-else-if="ticket.status == 3"
                                                                             variant="secondary"
-                                                                            class="button-event btn-primary" disabled>Đã bán
-                                                                            hết</b-button>
-
-
-                                                                        <img v-else-if="ticket.status == 3"
-                                                                            class="sold-out"
+                                                                            class="button-event btn-primary" disabled>Ngừng bán vé</b-button>
+                                                                            <b-button v-else-if="ticket.status == 4"
+                                                                            variant="secondary"
+                                                                            class="button-event btn-warning" disabled>Đang diễn ra</b-button>
+                                                                            <b-button v-else-if="ticket.status == 5"
+                                                                            variant="secondary"
+                                                                            class="button-event btn-secondary" disabled>Đã Hủy</b-button>
+                                                                        <img v-else-if="ticket.status == 6" class="sold-out"
                                                                             src="https://i.ibb.co/LrT0jLQ/soldout.png"
                                                                             alt="">
                                                                     </td>
@@ -77,19 +79,20 @@
 import moment from 'moment';
 export default {
     name: "TicketList",
-    props: ['currentEvent', 'listTickets'],
-    methods:{
+    props: ['currentEvent', 'listTickets','isShowList'],
+    methods: {
         formatDate(date) {
-      // Chuyển đổi ngày thành định dạng dd/mm/yyyy
-      return moment(date).format('DD/MM/YYYY');
-    },
+            // Chuyển đổi ngày thành định dạng dd/mm/yyyy
+            return moment(date).format('hh:mm DD/MM/YYYY');
+        },
     }
 }
 </script>
 <style>
-.buy-btn:hover{
+.buy-btn:hover {
     text-decoration: none;
 }
+
 .black-heading {
     line-height: 1.5;
     position: relative;
@@ -183,4 +186,5 @@ export default {
 .button-event {
     width: 120px;
     height: 53px;
-}</style>
+}
+</style>

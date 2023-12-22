@@ -6,8 +6,8 @@
                     <h1 class="black-heading">
                         Ticket Pricing
                     </h1>
-                    <div class="prices-content" style="display: flex; flex-direction: row;">
-                        <div style="width: 50%;" v-for="(detail, index) in currentEvent.eventDetails">
+                    <div class="prices-content" style="display: flex; flex-direction: row; flex-wrap: wrap;">
+                        <div style="width: 50%; text-align: center;" v-for="(detail, index) in currentEvent.eventDetails">
                             <p>
                                 <strong>
                                     <span style="color: var(--primary-color-hover-bold);">

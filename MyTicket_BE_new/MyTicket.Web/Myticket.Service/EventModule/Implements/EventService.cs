@@ -5,13 +5,11 @@ using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS.ConstantVariables.Shared;
 using MYTICKET.UTILS.ConstantVaribale.Shared;
 using MYTICKET.UTILS.CustomException;
-using MYTICKET.UTILS.Linq;
 using MYTICKET.WEB.DOMAIN.Entities;
 using MYTICKET.WEB.SERVICE.Common;
 using MYTICKET.WEB.SERVICE.EventModule.Abstracts;
 using MYTICKET.WEB.SERVICE.EventModule.Dtos;
 using MYTICKET.WEB.SERVICE.TicketModule.Dtos;
-using Org.BouncyCastle.Asn1.Cmp;
 using System.Text.Json;
 
 namespace MYTICKET.WEB.SERVICE.EventModule.Implements
@@ -47,7 +45,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
         {
             _logger.LogInformation($"{nameof(CreateEvent)}: input = {JsonSerializer.Serialize(input)}");
             var transaction = _dbContext.Database.BeginTransaction();
-            var eventInfo = _dbContext.Events.FirstOrDefault(s => s.Id == input.EventId && s.Deleted) ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
+            var eventInfo = _dbContext.Events.FirstOrDefault(s => s.Id == input.EventId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
             var eventDetailAdd = _dbContext.EventDetails.Add(new EventDetail
             {
                 EventId = input.EventId,
@@ -73,27 +71,28 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             var result = new PagingResult<EventDto>();
 
             var query = (from ev in _dbContext.Events
-                        join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
-                        join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
-                        where (!ev.Deleted
-                               && (input.Keyword == null || ev.EventName.ToLower().Contains(input.Keyword.ToLower()))
-                               && (input.EventTypeId == null || evType.Id == input.EventTypeId)
-                               && ((input.StartDate == null || evDetails.Any(ed => ed.OrganizationDay.Date >= input.StartDate.Value.Date))
-                               && (input.EndDate == null || evDetails.Any(ed => ed.OrganizationDay.Date <= input.EndDate.Value.Date))))
-                        select new EventDto
-                        {
-                            Id = ev.Id,
-                            EventName = ev.EventName,
-                            EventDescription = ev.EventDescription,
-                            EventImage = ev.EventImage,
-                            EventTypeId = ev.EventTypeId,
-                            EventTypeName = evType.Name,
-                            FirstEventDate = evDetails.OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
-                            LastEventDate = evDetails.OrderByDescending(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
-                            Status = ev.Status, // Assuming Status is a property of EventDetail,
-                            Supllier = _dbContext.Suppilers.Where(s => s.Id == ev.SupplierId).Select(s => s.FullName).FirstOrDefault(),
-                            SupplierId = ev.SupplierId
-                        });
+                         join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
+                         join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
+                         where (!ev.Deleted
+                                && (input.Keyword == null || ev.EventName.ToLower().Contains(input.Keyword.ToLower()))
+                                && (input.EventTypeId == null || evType.Id == input.EventTypeId)
+                                && ((input.StartDate == null || evDetails.Any(ed => ed.OrganizationDay.Date >= input.StartDate.Value.Date))
+                                && ((input.Status == null || ev.Status == input.Status))
+                                && (input.EndDate == null || evDetails.Any(ed => ed.OrganizationDay.Date <= input.EndDate.Value.Date))))
+                         select new EventDto
+                         {
+                             Id = ev.Id,
+                             EventName = ev.EventName,
+                             EventDescription = ev.EventDescription,
+                             EventImage = ev.EventImage,
+                             EventTypeId = ev.EventTypeId,
+                             EventTypeName = evType.Name,
+                             FirstEventDate = evDetails.OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
+                             LastEventDate = evDetails.OrderByDescending(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
+                             Status = ev.Status, // Assuming Status is a property of EventDetail,
+                             Supllier = _dbContext.Suppilers.Where(s => s.Id == ev.SupplierId).Select(s => s.FullName).FirstOrDefault(),
+                             SupplierId = ev.SupplierId
+                         });
             result.TotalItems = query.Count();
             query = query.OrderByDescending(s => s.FirstEventDate);
 
@@ -109,22 +108,22 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
         public List<EventDto> FindAllNewEvent()
         {
             var result = (from ev in _dbContext.Events
-                        join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
-                        join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
-                        select new EventDto
-                        {
-                            Id = ev.Id,
-                            EventName = ev.EventName,
-                            EventDescription = ev.EventDescription,
-                            EventImage = ev.EventImage,
-                            EventTypeId = ev.EventTypeId,
-                            EventTypeName = evType.Name,
-                            FirstEventDate = evDetails.OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
-                            LastEventDate = evDetails.OrderByDescending(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
-                            Status = ev.Status, // Assuming Status is a property of EventDetail,
-                            Supllier = _dbContext.Suppilers.Where(s => s.Id == ev.SupplierId).Select(s => s.FullName).FirstOrDefault(),
-                            SupplierId = ev.SupplierId
-                        }).OrderByDescending(s => s.FirstEventDate).Take(9).ToList();
+                          join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
+                          join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
+                          select new EventDto
+                          {
+                              Id = ev.Id,
+                              EventName = ev.EventName,
+                              EventDescription = ev.EventDescription,
+                              EventImage = ev.EventImage,
+                              EventTypeId = ev.EventTypeId,
+                              EventTypeName = evType.Name,
+                              FirstEventDate = evDetails.OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
+                              LastEventDate = evDetails.OrderByDescending(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
+                              Status = ev.Status, // Assuming Status is a property of EventDetail,
+                              Supllier = _dbContext.Suppilers.Where(s => s.Id == ev.SupplierId).Select(s => s.FullName).FirstOrDefault(),
+                              SupplierId = ev.SupplierId
+                          }).OrderByDescending(s => s.FirstEventDate).Take(9).ToList();
             return result;
         }
 
@@ -159,7 +158,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                           from evDetail in evDetails.DefaultIfEmpty()
                           join odDetail in _dbContext.OrderDetails on evDetail.Id equals odDetail.EventDetailId into odDetails
                           from odDetail in odDetails.DefaultIfEmpty()
-                          where( new int[] { EventStatuses.INIT, EventStatuses.ONSALE}.Contains(ev.Status)  && !ev.Deleted)
+                          where (new int[] { EventStatuses.INIT, EventStatuses.ONSALE }.Contains(ev.Status) && !ev.Deleted)
                           select new EventDto
                           {
                               Id = ev.Id,
@@ -173,7 +172,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                               Status = ev.Status, // Assuming Status is a property of EventDetail,
                               Supllier = _dbContext.Suppilers.Where(s => s.Id == ev.SupplierId).Select(s => s.FullName).FirstOrDefault(),
                               SupplierId = ev.SupplierId,
-                              PercentSaleTicket = odDetails.Count()/(_dbContext.Tickets.Include(s => s.TicketEvent).Where(s => s.TicketEvent.EventDetailId == evDetail.Id).Count())
+                              PercentSaleTicket = odDetails.Count() / (_dbContext.Tickets.Include(s => s.TicketEvent).Where(s => s.TicketEvent.EventDetailId == evDetail.Id).Count())
                           }).OrderByDescending(s => s.PercentSaleTicket).ThenByDescending(s => s.PercentSaleTicket).Take(9).ToList();
             return result;
         }
@@ -279,6 +278,39 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                 }).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.EventDetailNotFound);
             return eventDetails;
         }
+
+        public void UpdateEvent(UpdateEventDto input)
+        {
+            var currentUser = CommonUtils.GetCurrentUserId(_httpContext);
+            _logger.LogInformation($"{nameof(CreateEvent)}: input = {JsonSerializer.Serialize(input)}");
+            var updateEvent = _dbContext.Events.FirstOrDefault(s => s.Id == input.Id && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
+            var transaction = _dbContext.Database.BeginTransaction();
+            updateEvent.SupplierId = input.SupplierId;
+            updateEvent.EventName = input.EventName;
+            updateEvent.AdmissionPolicy = input.AdmissionPolicy;
+            updateEvent.EventDescription = input.EventDescription;
+            updateEvent.ExchangePolicy = input.ExchangePolicy;
+            updateEvent.EventTypeId = input.EventTypeId;
+            updateEvent.EventImage = input.EventImage;
+            updateEvent.IsExChange = input.IsExchange;
+            _dbContext.SaveChanges();
+            transaction.Commit();
+        }
+
+        public void UpdateEventDetail(UpdateEventDetailDto input)
+        {
+            var eventDetail = _dbContext.EventDetails.FirstOrDefault(s => s.Id == input.Id && !s.Deleted)
+                ?? throw new UserFriendlyException(ErrorCode.EventDetailNotFound);
+            eventDetail.VenueId = input.VenueId;
+            eventDetail.SeatSelectType = input.SelectSeatType;
+            eventDetail.HavingSeatMap = input.HavingSeatMap;
+            eventDetail.OrganizationDay = input.OrganizationDay;
+            eventDetail.StartSaleTicketDate = input.StartSaleTicketDate;
+            eventDetail.EndSaleTicketDate = input.EndSaleTicketDate;
+            eventDetail.EventSeatMapImage = input.EventSeatMapImage;
+            _dbContext.SaveChanges();
+        }
+
         private string GenerateCode(int length)
         {
             Random random = new Random();

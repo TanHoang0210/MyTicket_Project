@@ -6,25 +6,45 @@
                     <card>
                         <div class="row">
                             <h4 slot="header" class="card-title col-md-6">Thông tin chi tiết sự kiện</h4>
+                            <div class="text-center col-md-6">
+                                <button type="button" style="margin: 0 5px;" class="btn btn-warning btn-fill float-right "
+                                    @click.prevent="cancelEvent">
+                                    Hủy Sự kiện
+                                </button>
+                                <button v-if="!isUpdate" style="margin: 0 5px;" type="button"
+                                    class="btn btn-info btn-fill float-right " @click="setUpdate">
+                                    Cập nhật
+                                </button>
+                                <div v-else>
+                                    <button type="button" style="margin: 0 5px;"
+                                        class="btn btn-secondary btn-fill float-right " @click="cancelUpdate">
+                                        Hủy
+                                    </button>
+                                    <button type="submit" style="margin: 0 5px;" class="btn btn-info btn-fill float-right "
+                                        @click.prevent="updateProfile">
+                                        Lưu lại
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <form>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Đuy định đổi trả</label>
+                                    <label>Tên sự kiện</label>
                                     <textarea type="text" label="Tên sự kiện" class="form-control border-input"
-                                        :disabled="true" placeholder="Light dashboard" v-model="eventInfo.eventName">
+                                        :disabled="!isUpdate" placeholder="Light dashboard" v-model="eventInfo.eventName">
                                     </textarea>
                                 </div>
                                 <div class="col-md-3">
-                                    <base-input type="text" label="Nhà cung cấp" :disabled="true"
+                                    <base-input type="text" label="Nhà cung cấp" :disabled="!isUpdate"
                                         placeholder="Light dashboard" v-model="eventInfo.supllier">
                                     </base-input>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="eventTypeId">Loại Sự Kiện</label>
                                     <br>
-                                    <select class="select-form" v-model="eventInfo.eventTypeId" label="eventTypeId"
-                                        name="eventTypeId" id="eventTypeId">
+                                    <select :disabled="!isUpdate" class="select-form" v-model="eventInfo.eventTypeId"
+                                        label="eventTypeId" name="eventTypeId" id="eventTypeId">
                                         <option v-for="item in listType" :value="item.id">{{ item.name }}</option>
                                     </select>
                                 </div>
@@ -33,7 +53,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Mô tả sự kiện</label>
-                                        <textarea rows="10" class="form-control border-input"
+                                        <textarea :disabled="!isUpdate" rows="10" class="form-control border-input"
                                             placeholder="Here can be your description" v-model="eventInfo.eventDescription">
                                     </textarea>
                                     </div>
@@ -41,13 +61,16 @@
                                 <div class="col-md-8">
                                     <label for="image">Ảnh sự kiện</label>
                                     <br>
-                                    <img style="max-width: 780px;" slot="image" :src="$fileUrl + eventInfo.eventImage"
+                                    <img style="max-width: 100%;" slot="image" :src="$fileUrl + eventInfo.eventImage"
                                         alt="..." />
                                     <br>
                                     <div style="display: flex; margin: 10px;">
                                         <div style="margin: auto;">
-                                            <button class="btn btn-info btn-fill btn-img">
-                                                <i class="nc-icon nc-cloud-download-93"></i>
+                                            <input v-if="isUpdate" @change="handleFileChange" type="file" id="myFile"
+                                                name="filename">
+                                            <button v-if="isUpdate" @click="uploadEventImage"
+                                                class="btn btn-info btn-fill btn-img">
+                                                <i class="nc-icon nc-cloud-upload-94"></i>
                                             </button>
                                             <button class="btn btn-info btn-fill btn-img">
                                                 <i class="nc-icon nc-zoom-split"></i>
@@ -60,104 +83,314 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Đuy định đổi trả</label>
-                                        <textarea rows="5" class="form-control border-input"
+                                        <textarea :disabled="!isUpdate" rows="5" class="form-control border-input"
                                             placeholder="Here can be your description" v-model="eventInfo.exchangePolicy">
                                         </textarea>
                                     </div>
                                     <div class="form-group">
                                         <label>Nội quy sự kiện</label>
-                                        <textarea rows="5" class="form-control border-input"
+                                        <textarea :disabled="!isUpdate" rows="5" class="form-control border-input"
                                             placeholder="Here can be your description" v-model="eventInfo.admissionPolicy">
                                         </textarea>
                                     </div>
                                 </div>
-                                <div class="text-center col-md-6">
-                                <button type="submit" class="btn btn-info btn-fill float-right "
-                                    @click.prevent="updateProfile">
-                                    Cập nhật
-                                </button>
-                            </div>
                             </div>
                         </form>
                     </card>
-                    <h4 slot="header" class="card-title col-md-6">Danh sách các ngày diễn ra sự kiện</h4>
-                    <card v-for="item in eventInfo.eventDetails">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <base-input type="text" label="Ngày diễn ra" :disabled="true" placeholder="Light dashboard"
-                                    v-model="item.organizationDay">
-                                </base-input>
-                                <base-input type="text" label="Ngày mở bán vé" placeholder="Username"
-                                    v-model="item.startSaleTicketDate">
-                                </base-input>
-                                <base-input type="text" label="Ngày đóng bán vé" placeholder="Username"
-                                    v-model="item.endSaleTicketDate">
-                                </base-input>
-                                <base-input type="text" label="Sân vận động" placeholder="Username"
-                                    v-model="item.venueName">
-                                </base-input>
-                                <base-input type="text" label="Địa điểm" placeholder="Username" v-model="item.venueAddress">
-                                </base-input>
-                                <card style="display: flex; margin: 10px;">
-                                    <h4 slot="header" class="card-title">Danh sách các loại vé</h4>
-                                    <table style="border: 1px solid #ccc; width: 100%;">
-                                        <tbody>
-                                            <tr v-for="ticket in item.ticketEvents">
-                                                <td>{{ ticket.name }}</td>
-                                                <td>{{ ticket.price }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </card>
-                                <div class="text-center col-md-6">
-                                <button type="submit" class="btn btn-info btn-fill float-right "
-                                    @click.prevent="updateProfile">
-                                    Cập nhật
-                                </button>
-                            </div>
-                            </div>
-                            <div class="col-md-8">
-                                <label for="image">Ảnh Sơ đồ sự kiện</label>
-                                <br>
-                                <img style="max-width: 780px;" slot="image" :src="$fileUrl + item.eventSeatMapImage"
-                                    alt="..." />
-                                <br>
-                                <div style="display: flex; margin: 10px;">
-                                    <div style="margin: auto;">
-                                        <button class="btn btn-info btn-fill btn-img">
-                                            <i class="nc-icon nc-cloud-download-93"></i>
+                    <div v-if="eventInfo.eventDetails.length > 0">
+                        <h4 slot="header" class="card-title">Danh sách các ngày diễn ra sự kiện
+                        </h4>
+
+                        <card v-for="(item, index) in eventInfo.eventDetails" :key="index">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <base-input type="text" label="Ngày diễn ra" :disabled="index"
+                                        placeholder="Light dashboard" v-model="item.organizationDay">
+                                    </base-input>
+                                    <base-input type="text" label="Ngày mở bán vé" :disabled="true" placeholder="Username"
+                                        v-model="item.startSaleTicketDate">
+                                    </base-input>
+                                    <base-input type="text" label="Ngày đóng bán vé" :disabled="true" placeholder="Username"
+                                        v-model="item.endSaleTicketDate">
+                                    </base-input>
+                                    <base-input type="text" label="Sân vận động" :disabled="true" placeholder="Username"
+                                        v-model="item.venueName">
+                                    </base-input>
+                                    <base-input type="text" label="Địa điểm" :disabled="true" placeholder="Username"
+                                        v-model="item.venueAddress">
+                                    </base-input>
+                                    <card style="display: flex; margin: 10px;">
+                                        <h4 slot="header" class="card-title">Danh sách các loại vé</h4>
+                                        <table style="border: 1px solid #ccc; width: 100%;">
+                                            <tbody>
+                                                <tr v-for="ticket in item.ticketEvents">
+                                                    <td>{{ ticket.name }}</td>
+                                                    <td>{{ ticket.price }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </card>
+                                </div>
+                                <div class="col-md-8">
+                                    <div>
+                                        <label for="image">Ảnh Sơ đồ sự kiện</label>
+                                        <button type="submit" class="btn btn-info btn-fill float-right "
+                                            @click.prevent="showModalUpdateDetail(item)">
+                                            Cập nhật
                                         </button>
-                                        <button class="btn btn-info btn-fill btn-img">
-                                            <i class="nc-icon nc-zoom-split"></i>
+                                        <button type="button" style="margin: 0 5px;"
+                                            class="btn btn-success btn-fill float-right "
+                                            @click.prevent="cancelEvent(item.id)">
+                                            Mở bán vé
                                         </button>
+                                        <button type="button" style="margin: 0 5px;"
+                                            class="btn btn-warning btn-fill float-right " @click.prevent="cancelEvent">
+                                            Hủy Sự kiện
+                                        </button>
+                                    </div>
+                                    <br>
+                                    <div v-if="item.eventSeatMapImage">
+                                        <br>
+                                        <img style="max-width: 100%;" slot="image" :src="$fileUrl + item.eventSeatMapImage"
+                                            alt="..." />
+                                        <br>
+                                        <div style="display: flex; margin: 10px;">
+                                            <div style="margin: auto;">
+                                                <button class="btn btn-info btn-fill btn-img">
+                                                    <i class="nc-icon nc-zoom-split"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </card>
+                        </card>
+                    </div>
+                    <div style="display: flex;">
+                        <button style="margin: auto;" type="button" class="btn btn-info btn-fill"
+                            @click="showModalAddDetail">
+                            Thêm sự kiện
+                        </button>
+                    </div>
                 </div>
             </div>
+            <b-modal id="modal-add-detail" ref="modal-add-detail" size="xl" title="Thêm chi tiết sự kiện">
+                <form>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="eventTypeId">Sân vận động</label>
+                            <br>
+                            <select class="select-form" v-model="addEventDetail.venueId" label="eventTypeId"
+                                name="eventTypeId" id="eventTypeId">
+                                <option v-for="item in venues" :value="item.id">{{ item.name }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="example-datepicker">Ngày diễn ra</label>
+                            <input v-model="addEventDetail.organizationDay" type="datetime-local" id="datetime"
+                                name="datetime">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="example-datepicker">Ngày Mở bán vé</label>
+                            <input v-model="addEventDetail.startSaleTicketDate" type="datetime-local" id="datetime"
+                                name="datetime">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="example-datepicker">Ngày đóng bán vé</label>
+                            <input v-model="addEventDetail.endSaleTicketDate" type="datetime-local" id="datetime"
+                                name="datetime">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <b-form-checkbox id="checkbox-1" v-model="addEventDetail.havingSeatMap" name="checkbox-1">
+                                Có Sơ đồ chọn chỗ
+                            </b-form-checkbox>
+                            <label for="example-datepicker">Kiểu chọn vé</label>
+                            <select class="select-form" v-model="addEventDetail.selectSeatType" label="selectSeatType"
+                                name="selectSeatType" id="selectSeatType">
+                                <option v-for="item in selectSeatTypes" :value="item.type">{{ item.name }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                            <label for="image">Ảnh sự kiện</label>
+                            <br>
+                            <img v-if="addEventDetail.eventSeatMapImage" style="max-width: 780px;" slot="image"
+                                :src="$fileUrl + addEventDetail.eventSeatMapImage" alt="..." />
+                            <br>
+                            <div style="display: flex; margin: 10px;">
+                                <div style="margin: auto;">
+                                    <form>
+                                        <label v-if="addEventDetail.eventSeatMapImage === null" for="">Tải lên ảnh sự
+                                            kiện</label>
+                                        <br>
+                                        <input @change="handleFileChange" type="file" id="myFile" name="filename">
+                                        <button type="button" @click="uploadImage()" class="btn btn-info btn-fill btn-img">
+                                            <i class="nc-icon nc-cloud-upload-94"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-info btn-fill btn-img">
+                                            <i class="nc-icon nc-zoom-split"></i>
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <template #modal-footer="{ ok, cancel }">
+                    <div style="margin: auto; width: 30%;">
+                        <b-button class="buttonModal" size="lg" variant="success" @click="addEventDetailFunc()">
+                            OK
+                        </b-button>
+                        <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
+                            Cancel
+                        </b-button>
+                    </div>
+                </template>
+            </b-modal>
+            <b-modal id="modal-update-detail" ref="modal-update-detail" size="xl" title="Thêm chi tiết sự kiện">
+                <form>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="eventTypeId">Sân vận động</label>
+                            <br>
+                            <select class="select-form" v-model="updateEventDetail.venueId" label="eventTypeId"
+                                name="eventTypeId" id="eventTypeId">
+                                <option v-for="item in venues" :value="item.id">{{ item.name }}</option>
+                            </select>
+                            <label for="example-datepicker">Ngày diễn ra:</label>
+                            <flat-pickr v-model="updateEventDetail.organizationDay"
+                             :config="dateTimePickerConfig"></flat-pickr>
+                            <label for="example-datepicker">Ngày Mở bán vé</label>
+                            <flat-pickr v-model="updateEventDetail.startSaleTicketDate"
+                                :config="dateTimePickerConfig"></flat-pickr>
+                            <label for="example-datepicker">Ngày đóng bán vé</label>
+                            <flat-pickr v-model="updateEventDetail.endSaleTicketDate"
+                                :config="dateTimePickerConfig"></flat-pickr>
+                            <b-form-checkbox id="checkbox-1" v-model="updateEventDetail.havingSeatMap" name="checkbox-1">
+                                Có Sơ đồ chọn chỗ
+                            </b-form-checkbox>
+                            <label for="example-datepicker">Kiểu chọn vé</label>
+                            <select class="select-form" v-model="updateEventDetail.selectSeatType" label="selectSeatType"
+                                name="selectSeatType" id="selectSeatType">
+                                <option v-for="item in selectSeatTypes" :value="item.type">{{ item.name }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                            <label for="image">Ảnh sự kiện</label>
+                            <br>
+                            <img v-if="updateEventDetail.eventSeatMapImage" style="max-width: 780px;" slot="image"
+                                :src="$fileUrl + updateEventDetail.eventSeatMapImage" alt="..." />
+                            <br>
+                            <div style="display: flex; margin: 10px;">
+                                <div style="margin: auto;">
+                                    <form>
+                                        <label v-if="updateEventDetail.eventSeatMapImage === null" for="">Tải lên ảnh sự
+                                            kiện</label>
+                                        <br>
+                                        <input @change="handleFileChange" type="file" id="myFile" name="filename">
+                                        <button type="button" @click="uploadImageUpdateSeat()"
+                                            class="btn btn-info btn-fill btn-img">
+                                            <i class="nc-icon nc-cloud-upload-94"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-info btn-fill btn-img">
+                                            <i class="nc-icon nc-zoom-split"></i>
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <template #modal-footer="{ ok, cancel }">
+                    <div style="margin: auto; width: 30%;">
+                        <b-button class="buttonModal" size="lg" variant="success" @click="updateEventDetailFunc()">
+                            OK
+                        </b-button>
+                        <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
+                            Cancel
+                        </b-button>
+                    </div>
+                </template>
+            </b-modal>
         </div>
     </div>
 </template>
 <script>
+import FlatPickr from 'vue-flatpickr-component';
+import 'flatpickr/dist/flatpickr.css';
 import Card from 'src/components/Cards/Card.vue'
 import axios from 'axios'
 import helpService from 'src/service/help/helpService'
+import moment from 'moment'
 export default {
     components: {
-        Card
+        Card, FlatPickr
     },
     data() {
         return {
+            dateTimePickerConfig: {
+                enableTime: true,
+                dateFormat: 'H:i d/m/Y',
+            },
+            disabledIndices: [],
+            isUpdate: false,
             listType: [
                 {
+
                     id: 0,
                     name: "string",
                     description: "string",
                     eventTypeImage: "string"
                 }
             ],
+            selectSeatTypes: [
+                {
+                    type: 1,
+                    name: "Chọn vé"
+                },
+                {
+                    type: 2,
+                    name: "Chọn hạng vé"
+                }
+            ],
+            addEventDetail: {
+                eventId: 0,
+                venueId: 0,
+                organizationDay: null,
+                startSaleTicketDate: null,
+                endSaleTicketDate: null,
+                eventSeatMapImage: null,
+                havingSeatMap: true,
+                selectSeatType: 0
+            },
+            updateEventDetail: {
+                id: 0,
+                eventId: 0,
+                venueId: 0,
+                organizationDay: "2023-12-20T09:20:20.631Z",
+                startSaleTicketDate: "2023-12-20T09:20:20.631Z",
+                endSaleTicketDate: "2023-12-20T09:20:20.631Z",
+                eventSeatMapImage: "string",
+                havingSeatMap: true,
+                selectSeatType: 0
+            },
+            updateEvent: {
+                eventName: null,
+                eventTypeId: 0,
+                supplierId: 0,
+                eventDescription: null,
+                exchangePolicy: null,
+                admissionPolicy: null,
+                eventImage: null,
+                isExchange: true,
+                id: 0
+            },
+            seatImage: null,
+            venues: [],
+            eventDetailTable: [],
             eventInfo: {
                 id: 0,
                 eventName: "string",
@@ -202,8 +435,58 @@ export default {
         }
     },
     methods: {
-        updateProfile() {
-            alert('Your data: ' + JSON.stringify(this.eventInfo))
+
+        async updateProfile() {
+            this.updateEvent.eventName = this.eventInfo.eventName
+            this.updateEvent.eventTypeId = this.eventInfo.eventTypeId
+            this.updateEvent.supplierId = this.eventInfo.supplierId
+            this.updateEvent.eventDescription = this.eventInfo.eventDescription
+            this.updateEvent.exchangePolicy = this.eventInfo.exchangePolicy
+            this.updateEvent.admissionPolicy = this.eventInfo.admissionPolicy
+            this.updateEvent.eventImage = this.eventInfo.eventImage
+            this.updateEvent.isExchange = this.eventInfo.isExchange
+            this.updateEvent.id = this.eventInfo.id
+            try {
+                const response = await axios.put('myticket/api/event/update', this.updateEvent, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any other headers if needed
+                    },
+                });
+
+                // Handle the response
+                this.notifyVue('Thành công', 'Cập nhật sự kiện thành công', 'top', 'right', 'success')
+
+                // Return the response or do further processing if needed
+            } catch (error) {
+                // Handle errors
+                this.notifyVue('Thất bại', 'Cập nhật sự kiện thất bại', 'top', 'right', 'danger')
+                // Throw the error or return an error object if needed
+                throw error;
+            }
+            this.isUpdate = false;
+            this.fetchData()
+        },
+        async addEventDetailFunc() {
+            try {
+                this.addEventDetail.eventId = this.eventInfo.id;
+                const response = await axios.post('myticket/api/event/create-detail', this.addEventDetail, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any other headers if needed
+                    },
+                });
+                this.$refs['modal-add-detail'].hide();
+                // Handle the response
+                this.notifyVue('Thành công', 'Thêm mới sự kiện thành công', 'top', 'right', 'success')
+
+            } catch (error) {
+                // Handle errors
+                this.$refs['modal-add-detail'].hide();
+                this.notifyVue('Thất bại', 'Thêm mới sự kiện thất bại', 'top', 'right', 'danger')
+                // Throw the error or return an error object if needed
+            }
+            this.fetchData()
         },
         async getEventDetail() {
             try {
@@ -218,6 +501,140 @@ export default {
                 console.error('API 1 Error:', error);
                 throw error;
             }
+        },
+        setUpdate() {
+            this.isUpdate = true;
+        },
+        cancelUpdate() {
+            this.isUpdate = false;
+            this.fetchData()
+        },
+        async uploadImage() {
+            const formData = new FormData();
+            formData.append('file', this.seatImage);
+            await axios.post('myticket/api/file/upload', formData).then(
+                res => this.addEventDetail.eventSeatMapImage = res.data.data
+            ).catch(
+                err => err
+            )
+            console.log(this.addEventDetail.eventSeatMapImage)
+        },
+        async uploadImageUpdateSeat() {
+            const formData = new FormData();
+            formData.append('file', this.seatImage);
+            await axios.post('myticket/api/file/upload', formData).then(
+                res => this.updateEventDetail.eventSeatMapImage = res.data.data
+            ).catch(
+                err => err
+            )
+            console.log(this.updateEventDetail.eventSeatMapImage)
+        },
+        async uploadEventImage() {
+            const formData = new FormData();
+            formData.append('file', this.seatImage);
+            await axios.post('myticket/api/file/upload', formData).then(
+                res => this.eventInfo.eventImage = res.data.data
+            ).catch(
+                err => err
+            )
+            console.log(this.eventInfo.eventImage)
+        },
+        handleFileChange(event) {
+            // Update the 'file' data property when the file input changes
+            this.seatImage = event.target.files[0];
+        },
+        async showModalAddDetail(id) {
+            try {
+                this.venues = await this.findAllVenue();
+                this.$nextTick(() => {
+                    // Using $nextTick to ensure the modal component is updated
+                    this.$refs['modal-add-detail'].show();
+                });
+            } catch (error) {
+                console.error("Error fetching ticket details:", error);
+            }
+        },
+        async showModalUpdateDetail(item) {
+            try {
+                this.venues = await this.findAllVenue();
+                this.updateEventDetail.id = item.id
+                this.updateEventDetail.eventId = item.eventId
+                this.updateEventDetail.venueId = item.venueId
+                this.updateEventDetail.eventSeatMapImage = item.eventSeatMapImage
+                this.updateEventDetail.havingSeatMap = item.havingSeatMap
+                this.updateEventDetail.selectSeatType = item.seatSelectType
+                this.updateEventDetail.organizationDay = item.organizationDay
+                this.updateEventDetail.startSaleTicketDate = item.startSaleTicketDate
+                this.updateEventDetail.endSaleTicketDate = item.endSaleTicketDate
+                this.$nextTick(() => {
+                    // Using $nextTick to ensure the modal component is updated
+                    this.$refs['modal-update-detail'].show();
+                });
+            } catch (error) {
+
+            }
+            console.log(this.updateEventDetail)
+        },
+        async findAllVenue() {
+            try {
+                const res = await axios.get(
+                    "myticket/api/venue/find",
+                    {
+                        params: {
+                            pageSize: 1000,
+                            pageNumber: 1
+                        },
+                    }
+                )
+                return res.data.data.items;
+            } catch (error) {
+                console.error('API 1 Error:', error);
+                throw error;
+            }
+        },
+        async updateEventDetailFunc() {
+            try {
+                const response = await axios.put('myticket/api/event/detail/update', {
+                    venueId: this.updateEventDetail.venueId,
+                    organizationDay: moment(this.updateEventDetail.organizationDay,"HH:mm DD/MM/YYYY").format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+                    startSaleTicketDate: moment(this.updateEventDetail.startSaleTicketDate,"HH:mm DD/MM/YYYY").format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+                    endSaleTicketDate: moment(this.updateEventDetail.endSaleTicketDate,"HH:mm DD/MM/YYYY").format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+                    eventSeatMapImage: this.updateEventDetail.eventSeatMapImage,
+                    havingSeatMap: this.updateEventDetail.havingSeatMap,
+                    selectSeatType: this.updateEventDetail.selectSeatType,
+                    id: this.updateEventDetail.id
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any other headers if needed
+                    },
+                });
+                if (response.data.code === 200) {
+                    this.notifyVue('Thành công', 'Cập nhật sự kiện thành công', 'top', 'right', 'success')
+                }
+                else {
+                    this.notifyVue('Thất bại', 'Cập nhật sự kiện thất bại', 'top', 'right', 'danger')
+                }
+                // Handle the response
+
+                // Return the response or do further processing if needed
+            } catch (error) {
+                // Handle errors
+                // Throw the error or return an error object if needed
+                throw error;
+            }
+            this.$refs['modal-update-detail'].hide();
+            this.fetchData()
+        },
+        notifyVue(type, message, verticalAlign, horizontalAlign, color) {
+            this.$notifications.notify(
+                {
+                    message: `<span><b>${type}</b> - ${message}</span>`,
+                    icon: 'nc-icon nc-app',
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: color
+                })
         },
         async getCategories() {
             try {
@@ -247,6 +664,15 @@ export default {
                     element.ticketEvents.forEach(e => {
                         e.price = helpService.formatCurrency(e.price)
                     });
+                    this.eventDetailTable.push({
+                        id: element.id,
+                        eventName: element.eventName,
+                        venueName: element.venueName,
+                        organizationDay: element.organizationDay,
+                        startSaleTicketDate: element.startSaleTicketDate,
+                        endSaleTicketDate: element.endSaleTicketDate,
+                        tatus: element.status,
+                    })
                 });
             } catch (error) {
                 console.error('API 1 Error:', error);
@@ -273,8 +699,20 @@ export default {
     font-size: 1rem;
 }
 
+.buttonModal {
+    margin: 0 5px !important;
+}
+
 .btn-img {
     margin: 0 5px;
+}
+
+.modal-header {
+    background-color: var(--primary-color-bold) !important;
+}
+
+.modal-title {
+    font-size: 1.6rem !important;
 }
 </style>
   

@@ -1,8 +1,13 @@
 <template>
     <div>
         <div v-if="isLoading">
-        <LoadPage/>
-    </div>
+            <div style="width:100%;height:0px;position:relative;padding-bottom:100.000%;">
+                <iframe src="https://streamable.com/e/70ps50?autoplay=1&nocontrols=1" frameborder="0" width="100%"
+                    height="100%" allowfullscreen allow="autoplay"
+                    style="width:100%;height:100%;position:absolute;left:0px;top:0px;overflow:hidden;">
+                </iframe>
+            </div>
+        </div>
         <div v-else style="display: flex;">
             <!-- Biểu thức hoàn thành sẽ có class "completed" -->
             <div v-if="isComplete" class="completeInfo" :class="{ completed: isComplete }">
@@ -36,9 +41,9 @@ export default {
     },
     data() {
         return {
-            id:null,
-            customerId:null,
-            isLoading:false,
+            id: null,
+            customerId: null,
+            isLoading: false,
             isComplete: false,
             drawingInProgress: false,
             borderWidth: 0,
@@ -76,11 +81,11 @@ export default {
             const dataRes = params.vnp_OrderInfo.split('_')
             if (params.vnp_ResponseCode === '00' && params.vnp_TransactionStatus === '00') {
                 // Giao dịch thành công, bạn có thể xử lý dữ liệu khác từ params nếu cần thiết
-                await this.completedTransfer(dataRes[0],dataRes[1])
+                await this.completedTransfer(dataRes[0], dataRes[1])
                 this.isComplete = true;
                 this.expression = 'Đơn hàng của bạn đã hoàn thành!<br>Vào mục vé của bạn để xem thông tin vé đã đặt nhé!'
             } else {
-                await this.cancelTransfer(dataRes[0],dataRes[1])
+                await this.cancelTransfer(dataRes[0], dataRes[1])
                 // Giao dịch thất bại hoặc hủy bỏ
                 this.isComplete = false;
                 this.expression = 'OOPS!<br>Đơn hàng của bạn không thể thoàn thành vui lòng đặt lại vé!'
@@ -91,12 +96,12 @@ export default {
         letgo() {
             if (!this.isComplete) {
                 this.$router.push('/')
-            }else{
+            } else {
                 this.$router.push('/order')
             }
 
         },
-        async completedTransfer(id,customerId){
+        async completedTransfer(id, customerId) {
             try {
                 await axios.put('myticket/api/order/transfer/update-status',
                     {
@@ -111,7 +116,7 @@ export default {
                 });
             }
         },
-        async cancelTransfer(id,customerId){
+        async cancelTransfer(id, customerId) {
             try {
                 await axios.put('myticket/api/order/transfer/update-status',
                     {

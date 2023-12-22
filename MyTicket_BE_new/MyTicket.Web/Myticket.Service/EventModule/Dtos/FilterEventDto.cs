@@ -17,5 +17,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
 
         [FromQuery(Name = "endDate")]
         public DateTime? EndDate { get; set; }
+
+        [FromQuery(Name = "status")]
+        public int? Status {  get; set; }
     }
 }

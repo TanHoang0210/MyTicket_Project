@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
 {
-    public class UpdateEventDto : CreateEventDto
+    public class UpdateEventDetailDto : CreateEventDetailDto
     {
         public int Id { get; set; }
     }

@@ -1,22 +1,27 @@
 <template>
     <div>
         <div v-if="isLoading">
-        <LoadPage/>
-    </div>
+            <div style="width:100%;height:0px;position:relative;padding-bottom:20.000%;"><iframe nocontrols
+                    src="https://streamable.com/e/70ps50?autoplay=1&nocontrols=1" frameborder="0" width="100%" height="100%"
+                    allowfullscreen allow="autoplay"
+                    style="width:100%;height:100%;position:absolute;margin: auto;overflow:hidden;"></iframe></div>
+            <h2 v-html="expression">
+            </h2>
+        </div>
         <div v-else style="display: flex;">
             <!-- Biểu thức hoàn thành sẽ có class "completed" -->
             <div v-if="isComplete" class="completeInfo" :class="{ completed: isComplete }">
                 <!-- Nội dung của biểu thức -->
-                <b-icon class="circle-border" :style="{ 'border-width': borderWidth }" icon="check-lg"
-                    :animation="throbAnimation" font-scale="8"></b-icon>
+                <img class="circle-border" style="width: 30%; margin: auto;"
+                    src="https://yourimageshare.com/ib/F0UmAVYWKI.webp" alt="">
                 <h2 v-html="expression">
                 </h2>
                 <b-button @click="letgo()" style="width: 20%; margin: auto;" variant="success">Nhận Vé</b-button>
             </div>
             <div v-else class="completeInfo" :class="{ completed: isComplete }">
                 <!-- Nội dung của biểu thức -->
-                <b-icon class="circle-border-red" :style="{ 'border-width': borderWidth }" icon="x-lg"
-                    :animation="throbAnimation" font-scale="8"></b-icon>
+                <img class="circle-border" style="width: 30%; margin: auto;"
+                    src="https://yourimageshare.com/ib/M5o1YCoLcG.webp" alt="">
                 <h2 v-html="expression">
                 </h2>
                 <b-button @click="letgo()" style="width: 20%; margin: auto;" variant="secondary">Về trang chủ</b-button>
@@ -36,39 +41,19 @@ export default {
     },
     data() {
         return {
-            isLoading:false,
+            isLoading: false,
             isComplete: false,
             drawingInProgress: false,
             borderWidth: 0,
-            throbAnimation: 'throb',
             expression: "",
         }
     },
     mounted() {
         this.isLoading = true;
+        this.expression = "MyTicket đang tiến hành đặt vé vui lòng chờ trong giây lát!"
         this.checkOrder()
-        this.startDrawing()
-        setTimeout(() => {
-            this.throbAnimation = null;
-        }, 800); // Đặt thời gian tùy thuộc vào thời gian hiệu ứng throb
     },
     methods: {
-        startDrawing() {
-            this.drawingInProgress = true;
-            this.animateDrawing();
-        },
-        animateDrawing() {
-            const interval = setInterval(() => {
-                if (this.drawingInProgress) {
-                    this.borderWidth += 1;
-                    if (this.borderWidth >= 10) {
-                        // Điều kiện dừng vẽ (tùy chọn)
-                        clearInterval(interval);
-                        this.drawingInProgress = false;
-                    }
-                }
-            }, 20); // Điều chỉnh tốc độ vẽ tùy thuộc vào nhu cầu của bạn
-        },
         async checkOrder() {
             const params = this.$route.query;
             if (params.vnp_ResponseCode === '00' && params.vnp_TransactionStatus === '00') {
@@ -80,7 +65,7 @@ export default {
                 await this.canceldOrder(params.vnp_OrderInfo)
                 // Giao dịch thất bại hoặc hủy bỏ
                 this.isComplete = false;
-                this.expression = 'OOPS!<br>Đơn hàng của bạn không thể thoàn thành vui lòng đặt lại vé!'
+                this.expression = 'OOPS!<br>Đơn hàng của bạn không thể hoàn thành vui lòng đặt lại vé!'
 
             }
             this.isLoading = false;
@@ -88,18 +73,18 @@ export default {
         letgo() {
             if (!this.isComplete) {
                 this.$router.push('/')
-            }else{
+            } else {
                 this.$router.push('/order')
             }
 
         },
-        async completedOrder(orderId){
+        async completedOrder(orderId) {
             try {
-                const res = await axios.put('myticket/api/order/update-order-status', 
-                {
-                    id: orderId,
-                    status:5
-                })
+                const res = await axios.put('myticket/api/order/update-order-status',
+                    {
+                        id: orderId,
+                        status: 5
+                    })
             } catch (error) {
                 this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
                     position: 'top-right',
@@ -107,13 +92,13 @@ export default {
                 });
             }
         },
-        async canceldOrder(orderId){
+        async canceldOrder(orderId) {
             try {
-                const res = await axios.put('myticket/api/order/update-order-status', 
-                {
-                    id: orderId,
-                    status:4
-                })
+                const res = await axios.put('myticket/api/order/update-order-status',
+                    {
+                        id: orderId,
+                        status: 4
+                    })
             } catch (error) {
                 this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {
                     position: 'top-right',
@@ -152,22 +137,6 @@ export default {
 }
 
 .circle-border {
-    margin: auto;
-    color: green;
-    border: 1px solid green;
-    border-radius: 50%;
-    /* Định hình hình tròn */
-    transition: border-width 0.5s ease;
+    transition: all 0.5s ease;
     /* Hiệu ứng chuyển động của border */
-}
-
-.circle-border-red {
-    margin: auto;
-    color: red;
-    border: 1px solid red;
-    border-radius: 50%;
-    /* Định hình hình tròn */
-    transition: border-width 0.5s ease;
-    /* Hiệu ứng chuyển động của border */
-}
-</style>
+}</style>

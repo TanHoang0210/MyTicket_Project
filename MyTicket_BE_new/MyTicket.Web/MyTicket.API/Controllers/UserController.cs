@@ -6,6 +6,7 @@ using MYTICKET.UTILS;
 using MYTICKET.WEB.DOMAIN.Entities;
 using MYTICKET.WEB.SERVICE.AuthModule.Abstracts;
 using MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto;
+using MYTICKET.WEB.SERVICE.VenueModule.Dtos;
 using System.Net;
 
 namespace MYTICKET.WEB.API.Controllers
@@ -173,5 +174,14 @@ namespace MYTICKET.WEB.API.Controllers
             _userService.ChangePassword(input);
             return new();
         }
+        /// <summary>
+        /// lây danh sách khach hang
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("customer/find-all")]
+        public APIResponse<PagingResult<CurrentCustomerDto>> FindProduct([FromQuery] FilterCustomerDto input)
+               => new(_customerService.GetAll(input));
     }
 }

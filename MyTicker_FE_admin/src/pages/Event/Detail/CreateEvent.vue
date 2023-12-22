@@ -9,7 +9,7 @@
                             <div class="text-center col-md-6">
                                 <button type="submit" class="btn btn-success btn-fill float-right "
                                     @click.prevent="createEvent">
-                                    Tiếp Tục
+                                    Lưu Lại
                                 </button>
                             </div>
                         </div>
@@ -70,16 +70,18 @@
                                 <div class="col-md-8">
                                     <label for="image">Ảnh sự kiện</label>
                                     <br>
-                                    <img style="max-width: 780px;" slot="image" :src="$fileUrl + eventInfo.eventImage"
-                                        alt="..." />
+                                    <img v-if="eventInfo.eventImage" style="max-width: 780px;" slot="image"
+                                        :src="$fileUrl + eventInfo.eventImage" alt="..." />
                                     <br>
                                     <div style="display: flex; margin: 10px;">
                                         <div style="margin: auto;">
-                                            <form action="/">
-                                                <label v-if="eventInfo.eventImage === null" for="">Tải lên ảnh sự kiện</label>
+                                            <form>
+                                                <label v-if="eventInfo.eventImage === null" for="">Tải lên ảnh sự
+                                                    kiện</label>
                                                 <br>
-                                                <input type="file" id="myFile" name="filename">
-                                                <button type="submit" class="btn btn-info btn-fill btn-img">
+                                                <input @change="handleFileChange" type="file" id="myFile" name="filename">
+                                                <button type="button" @click="uploadImage()"
+                                                    class="btn btn-info btn-fill btn-img">
                                                     <i class="nc-icon nc-cloud-upload-94"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-info btn-fill btn-img">
@@ -117,6 +119,7 @@
 <script>
 import Card from 'src/components/Cards/Card.vue'
 import axios from 'axios'
+import helpService from 'src/service/help/helpService'
 export default {
     components: {
         Card
@@ -149,12 +152,43 @@ export default {
                 admissionPolicy: "",
                 eventImage: null,
                 isExchange: true,
-            }
+            },
+            imageEvent: null,
+            imageLoadeded: false,
         }
     },
     methods: {
-        createEvent() {
-            alert('Your data: ' + JSON.stringify(this.eventInfo))
+        async createEvent() {
+            try {
+                const response = await axios.post('myticket/api/event/create', this.eventInfo, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any other headers if needed
+                    },
+                });
+                helpService.notifyVue ('Thành công','Thêm mới sự kiện thành công','top', 'right',2)
+                // Return the response or do further processing if needed
+                this.$router.push('/event')
+            } catch (error) {
+                // Handle errors
+                helpService.notifyVue ('Thất bại','Thêm mới sự kiện thất bại','top', 'right',4)
+                // Throw the error or return an error object if needed
+                throw error;
+            }
+        },
+        async uploadImage() {
+            const formData = new FormData();
+            formData.append('file', this.imageEvent);
+            await axios.post('myticket/api/file/upload', formData).then(
+                res => this.eventInfo.eventImage = res.data.data
+            ).catch(
+                err => err
+            )
+            console.log(this.eventInfo.eventImage)
+        },
+        handleFileChange(event) {
+            // Update the 'file' data property when the file input changes
+            this.imageEvent = event.target.files[0];
         },
         async getCategories() {
             try {
@@ -201,7 +235,6 @@ export default {
         },
     }, mounted() {
         this.fetchData();
-        console.log(this.listType)
     },
 
 

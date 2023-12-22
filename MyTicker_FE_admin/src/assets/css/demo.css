@@ -162,7 +162,17 @@
     font-size: 14px;
     margin: 10px;
 }
-
+.modal{
+    top: -150px !important;
+}
+:root {
+    --primary-color: #FDF9F7;
+    --primary-color-bold: rgb(226, 168, 140);
+    --primary-color--hover: rgb(0, 0, 0, 0.1);
+    --text-color: #555;
+    --carousel-width: 880px;
+    --primary-color-hover-bold: rgb(188, 101, 60);
+  }
 .fixed-plugin .dropdown-menu li {
     display: block;
     padding: 18px 2px;
