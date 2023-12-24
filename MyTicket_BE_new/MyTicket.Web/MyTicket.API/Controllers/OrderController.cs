@@ -256,5 +256,41 @@ namespace MYTICKET.WEB.API.Controllers
 
             }
         }
+
+        /// <summary>
+        /// Danh sách vé của khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("admin/order/find-all")]
+        public APIResponse<PagingResult<OrderDetailDto>> FindAllTicketByCustomerIdAdmin([FromQuery] FilterOrderCustomer input)
+               => new(_orderService.FindAllOrderByCustomerIdAdmin(input));
+
+        /// <summary>
+        /// Danh sách vé của khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("admin/order-transfer/find-all")]
+        public APIResponse<PagingResult<OrderDetailDto>> FindAllTicketTransferByCustomerIdAdmin([FromQuery] FilterOrderCustomer input)
+               => new(_orderService.FindAllOrderTransferByCustomerId(input));
+
+        /// <summary>
+        /// Danh sách vé của khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("admin/transfer/find-all")]
+        public APIResponse<PagingResult<TicketTransferDto>> FindAllTransferByCustomerIdAdmin([FromQuery] FilterOrderCustomer input)
+               => new(_orderService.FindAllTransferCustomerIdAdmin(input));
+
+        /// <summary>
+        /// Danh sách vé của khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("admin/exchange/find-all")]
+        public APIResponse<PagingResult<TicketExchangeDto>> FindAllExchangeByCustomerIdAdmin([FromQuery] FilterOrderCustomer input)
+               => new(_orderService.FindAllExchangeCustomerIdAdmin(input));
     }
 }

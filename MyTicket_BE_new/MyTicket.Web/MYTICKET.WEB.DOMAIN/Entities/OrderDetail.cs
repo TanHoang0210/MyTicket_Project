@@ -45,6 +45,11 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// ngay chuyen nhuong
         /// </summary>
         public DateTime? TransferDate { get; set; }
+
+        public DateTime? TransferDoneDate { get; set; }
+
+        public DateTime? TransferCancelDate { get; set; }
+
         /// <summary>
         /// người được chuyển nhượng
         /// </summary>
@@ -56,6 +61,11 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public string? ExchangeCode { get; set; }
 
         public DateTime? ExchangeDate { get; set; }
+
+        public DateTime? ExchangeDoneDate { get; set; }
+
+        public DateTime? ExchangeCancelDate { get; set; }
+
         public string? QrCode { get; set; }
 
         public int Status { get; set; }

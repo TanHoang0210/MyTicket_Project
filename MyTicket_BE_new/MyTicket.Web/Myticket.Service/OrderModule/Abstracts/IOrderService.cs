@@ -119,5 +119,34 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
         /// <param name="input"></param>
         /// <returns></returns>
         Task UpdateTransferStatus(UpdateTransferStatusDto input);
+
+
+        /// <summary>
+        /// Danh sách vé của khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        PagingResult<OrderDetailDto> FindAllOrderByCustomerIdAdmin(FilterOrderCustomer input);
+
+        /// <summary>
+        /// Danh sách vé duoc chuyen nhuong cua kh
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        PagingResult<OrderDetailDto> FindAllOrderTransferByCustomerId(FilterOrderCustomer input);
+
+        /// <summary>
+        /// Danh sách vé chuyển nhượng của khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        PagingResult<TicketTransferDto> FindAllTransferCustomerIdAdmin(FilterOrderCustomer input);
+
+        /// <summary>
+        /// Danh sách vé trả lại của khác hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        PagingResult<TicketExchangeDto> FindAllExchangeCustomerIdAdmin(FilterOrderCustomer input);
     }
 }

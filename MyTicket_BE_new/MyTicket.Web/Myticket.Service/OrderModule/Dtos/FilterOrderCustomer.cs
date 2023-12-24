@@ -10,6 +10,10 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
 {
     public class FilterOrderCustomer : PagingRequestBaseDto
     {
+        [FromQuery(Name = "customerId")]
+        public int CustomerId { get; set; }
 
+        [FromQuery(Name = "status")]
+        public int? Status { get; set; }
     }
 }

@@ -19,9 +19,8 @@ import Customer from 'src/pages/Customer/Customer.vue'
 import Supplier from 'src/pages/Supplier/Supplier.vue'
 import Venue from 'src/pages/Event/Venue.vue'
 import EventType from 'src/pages/Event/EventType.vue'
-import Order from 'src/pages/Order/Order.vue'
-import Transfer from 'src/pages/Order/Transfer.vue'
-import Exchange from 'src/pages/Order/Exchange.vue'
+import CustomerDetail from 'src/pages/Customer/Detail/CustomerDetail.vue'
+import Report from 'src/pages/Report/Report.vue'
 
 const routes = [
   {
@@ -122,7 +121,6 @@ const routes = [
         name: 'EventDetail',
         component: EventDetail,
     meta: { requiresAuth: true },
-
       },
       {
         path: 'event/create',
@@ -142,25 +140,37 @@ const routes = [
         path: 'eventtype',
         name: 'EventType',
         component: EventType,
-    meta: { requiresAuth: true },
-
-      }, {
-        path: 'order',
-        name: 'Order',
-        component: Order,
-    meta: { requiresAuth: true },
-
-      }, {
-        path: 'transfer',
-        name: 'Transfer',
-        component: Transfer,
-    meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
 
       },
       {
-        path: 'exchange',
-        name: 'Exchange',
-        component: Exchange,
+        path: 'customer/:action',
+        name: 'CustomerDetail',
+        component: CustomerDetail,
+      meta: { requiresAuth: true },
+      },
+      // {
+      //   path: 'customer/order',
+      //   name: 'CustomerDetail',
+      //   component: CustomerDetail,
+      // meta: { requiresAuth: true },
+      // },
+      // {
+      //   path: 'customer/exchange',
+      //   name: 'CustomerDetail',
+      //   component: CustomerDetail,
+      // meta: { requiresAuth: true },
+      // },
+      // {
+      //   path: 'customer/transfer',
+      //   name: 'CustomerDetail',
+      //   component: CustomerDetail,
+      // meta: { requiresAuth: true },
+      // },
+      {
+        path: 'report',
+        name: 'Report',
+        component: Report,
     meta: { requiresAuth: true },
       }
     ]

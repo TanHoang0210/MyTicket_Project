@@ -47,8 +47,15 @@ namespace MYTICKET.UTILS.ConstantVaribale.Shared
     {
         public const int INIT = 1;
 
-        public const int COMPLETE = 2;
+        public const int READY_TO_PAY = 2;
 
-        public const int RECEIVED = 3;
+        public const int PAYING = 3;
+
+        public const int CANCEL = 4;
+
+        public const int SUCCESS = 5;
+
+        public const int RECEIVED = 6;
+
     }
 }

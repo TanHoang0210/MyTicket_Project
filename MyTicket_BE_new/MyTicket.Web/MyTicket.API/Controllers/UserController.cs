@@ -74,6 +74,19 @@ namespace MYTICKET.WEB.API.Controllers
         }
 
         /// <summary>
+        /// Thêm tai khoan ncc
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost("account/add-by-suplier")]
+
+        public APIResponse AddBySuplierAccount([FromBody] CreateSupplierAccountDto input)
+        {
+            _supplierService.CreateSupplierAccount(input);
+            return new();
+        }
+        /// <summary>
         /// Thêm User nha cung cap
         /// </summary>
         /// <param name="input"></param>
@@ -86,7 +99,32 @@ namespace MYTICKET.WEB.API.Controllers
             _supplierService.CreateSupplierUser(input);
             return new();
         }
+        /// <summary>
+        /// Thêm tai khoan ncc
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut("account/update-by-suplier")]
 
+        public APIResponse UpdateBySuplierAccount([FromBody] UpdateSupplierAccountDto input)
+        {
+            _supplierService.UpdateSupplierAccount(input);
+            return new();
+        }
+        /// <summary>
+        /// Thêm User nha cung cap
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut("update-by-suplier")]
+
+        public APIResponse UpdateBySuplier([FromBody] UpdateSupplierDto input)
+        {
+            _supplierService.UpdateSupplierUser(input);
+            return new();
+        }
         /// <summary>
         /// Cập nhật User
         /// </summary>
@@ -154,6 +192,25 @@ namespace MYTICKET.WEB.API.Controllers
         /// <summary>
         /// Danh sach nha cc
         /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("supplier/find-by-id")]
+        public APIResponse<SupplierDetailDto> GetSupllierById([FromQuery] int id)
+            => new(_supplierService.GetById(id));
+
+        /// <summary>
+        /// Danh sach nha cc
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("supplier/account/find-by-id")]
+        public APIResponse<SupplierAccountDto> GetSupllierAccountById([FromQuery] int id)
+            => new(_supplierService.GetAccountById(id));
+        /// <summary>
+        /// Danh sach nha cc
+        /// </summary>
         [Authorize]
         [HttpGet("now")]
         public APIResponse<User> Getcurrent()
@@ -181,7 +238,17 @@ namespace MYTICKET.WEB.API.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet("customer/find-all")]
-        public APIResponse<PagingResult<CurrentCustomerDto>> FindProduct([FromQuery] FilterCustomerDto input)
+        public APIResponse<PagingResult<CurrentCustomerDto>> FindAllCustomer([FromQuery] FilterCustomerDto input)
                => new(_customerService.GetAll(input));
+
+        /// <summary>
+        /// lây danh sách khach hang
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("customer/find-by-id")]
+        public APIResponse<CurrentCustomerDto> FindCustomerById([FromQuery] int id)
+               => new(_customerService.GetById(id));
     }
 }

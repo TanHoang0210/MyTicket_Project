@@ -7,7 +7,7 @@
                         <template slot="header">
                             <div class="row" style="display: flex; justify-content: space-between;">
                                 <div class="col-md-6">
-                                    <h4 class="card-title">Danh sách nhà cung cấp</h4>
+                                    <h4 class="card-title">Danh sách vé khách hàng</h4>
                                 </div>
                                 <div class="col-md-4">
                                     <b-input-group class="float-right">
@@ -18,22 +18,23 @@
                                         </b-input-group-append>
                                     </b-input-group>
                                 </div>
-                                <div class="col-md-2">
-                                    <button class="btn btn-success btn-fill float-right"
-                                        style="color: #fff; margin-right: 30px;" @click="showModalSupplier(0)">
-                                        Thêm mới
-                                    </button>
-                                </div>
                             </div>
                         </template>
-                        <b-table striped hover :fields="fields" :items="suppliers">
+                        <b-table striped hover :fields="fields" :items="orders">
+                            <template #cell(transferStatus)="data">
+                                <td style="color: blue;font-weight: 600;" v-if="data.item.transferStatus === 1">Khởi tạo
+                                </td>
+                                <td style="color: green;font-weight: 600;" v-if="data.item.transferStatus === 2">Đã xác nhận
+                                </td>
+                                <td style="color: #888;font-weight: 600;" v-if="data.item.transferStatus === 3">Đã hủy</td>
+                                <td style="color: yellow;font-weight: 600;" v-if="data.item.transferStatus === 4">Đang thanh
+                                    toán</td>
+                                <td style="color: orange;font-weight: 600;" v-if="data.item.transferStatus === 5">Đã chuyển
+                                    nhượng</td>
+                            </template>
                             <template #cell(action)="data">
                                 <div style="font-size: 1.2rem; !important">
-                                    <b-button class="table-btn" variant="danger" title="Xóa">
-                                        <b-icon icon="trash">
-                                        </b-icon>
-                                    </b-button>
-                                    <b-button @click="showModalSupplier(data.item.id)" class="table-btn" variant="secondary"
+                                    <b-button @click="showModalTransfer(data.item.id)" class="table-btn" variant="secondary"
                                         title="Xem chi tiết">
                                         <b-icon icon="pencil-square">
                                         </b-icon>
@@ -42,92 +43,71 @@
                             </template>
                         </b-table>
                     </card>
-                    <b-modal id="modal-add-edit" ref="modal-add-edit" size="lg" title="Thông tin nhà cung cấp" ok-only>
+                    <b-modal id="modal-add-edit" ref="modal-add-edit" size="lg" title="Thông tin chuyển nhượng" ok-only>
                         <form>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <base-input type="text" label="Tên đẩy đủ" placeholder="Nhập tên đầy đủ"
-                                        v-model="updateSupplier.fullName">
-                                    </base-input>
-                                    <base-input type="text" label="Tên Doanh nghiệp" placeholder="Nhập tên nhà cung cấp"
-                                        v-model="updateSupplier.shortName">
-                                    </base-input>
-                                </div>
-                                <div class="col-md-6">
-                                    <base-input type="text" label="Địa chỉ" placeholder="Nhập địa chỉ"
-                                        v-model="updateSupplier.address">
-                                    </base-input>
-                                    <base-input type="text" label="Mã nhà cung cấp" placeholder="Nhập mã nhà cung cấp"
-                                        v-model="updateSupplier.taxCode">
-                                    </base-input>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-12">
-                                    <card v-if="updateSupplier.id !== 0">
-                                        <b-table v-if="updateSupplier.accounts.length > 0" :fields="fieldAccounts"
-                                            :items="updateSupplier.accounts">
-                                            <template #cell(password)="data">
-                                                ******
-                                            </template>
-                                            <template #cell(action)="data">
-                                                <div style="font-size: 1.2rem; !important">
-                                                    <b-button class="table-btn" variant="danger" title="Xóa">
-                                                        <b-icon icon="trash">
-                                                        </b-icon>
-                                                    </b-button>
-                                                    <b-button @click="showModalAccount(data.item.id)" class="table-btn"
-                                                        variant="secondary" title="Xem chi tiết">
-                                                        <b-icon icon="pencil-square">
-                                                        </b-icon>
-                                                    </b-button>
-                                                </div>
-                                            </template>
-                                        </b-table>
-                                        <button class="btn btn-success btn-fill float-right"
-                                            style="color: #fff; margin-right: 30px;" @click="showModalAccount(0)">
-                                            Thêm mới
-                                        </button>
-                                    </card>
+                                    <base-input type="text" label="Tên Sự kiện" :disabled="true"
+                                        v-model="transfer.eventName">
+                                    </base-input>
+                                </div>
+                                <div class="col-md-6">
+                                    <base-input type="text" label="Mã đặt vé" 
+                                        v-model="transfer.orderCode">
+                                    </base-input>
+                                    <base-input type="text" label="Ngày đặt vé" 
+                                        v-model="transfer.orderDate">
+                                    </base-input>
+                                    <base-input type="text" label="Ngày diễn ra" 
+                                        v-model="transfer.organizationDay">
+                                    </base-input>
+                                    <base-input type="text" label="Sân vận động" 
+                                        v-model="transfer.venueName">
+                                    </base-input>
+                                    <base-input type="text" label="Địa chỉ" 
+                                        v-model="transfer.venueAddress">
+                                    </base-input>
+                                    <base-input type="text" label="Ngày yêu cầu chuyển nhượng" 
+                                        v-model="transfer.transferDate">
+                                    </base-input>
+                                </div>
+                                <div class="col-md-6">
+                                    <base-input type="text" label="Hạng vé" 
+                                        v-model="transfer.ticketEventName">
+                                    </base-input>
+                                    <base-input type="text" label="Mã vé" 
+                                        v-model="transfer.ticketCode">
+                                    </base-input>
+                                    <base-input type="text" label="Mã chỗ ngồi" 
+                                        v-model="transfer.seatCode">
+                                    </base-input>
+                                    <base-input type="text" label="Giá" 
+                                        v-model="transfer.price">
+                                    </base-input>
+                                    <base-input v-if="transfer.transferStatus === 3" type="text" label="Ngày hủy chuyển nhượng" 
+                                        v-model="transfer.transferCancelDate">
+                                    </base-input>
+                                    <base-input v-if="transfer.transferStatus === 5" type="text" label="Ngày chuyển nhượng" 
+                                        v-model="transfer.transferDoneDate">
+                                    </base-input>
+                                    <label for="status">Trạng thái</label>
+                                    <br>
+                                    <span style="color: blue;font-weight: 600;" v-if="transfer.transferStatus === 1">Khởi tạo
+                                </span>
+                                <span style="color: green;font-weight: 600;" v-if="transfer.transferStatus === 2">Đã xác nhận
+                                </span>
+                                <span style="color: #888;font-weight: 600;" v-if="transfer.transferStatus === 3">Đã hủy</span>
+                                <span style="color: yellow;font-weight: 600;" v-if="transfer.transferStatus === 4">Đang thanh
+                                    toán</span>
+                                <span style="color: orange;font-weight: 600;" v-if="transfer.transferStatus === 5">Đã chuyển
+                                    nhượng</span>
                                 </div>
                             </div>
                         </form>
                         <template #modal-footer="{ ok, cancel }">
-                            <div style="margin: auto; width: 30%;">
-                                <b-button class="buttonModal" size="lg" variant="success" @click="addEditSupplier()">
-                                    OK
-                                </b-button>
+                            <div style="margin: auto; width: 100%;">
                                 <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
-                                    Cancel
-                                </b-button>
-                            </div>
-                        </template>
-                    </b-modal>
-                    <b-modal centered id="modal-add-edit-account" ref="modal-add-edit-account" size="sm"
-                        title="Thông tin tài khoản" ok-only>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <base-input type="text" label="Tên đăng nhập" placeholder="Nhập tên đăng nhập"
-                                    v-model="updateAccount.username">
-                                </base-input>
-                                <base-input v-if="!isUpdate" type="text" label="Mật khẩu" placeholder="Nhập mật khẩu"
-                                    v-model="updateAccount.password">
-                                </base-input>
-                                <base-input type="text" label="Địa chỉ Email" placeholder="Nhập địa chỉ email"
-                                    v-model="updateAccount.email">
-                                </base-input>
-                                <base-input type="text" label="Số điện thoại" placeholder="Số điện thoại"
-                                    v-model="updateAccount.phone">
-                                </base-input>
-                            </div>
-                        </div>
-                        <template #modal-footer="{ ok, cancel }">
-                            <div style="margin: auto; width: 70%;">
-                                <b-button class="buttonModal" size="lg" variant="success" @click="addEditSupplierAccount(updateSupplier.id)">
-                                    OK
-                                </b-button>
-                                <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
-                                    Cancel
+                                    Đóng
                                 </b-button>
                             </div>
                         </template>
@@ -142,6 +122,7 @@
 import LTable from 'src/components/Table.vue'
 import Card from 'src/components/Cards/Card.vue'
 import axios from 'axios'
+import helpService from 'src/service/help/helpService'
 export default {
     components: {
         LTable,
@@ -154,56 +135,49 @@ export default {
                 status: null
             },
             id: 0,
-            isUpdate:false,
+            isUpdate: false,
             pageSize: 100,
             pageNumber: 1,
-            suppliers: [],
+            orders: [],
             imageUpload: null,
             fields: ['id',
-                { key: 'fullName', label: 'Tên đầy đủ doanh nghiệp ' },
-                { key: 'shortName', label: 'Tên doanh nghiệp' },
-                { key: 'address', label: 'Địa chỉ' },
-                { key: 'taxCode', label: 'Mã số ' },
+                { key: 'orderCode', label: 'Mã đơn đặt vé ' },
+                { key: 'orderDate', label: 'Ngày đặt vé' },
+                { key: 'eventName', label: 'Tên sự kiện' },
+                { key: 'ticketEventName', label: 'Hạng vé' },
+                { key: 'transferStatus', label: 'Trạng thái' },
                 { key: 'action', label: 'Thao tác' },
             ],
-            fieldAccounts: ['id',
-                { key: 'username', label: 'Tên tài khoản' },
-                { key: 'password', label: 'Mật khẩu' },
-                { key: 'email', label: 'Email' },
-                { key: 'phone', label: 'Số điện thoại' },
-                { key: 'action', label: 'Thao tác' },
-            ],
-            updateAccount: {
+            transfer: {
                 id: 0,
-                username: null,
-                password: null,
-                email: null,
-                phone: null
-            },
-            updateSupplier: {
-                id: 0,
-                fullName: null,
-                shortName: null,
-                address: null,
-                taxCode: null,
-                accounts: [
-                    {
-                        id: 0,
-                        username: null,
-                        email: null,
-                        phone: null
-                    }
-                ]
-            },
+                orderId: 0,
+                orderCode: "string",
+                orderDate: "2023-12-24T15:35:00.181Z",
+                eventDetailId: 0,
+                eventName: "string",
+                organizationDay: "2023-12-24T15:35:00.181Z",
+                venueName: "string",
+                venueAddress: "string",
+                ticketId: 0,
+                ticketEventName: "string",
+                ticketCode: "string",
+                seatCode: "string",
+                price: 0,
+                transferStatus: 0,
+                transferDate: "2023-12-24T15:35:00.181Z",
+                transferDoneDate: "2023-12-24T15:35:00.181Z",
+                transferCancelDate: "2023-12-24T15:35:00.181Z"
+            }
         };
     },
     methods: {
-        async getSupplier() {
+        async getOrder() {
             try {
                 const res = await axios.get(
-                    "myticket/api/user/supplier/find-all",
+                    "myticket/api/order/admin/transfer/find-all",
                     {
                         params: {
+                            customerId: this.$route.query.id,
                             pageSize: this.pageSize,
                             pageNumber: this.pageNumber,
                             keyword: this.search.keyword,
@@ -233,31 +207,18 @@ export default {
         },
         async getAllData() {
             try {
-                this.suppliers = await this.getSupplier();
+                this.orders = await this.getOrder();
+                this.orders.forEach(element => {
+                    element.orderDate = helpService.formatDate(element.orderDate)
+                });
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         },
-        async getSupplierById(id) {
+        async getTransferById(id) {
             try {
                 const res = await axios.get(
-                    "myticket/api/user/supplier/find-by-id",
-                    {
-                        params: {
-                            id: id,
-                        },
-                    }
-                )
-                return res.data.data;
-            } catch (error) {
-                console.error('API Error:', error);
-                throw error;
-            }
-        },
-        async getSupplierAccountById(id) {
-            try {
-                const res = await axios.get(
-                    "myticket/api/user/supplier/account/find-by-id",
+                    "myticket/api/order/transfer/find-by-id",
                     {
                         params: {
                             id: id,
@@ -280,45 +241,20 @@ export default {
                     type: color
                 })
         },
-        async showModalSupplier(id) {
+        async showModalTransfer(id) {
             console.log(id)
             try {
-                if (id !== 0) {
-                    this.updateSupplier = await this.getSupplierById(id)
-                } else {
-                    this.updateSupplier.id = 0,
-                        this.updateSupplier.fullName = null,
-                        this.updateSupplier.shortName = null,
-                        this.updateSupplier.address = null,
-                        this.updateSupplier.taxCode = null,
-                        this.updateSupplier.accounts = []
-                }
+                    this.transfer = await this.getTransferById(id)
+                    this.transfer.transferCancelDate = helpService.formatDate(this.transfer.transferCancelDate)
+                    this.transfer.transferDate = helpService.formatDate(this.transfer.transferDate)
+                    this.transfer.transferDoneDate = helpService.formatDate(this.transfer.transferDoneDate)
+                    this.transfer.orderDate = helpService.formatDate(this.transfer.orderDate)
+                    this.transfer.organizationDay = helpService.formatDate(this.transfer.organizationDay)
+                    this.transfer.price = helpService.formatCurrency(this.transfer.price)
                 // this.venues = await this.findAllVenue();
                 this.$nextTick(() => {
                     // Using $nextTick to ensure the modal component is updated
                     this.$refs['modal-add-edit'].show();
-                });
-            } catch (error) {
-                console.error("Error fetching ticket details:", error);
-            }
-        },
-        async showModalAccount(id) {
-            try {
-                if (id !== 0) {
-                    this.updateAccount = await this.getSupplierAccountById(id)
-                    this.isUpdate = true;
-                } else {
-                        this.isUpdate = false;
-                        this.updateAccount.id = 0,
-                        this.updateAccount.username = null,
-                        this.updateAccount.password = null,
-                        this.updateAccount.email = null,
-                        this.updateAccount.phone = null
-                }
-                // this.venues = await this.findAllVenue();
-                this.$nextTick(() => {
-                    // Using $nextTick to ensure the modal component is updated
-                    this.$refs['modal-add-edit-account'].show();
                 });
             } catch (error) {
                 console.error("Error fetching ticket details:", error);
@@ -417,6 +353,5 @@ export default {
 <style>
 .table-btn.btn {
     border: none !important;
-}
-</style>
+}</style>
     

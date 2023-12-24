@@ -53,7 +53,7 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
                          && (input.Keyword == null || (customer.FirstName.Contains(input.Keyword)|| customer.LastName.Contains(input.Keyword)))
                          select new CurrentCustomerDto
                          {
-                             Id = user.Id,
+                             Id = customer.Id,
                              Address = customer.Address,
                              Country = customer.Country,
                              DateOfBirth = customer.DateOfBirth,
@@ -75,6 +75,30 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
             }
             result.Items = query;
             return result;
+        }
+
+        public CurrentCustomerDto GetById(int id)
+        {
+            var query = (from user in _dbContext.Users
+                         join customer in _dbContext.Customers on user.CustomerId equals customer.Id
+                         where !user.Deleted && !customer.Deleted
+                         && customer.Id == id
+                         select new CurrentCustomerDto
+                         {
+                             Id = customer.Id,
+                             Address = customer.Address,
+                             Country = customer.Country,
+                             DateOfBirth = customer.DateOfBirth,
+                             Email = user.Email,
+                             FirstName = customer.FirstName,
+                             Gender = customer.Gender,
+                             LastName = customer.LastName,
+                             Nationality = customer.Nationality,
+                             Password = user.Password,
+                             Phone = user.Phone,
+                             Username = user.Username
+                         }).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.CustomerNotFound);
+            return query;
         }
 
         public void UpdateCustomerUser(UpdateCustomerUserDto input)

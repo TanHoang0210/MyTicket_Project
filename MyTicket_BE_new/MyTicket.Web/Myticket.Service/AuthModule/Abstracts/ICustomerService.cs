@@ -25,11 +25,19 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Abstracts
         void UpdateCustomerUser(UpdateCustomerUserDto input);
 
         /// <summary>
-        /// Danh sasch ncc
+        /// Danh sasch khach hang
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
         PagingResult<CurrentCustomerDto> GetAll(FilterCustomerDto input);
+
+
+        /// <summary>
+        /// thong tin khach hang
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        CurrentCustomerDto GetById(int id);
 
     }
 }

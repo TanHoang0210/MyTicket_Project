@@ -7,7 +7,7 @@
                         <template slot="header">
                             <div class="row" style="display: flex; justify-content: space-between;">
                                 <div class="col-md-6">
-                                    <h4 class="card-title">Danh sách nhà cung cấp</h4>
+                                    <h4 class="card-title">Danh sách vé khách hàng</h4>
                                 </div>
                                 <div class="col-md-4">
                                     <b-input-group class="float-right">
@@ -18,21 +18,19 @@
                                         </b-input-group-append>
                                     </b-input-group>
                                 </div>
-                                <div class="col-md-2">
-                                    <button class="btn btn-success btn-fill float-right"
-                                        style="color: #fff; margin-right: 30px;" @click="showModalSupplier(0)">
-                                        Thêm mới
-                                    </button>
-                                </div>
                             </div>
                         </template>
-                        <b-table striped hover :fields="fields" :items="suppliers">
+                        <b-table striped hover :fields="fields" :items="orders">
+                            <template #cell(status)="data">
+                                <td style="color: blue;font-weight: 600;" v-if="data.item.status === 1">Khởi tạo</td>
+                                <td style="color: greenyellow;font-weight: 600;" v-if="data.item.status === 2">Chưa thanh toán</td>
+                                <td style="color: yellow;font-weight: 600;" v-if="data.item.status === 3">Đang thanh toán</td>
+                                <td style="color: #888;font-weight: 600;" v-if="data.item.status === 4">Đã hủy</td>
+                                <td style="color: orange;font-weight: 600;" v-if="data.item.status === 5">Đã thanh toán</td>
+                                <td style="color: green;font-weight: 600;" v-if="data.item.status === 6">Đã nhận vé</td>
+                            </template>
                             <template #cell(action)="data">
                                 <div style="font-size: 1.2rem; !important">
-                                    <b-button class="table-btn" variant="danger" title="Xóa">
-                                        <b-icon icon="trash">
-                                        </b-icon>
-                                    </b-button>
                                     <b-button @click="showModalSupplier(data.item.id)" class="table-btn" variant="secondary"
                                         title="Xem chi tiết">
                                         <b-icon icon="pencil-square">
@@ -42,96 +40,6 @@
                             </template>
                         </b-table>
                     </card>
-                    <b-modal id="modal-add-edit" ref="modal-add-edit" size="lg" title="Thông tin nhà cung cấp" ok-only>
-                        <form>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <base-input type="text" label="Tên đẩy đủ" placeholder="Nhập tên đầy đủ"
-                                        v-model="updateSupplier.fullName">
-                                    </base-input>
-                                    <base-input type="text" label="Tên Doanh nghiệp" placeholder="Nhập tên nhà cung cấp"
-                                        v-model="updateSupplier.shortName">
-                                    </base-input>
-                                </div>
-                                <div class="col-md-6">
-                                    <base-input type="text" label="Địa chỉ" placeholder="Nhập địa chỉ"
-                                        v-model="updateSupplier.address">
-                                    </base-input>
-                                    <base-input type="text" label="Mã nhà cung cấp" placeholder="Nhập mã nhà cung cấp"
-                                        v-model="updateSupplier.taxCode">
-                                    </base-input>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <card v-if="updateSupplier.id !== 0">
-                                        <b-table v-if="updateSupplier.accounts.length > 0" :fields="fieldAccounts"
-                                            :items="updateSupplier.accounts">
-                                            <template #cell(password)="data">
-                                                ******
-                                            </template>
-                                            <template #cell(action)="data">
-                                                <div style="font-size: 1.2rem; !important">
-                                                    <b-button class="table-btn" variant="danger" title="Xóa">
-                                                        <b-icon icon="trash">
-                                                        </b-icon>
-                                                    </b-button>
-                                                    <b-button @click="showModalAccount(data.item.id)" class="table-btn"
-                                                        variant="secondary" title="Xem chi tiết">
-                                                        <b-icon icon="pencil-square">
-                                                        </b-icon>
-                                                    </b-button>
-                                                </div>
-                                            </template>
-                                        </b-table>
-                                        <button class="btn btn-success btn-fill float-right"
-                                            style="color: #fff; margin-right: 30px;" @click="showModalAccount(0)">
-                                            Thêm mới
-                                        </button>
-                                    </card>
-                                </div>
-                            </div>
-                        </form>
-                        <template #modal-footer="{ ok, cancel }">
-                            <div style="margin: auto; width: 30%;">
-                                <b-button class="buttonModal" size="lg" variant="success" @click="addEditSupplier()">
-                                    OK
-                                </b-button>
-                                <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
-                                    Cancel
-                                </b-button>
-                            </div>
-                        </template>
-                    </b-modal>
-                    <b-modal centered id="modal-add-edit-account" ref="modal-add-edit-account" size="sm"
-                        title="Thông tin tài khoản" ok-only>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <base-input type="text" label="Tên đăng nhập" placeholder="Nhập tên đăng nhập"
-                                    v-model="updateAccount.username">
-                                </base-input>
-                                <base-input v-if="!isUpdate" type="text" label="Mật khẩu" placeholder="Nhập mật khẩu"
-                                    v-model="updateAccount.password">
-                                </base-input>
-                                <base-input type="text" label="Địa chỉ Email" placeholder="Nhập địa chỉ email"
-                                    v-model="updateAccount.email">
-                                </base-input>
-                                <base-input type="text" label="Số điện thoại" placeholder="Số điện thoại"
-                                    v-model="updateAccount.phone">
-                                </base-input>
-                            </div>
-                        </div>
-                        <template #modal-footer="{ ok, cancel }">
-                            <div style="margin: auto; width: 70%;">
-                                <b-button class="buttonModal" size="lg" variant="success" @click="addEditSupplierAccount(updateSupplier.id)">
-                                    OK
-                                </b-button>
-                                <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
-                                    Cancel
-                                </b-button>
-                            </div>
-                        </template>
-                    </b-modal>
                 </div>
             </div>
         </div>
@@ -142,6 +50,7 @@
 import LTable from 'src/components/Table.vue'
 import Card from 'src/components/Cards/Card.vue'
 import axios from 'axios'
+import helpService from 'src/service/help/helpService'
 export default {
     components: {
         LTable,
@@ -157,53 +66,26 @@ export default {
             isUpdate:false,
             pageSize: 100,
             pageNumber: 1,
-            suppliers: [],
+            orders: [],
             imageUpload: null,
             fields: ['id',
-                { key: 'fullName', label: 'Tên đầy đủ doanh nghiệp ' },
-                { key: 'shortName', label: 'Tên doanh nghiệp' },
-                { key: 'address', label: 'Địa chỉ' },
-                { key: 'taxCode', label: 'Mã số ' },
+                { key: 'orderCode', label: 'Mã đơn đặt vé ' },
+                { key: 'orderDate', label: 'Ngày đặt vé' },
+                { key: 'eventName', label: 'Tên sự kiện' },
+                { key: 'ticketEventName', label: 'Hạng vé' },
+                { key: 'status', label: 'Trạng thái' },
                 { key: 'action', label: 'Thao tác' },
-            ],
-            fieldAccounts: ['id',
-                { key: 'username', label: 'Tên tài khoản' },
-                { key: 'password', label: 'Mật khẩu' },
-                { key: 'email', label: 'Email' },
-                { key: 'phone', label: 'Số điện thoại' },
-                { key: 'action', label: 'Thao tác' },
-            ],
-            updateAccount: {
-                id: 0,
-                username: null,
-                password: null,
-                email: null,
-                phone: null
-            },
-            updateSupplier: {
-                id: 0,
-                fullName: null,
-                shortName: null,
-                address: null,
-                taxCode: null,
-                accounts: [
-                    {
-                        id: 0,
-                        username: null,
-                        email: null,
-                        phone: null
-                    }
-                ]
-            },
+            ]
         };
     },
     methods: {
-        async getSupplier() {
+        async getOrder() {
             try {
                 const res = await axios.get(
-                    "myticket/api/user/supplier/find-all",
+                    "myticket/api/order/admin/order-transfer/find-all",
                     {
                         params: {
+                            customerId: this.$route.query.id,
                             pageSize: this.pageSize,
                             pageNumber: this.pageNumber,
                             keyword: this.search.keyword,
@@ -233,7 +115,10 @@ export default {
         },
         async getAllData() {
             try {
-                this.suppliers = await this.getSupplier();
+                this.orders = await this.getOrder();
+                this.orders.forEach(element => {
+                    element.orderDate = helpService.formatDate(element.orderDate)
+                });
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
