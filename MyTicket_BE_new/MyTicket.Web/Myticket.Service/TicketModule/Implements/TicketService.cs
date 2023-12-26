@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS.ConstantVariables.Shared;
@@ -36,6 +37,7 @@ namespace MYTICKET.WEB.SERVICE.TicketModule.Implements
                 EventDetailId = input.EventDetailId,
                 Status = EventStatuses.INIT,
             }).Entity;
+            _dbContext.SaveChanges();
             for (var i = 1; i <= input.Quantity; i++)
             {
                 _dbContext.Tickets.Add(new Ticket
@@ -51,7 +53,24 @@ namespace MYTICKET.WEB.SERVICE.TicketModule.Implements
 
         public List<TicketEventDto> GetAllTicket(int eventDetailId)
         {
-            throw new NotImplementedException();
+            var ticketEvents = (from ticketEvent in _dbContext.TicketEvents
+                               join ticket in _dbContext.Tickets on ticketEvent.Id equals ticket.TicketEventId into tickets
+                               where ticketEvent.EventDetailId == eventDetailId
+                               select new TicketEventDto
+                               {
+                                   Id = ticketEvent.Id,
+                                   Name = ticketEvent.Name,
+                                   EventDetailId = ticketEvent.EventDetailId,
+                                   IntQuantity = tickets.Count(),
+                                   Price = ticketEvent.Price,
+                                   Status = ticketEvent.Status,
+                               }).ToList();
+            foreach (var ticketEvent in ticketEvents)
+            {
+                var orderQuantity = _dbContext.OrderDetails.Include(s => s.Order).Include(s => s.Order).Where(s => s.Ticket.TicketEventId == ticketEvent.Id && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted && !s.Order.Deleted).Count();
+                ticketEvent.Quantity = ticketEvent.IntQuantity - orderQuantity;
+            }
+            return ticketEvents;
         }
 
         public PagingResult<TicketEventTransferDto> GetAllTicketTransfer(FilterTicketDto input)
@@ -86,6 +105,25 @@ namespace MYTICKET.WEB.SERVICE.TicketModule.Implements
             }
 
             result.Items = query;
+            return result;
+        }
+
+        public TicketEventDto GetTicketById(int id)
+        {
+            var result = (from ticketEvent in _dbContext.TicketEvents
+                                join ticket in _dbContext.Tickets on ticketEvent.Id equals ticket.TicketEventId into tickets
+                                where ticketEvent.Id == id
+                                select new TicketEventDto
+                                {
+                                    Id = ticketEvent.Id,
+                                    Name = ticketEvent.Name,
+                                    EventDetailId = ticketEvent.EventDetailId,
+                                    IntQuantity = tickets.Count(),
+                                    Price = ticketEvent.Price,
+                                    Status = ticketEvent.Status,
+                                }).FirstOrDefault() ?? throw new UserFriendlyException(ErrorCode.TicketNotFound);
+                var orderQuantity = _dbContext.OrderDetails.Include(s => s.Order).Include(s => s.Order).Where(s => s.Ticket.TicketEventId == result.Id && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted && !s.Order.Deleted).Count();
+            result.Quantity = result.IntQuantity - orderQuantity;
             return result;
         }
 

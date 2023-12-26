@@ -115,5 +115,40 @@ namespace MYTICKET.WEB.API.Controllers
         [HttpGet("detail/find-by-id")]
         public APIResponse<EventDetailDto> FindEventDetailbyId([FromQuery] int id)
                => new(_eventService.GetEventDetailTicketById(id));
+
+        /// <summary>
+        /// cap nhat trang thai chi tiet su kien
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut("detail/update-status")]
+        public APIResponse UpdateEventDetailStatus([FromBody] UpdateEventDetailStatus input)
+        {
+            _eventService.UpdateEventDetailStatus(input);
+            return new();
+        }
+
+        /// <summary>
+        /// cap nhat trang thai su kien
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut("update-status")]
+        public APIResponse UpdateEventStatus([FromBody] UpdateEventStatus input)
+        {
+            _eventService.UpdateEventStatus(input);
+            return new();
+        }
+
+        /// <summary>
+        /// lấy chi tiết sự kiệnadmin
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("admin/find-by-id")]
+        public APIResponse<EventDto> FindByIdAdmin([FromQuery] int id)
+               => new(_eventService.GetEventByIdAdmin(id));
     }
 }

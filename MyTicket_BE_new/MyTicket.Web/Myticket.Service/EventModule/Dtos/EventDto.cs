@@ -65,5 +65,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
         public IEnumerable<EventDetailDto>? EventDetails { get; set; }
 
         public double? PercentSaleTicket {get;set;}
+
+        public bool IsExchange { get; set; }
     }
 }

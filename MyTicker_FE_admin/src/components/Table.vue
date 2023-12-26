@@ -15,9 +15,10 @@
             column.field) }}</td>
         </slot>
         <td>
-          <router-link class="btn btn-info btn-fill" :style="{ color: '#fff' }"
+          <router-link class="btn btn-info" :style="{ border:'none' }"
             :to="{ name: 'EventDetail', query: { id: item.id } }">
-            Chi tiết
+            <b-icon icon="pencil-square">
+            </b-icon>
           </router-link>
         </td>
       </tr>

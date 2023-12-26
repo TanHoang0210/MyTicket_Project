@@ -14,4 +14,13 @@ namespace MYTICKET.UTILS.ConstantVaribale.Shared
         public const int TAKING_PLACE = 4;
         public const int CANCEL = 5;
     }
+
+    public static class EventDetailStatuses
+    {
+        public const int INIT = 1;
+        public const int ONSALE = 2;
+        public const int STOP_SALE = 3;
+        public const int TAKING_PLACE = 4;
+        public const int CANCEL = 5;
+    }
 }

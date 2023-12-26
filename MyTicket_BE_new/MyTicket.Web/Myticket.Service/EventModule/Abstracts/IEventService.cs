@@ -71,5 +71,25 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Abstracts
         /// <param name="eventDetailId"></param>
         /// <returns></returns>
         EventDetailDto GetEventDetailTicketById(int eventDetailId);
+
+        /// <summary>
+        /// Cập nhật trạng thái sự kiện
+        /// </summary>
+        /// <param name="input"></param>
+        void UpdateEventStatus(UpdateEventStatus input);
+
+        /// <summary>
+        /// Cập nhật trạng thái chi tiết sự kiện
+        /// </summary>
+        /// <param name="input"></param>
+        void UpdateEventDetailStatus(UpdateEventDetailStatus input);
+
+        /// <summary>
+        /// cthông tin sự kiện
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <returns></returns>
+        EventDto GetEventByIdAdmin(int eventId);
+
     }
 }

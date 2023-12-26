@@ -43,7 +43,7 @@
                             </template>
                         </b-table>
                     </card>
-                    <b-modal id="modal-add-edit" ref="modal-add-edit" size="lg" title="Thông tin chuyển nhượng" ok-only>
+                    <b-modal id="modal-add-edit" scrollable ref="modal-add-edit" size="lg" title="Thông tin chuyển nhượng" ok-only>
                         <form>
                             <div class="row">
                                 <div class="col-md-12">

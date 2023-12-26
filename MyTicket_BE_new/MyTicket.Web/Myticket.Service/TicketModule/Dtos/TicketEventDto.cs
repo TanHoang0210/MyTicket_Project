@@ -13,12 +13,14 @@ namespace MYTICKET.WEB.SERVICE.TicketModule.Dtos
         public int Id { get; set; }
         public required string Name { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
 
-        public int EventDetailId { get; set; }
+        public int? EventDetailId { get; set; }
 
-        public int Status { get; set; }
+        public int? Status { get; set; }
 
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
+
+        public int? IntQuantity { get; set; }
     }
 }

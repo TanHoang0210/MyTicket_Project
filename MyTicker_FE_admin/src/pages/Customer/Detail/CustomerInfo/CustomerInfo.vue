@@ -4,6 +4,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <card>
+                        <div>
                         <div class="row">
                             <h4 slot="header" class="card-title col-md-6">Thông tin chung </h4>
                         </div>
@@ -71,6 +72,7 @@
                                 </div>
                             </div>
                         </form>
+                    </div>
                     </card>
                 </div>
             </div>

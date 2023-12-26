@@ -44,5 +44,25 @@ namespace MYTICKET.WEB.API.Controllers
             _ticketService.CreateTicketEvent(input);
             return new();
         }
+
+        /// <summary>
+        /// Danh sách vé
+        /// </summary>
+        /// <param name="eventDetailId"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("find-all")]
+        public APIResponse<List<TicketEventDto>> FindAllTicket([FromQuery] int eventDetailId)
+               => new(_ticketService.GetAllTicket(eventDetailId));
+
+        /// <summary>
+        /// Thong tin ve
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("find-by-id")]
+        public APIResponse<TicketEventDto> FindTicketById([FromQuery] int id)
+               => new(_ticketService.GetTicketById(id));
     }
 }

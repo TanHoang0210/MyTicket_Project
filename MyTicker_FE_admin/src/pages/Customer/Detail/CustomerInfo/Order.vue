@@ -49,68 +49,68 @@
                             </template>
                         </b-table>
                     </card>
-                    <b-modal id="modal-add-edit" ref="modal-add-edit" size="lg" title="Thông tin vé" ok-only>
-                        <form>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <base-input type="text" label="Tên Sự kiện" :disabled="true"
-                                        v-model="order.eventName">
-                                    </base-input>
-                                </div>
-                                <div class="col-md-6">
-                                    <base-input type="text" label="Mã đặt vé" 
-                                        v-model="order.orderCode">
-                                    </base-input>
-                                    <base-input type="text" label="Ngày đặt vé" 
-                                        v-model="order.orderDate">
-                                    </base-input>
-                                    <base-input type="text" label="Ngày diễn ra" 
-                                        v-model="order.organizationDay">
-                                    </base-input>
-                                    <base-input type="text" label="Sân vận động" 
-                                        v-model="order.venueName">
-                                    </base-input>
-                                    <base-input type="text" label="Địa chỉ" 
-                                        v-model="order.venueAddress">
-                                    </base-input>
-                                </div>
-                                <div class="col-md-6">
-                                    <base-input type="text" label="Hạng vé" 
-                                        v-model="order.ticketEventName">
-                                    </base-input>
-                                    <base-input type="text" label="Mã vé" 
-                                        v-model="order.ticketCode">
-                                    </base-input>
-                                    <base-input type="text" label="Mã chỗ ngồi" 
-                                        v-model="order.seatCode">
-                                    </base-input>
-                                    <base-input type="text" label="Giá" 
-                                        v-model="order.price">
-                                    </base-input>
-                                    <label for="status">Trạng thái</label>
-                                    <br>
-                                    <span style="color: blue;font-weight: 600;" v-if="order.status === 1">Khởi tạo</span>
-                                <span style="color: greenyellow;font-weight: 600;" v-if="order.status === 2">Chưa thanh
-                                    toán</span>
-                                <span style="color: yellow;font-weight: 600;" v-if="order.status === 3">Đang thanh toán
-                                </span>
-                                <span style="color: #888;font-weight: 600;" v-if="order.status === 4">Đã hủy</span>
-                                <span style="color: orange;font-weight: 600;" v-if="order.status === 5">Đã thanh toán</span>
-                                <span style="color: green;font-weight: 600;" v-if="order.status === 6">Đã thanh toán</span>
-                                </div>
-                            </div>
-                        </form>
-                        <template #modal-footer="{ ok, cancel }">
-                            <div style="margin: auto; width: 100%;">
-                                <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
-                                    Đóng
-                                </b-button>
-                            </div>
-                        </template>
-                    </b-modal>
                 </div>
             </div>
         </div>
+        <b-modal scrollable  id="modal-add-edit" size="lg" ref="modal-add-edit" title="Thông tin vé">
+            <form>
+                <div class="row">
+                    <div class="col-md-12">
+                        <base-input type="text" label="Tên Sự kiện" :disabled="true"
+                            v-model="order.eventName">
+                        </base-input>
+                    </div>
+                    <div class="col-md-6">
+                        <base-input type="text" label="Mã đặt vé" 
+                            v-model="order.orderCode">
+                        </base-input>
+                        <base-input type="text" label="Ngày đặt vé" 
+                            v-model="order.orderDate">
+                        </base-input>
+                        <base-input type="text" label="Ngày diễn ra" 
+                            v-model="order.organizationDay">
+                        </base-input>
+                        <base-input type="text" label="Sân vận động" 
+                            v-model="order.venueName">
+                        </base-input>
+                        <base-input type="text" label="Địa chỉ" 
+                            v-model="order.venueAddress">
+                        </base-input>
+                    </div>
+                    <div class="col-md-6">
+                        <base-input type="text" label="Hạng vé" 
+                            v-model="order.ticketEventName">
+                        </base-input>
+                        <base-input type="text" label="Mã vé" 
+                            v-model="order.ticketCode">
+                        </base-input>
+                        <base-input type="text" label="Mã chỗ ngồi" 
+                            v-model="order.seatCode">
+                        </base-input>
+                        <base-input type="text" label="Giá" 
+                            v-model="order.price">
+                        </base-input>
+                        <label for="status">Trạng thái</label>
+                        <br>
+                        <span style="color: blue;font-weight: 600;" v-if="order.status === 1">Khởi tạo</span>
+                    <span style="color: greenyellow;font-weight: 600;" v-if="order.status === 2">Chưa thanh
+                        toán</span>
+                    <span style="color: yellow;font-weight: 600;" v-if="order.status === 3">Đang thanh toán
+                    </span>
+                    <span style="color: #888;font-weight: 600;" v-if="order.status === 4">Đã hủy</span>
+                    <span style="color: orange;font-weight: 600;" v-if="order.status === 5">Đã thanh toán</span>
+                    <span style="color: green;font-weight: 600;" v-if="order.status === 6">Đã thanh toán</span>
+                    </div>
+                </div>
+            </form>
+            <template #modal-footer="{ ok, cancel }">
+                <div style="margin: auto; width: 100%;">
+                    <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
+                        Đóng
+                    </b-button>
+                </div>
+            </template>
+        </b-modal>
     </div>
 </template>
     

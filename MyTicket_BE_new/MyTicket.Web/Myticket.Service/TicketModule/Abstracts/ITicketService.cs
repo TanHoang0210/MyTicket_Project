@@ -30,5 +30,12 @@ namespace MYTICKET.WEB.SERVICE.TicketModule.Abstracts
         /// <param name="input"></param>
         /// <returns></returns>
         PagingResult<TicketEventTransferDto> GetAllTicketTransfer(FilterTicketDto input);
+
+        /// <summary>
+        /// Lấy thong tin ve
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        TicketEventDto GetTicketById(int id);
     }
 }

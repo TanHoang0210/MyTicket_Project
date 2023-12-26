@@ -17,6 +17,7 @@ import CreateEvent from 'src/pages/Event/Detail/CreateEvent.vue'
 import Login from 'src/pages/Login.vue'
 import Customer from 'src/pages/Customer/Customer.vue'
 import Supplier from 'src/pages/Supplier/Supplier.vue'
+import SupplierDetail from 'src/pages/Supplier/Detail/SupplierDetail.vue'
 import Venue from 'src/pages/Event/Venue.vue'
 import EventType from 'src/pages/Event/EventType.vue'
 import CustomerDetail from 'src/pages/Customer/Detail/CustomerDetail.vue'
@@ -147,6 +148,12 @@ const routes = [
         path: 'customer/:action',
         name: 'CustomerDetail',
         component: CustomerDetail,
+      meta: { requiresAuth: true },
+      },
+      {
+        path: 'supplier/:action',
+        name: 'SupplierDetail',
+        component: SupplierDetail,
       meta: { requiresAuth: true },
       },
       // {

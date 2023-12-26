@@ -29,15 +29,11 @@
                         <b-table striped hover :fields="fields" :items="suppliers">
                             <template #cell(action)="data">
                                 <div style="font-size: 1.2rem; !important">
-                                    <b-button class="table-btn" variant="danger" title="Xóa">
-                                        <b-icon icon="trash">
-                                        </b-icon>
-                                    </b-button>
-                                    <b-button @click="showModalSupplier(data.item.id)" class="table-btn" variant="secondary"
-                                        title="Xem chi tiết">
+                                    <router-link class="btn btn-info" :style="{ border:'none' }"
+                                        :to="{path:'supplier/info',query:{id:data.item.id}}">
                                         <b-icon icon="pencil-square">
                                         </b-icon>
-                                    </b-button>
+                                    </router-link>
                                 </div>
                             </template>
                         </b-table>
@@ -95,35 +91,6 @@
                         <template #modal-footer="{ ok, cancel }">
                             <div style="margin: auto; width: 30%;">
                                 <b-button class="buttonModal" size="lg" variant="success" @click="addEditSupplier()">
-                                    OK
-                                </b-button>
-                                <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
-                                    Cancel
-                                </b-button>
-                            </div>
-                        </template>
-                    </b-modal>
-                    <b-modal centered id="modal-add-edit-account" ref="modal-add-edit-account" size="sm"
-                        title="Thông tin tài khoản" ok-only>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <base-input type="text" label="Tên đăng nhập" placeholder="Nhập tên đăng nhập"
-                                    v-model="updateAccount.username">
-                                </base-input>
-                                <base-input v-if="!isUpdate" type="text" label="Mật khẩu" placeholder="Nhập mật khẩu"
-                                    v-model="updateAccount.password">
-                                </base-input>
-                                <base-input type="text" label="Địa chỉ Email" placeholder="Nhập địa chỉ email"
-                                    v-model="updateAccount.email">
-                                </base-input>
-                                <base-input type="text" label="Số điện thoại" placeholder="Số điện thoại"
-                                    v-model="updateAccount.phone">
-                                </base-input>
-                            </div>
-                        </div>
-                        <template #modal-footer="{ ok, cancel }">
-                            <div style="margin: auto; width: 70%;">
-                                <b-button class="buttonModal" size="lg" variant="success" @click="addEditSupplierAccount(updateSupplier.id)">
                                     OK
                                 </b-button>
                                 <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">

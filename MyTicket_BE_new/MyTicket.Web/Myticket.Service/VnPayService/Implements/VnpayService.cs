@@ -54,7 +54,7 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
             pay.AddRequestData("vnp_Locale", _appSettings.Value.Vnp_Locale);
             pay.AddRequestData("vnp_OrderInfo", orderInfo.ToString());
             pay.AddRequestData("vnp_OrderType", transfer.CustomerTransferOwnerId.ToString());
-            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8080/transfer/ticket/complete");
+            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8081/transfer/ticket/complete");
             pay.AddRequestData("vnp_TxnRef", tick);
             var paymentUrl =
             pay.CreateRequestUrl("https://sandbox.vnpayment.vn/paymentv2/vpcpay.html", _appSettings.Value.Vnp_SecureHash);
@@ -101,7 +101,7 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
             pay.AddRequestData("vnp_Locale", _appSettings.Value.Vnp_Locale);
             pay.AddRequestData("vnp_OrderInfo", order.Id.ToString());
             pay.AddRequestData("vnp_OrderType", order.OrderType.ToString());
-            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8080/ticket/complete");
+            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8081/ticket/complete");
             pay.AddRequestData("vnp_TxnRef", tick);
             var paymentUrl =
             pay.CreateRequestUrl("https://sandbox.vnpayment.vn/paymentv2/vpcpay.html", _appSettings.Value.Vnp_SecureHash);

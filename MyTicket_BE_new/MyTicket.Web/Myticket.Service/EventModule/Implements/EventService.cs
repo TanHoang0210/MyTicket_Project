@@ -91,7 +91,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                              LastEventDate = evDetails.OrderByDescending(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
                              Status = ev.Status, // Assuming Status is a property of EventDetail,
                              Supllier = _dbContext.Suppilers.Where(s => s.Id == ev.SupplierId).Select(s => s.FullName).FirstOrDefault(),
-                             SupplierId = ev.SupplierId
+                             SupplierId = ev.SupplierId,
                          });
             result.TotalItems = query.Count();
             query = query.OrderByDescending(s => s.FirstEventDate);
@@ -132,7 +132,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             var result = (from ev in _dbContext.Events
                           join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
                           join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
-                          where (new int[] { EventStatuses.INIT, EventStatuses.ONSALE }.Contains(ev.Status) && !ev.Deleted && ev.IsOutStanding)
+                          where (!ev.Deleted && ev.IsOutStanding)
                           select new EventDto
                           {
                               Id = ev.Id,
@@ -158,7 +158,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                           from evDetail in evDetails.DefaultIfEmpty()
                           join odDetail in _dbContext.OrderDetails on evDetail.Id equals odDetail.EventDetailId into odDetails
                           from odDetail in odDetails.DefaultIfEmpty()
-                          where (new int[] { EventStatuses.INIT, EventStatuses.ONSALE }.Contains(ev.Status) && !ev.Deleted)
+                          where (!ev.Deleted)
                           select new EventDto
                           {
                               Id = ev.Id,
@@ -194,7 +194,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                     ExchangePolicy = s.ExchangePolicy,
                     AdmissionPolicy = s.AdmissionPolicy,
                     Supllier = _dbContext.Suppilers.Where(x => x.Id == s.SupplierId).Select(s => s.FullName).FirstOrDefault(),
-                    SupplierId = s.SupplierId
+                    SupplierId = s.SupplierId,
+                    IsExchange = s.IsExChange
                 })
                 .FirstOrDefault()
                ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
@@ -240,6 +241,76 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             return eventinfo;
         }
 
+        public EventDto GetEventByIdAdmin(int eventId)
+        {
+            var eventinfo = _dbContext.Events.Where(s => s.Id == eventId && !s.Deleted)
+                .Select(s => new EventDto
+                {
+                    Id = s.Id,
+                    EventName = s.EventName,
+                    EventDescription = s.EventDescription,
+                    EventImage = s.EventImage,
+                    EventTypeId = s.EventTypeId,
+                    EventTypeName = _dbContext.EventTypes.Where(x => x.Id == s.EventTypeId).Select(x => x.Name).FirstOrDefault(),
+                    FirstEventDate = _dbContext.EventDetails.Where(o => o.EventId == s.Id).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay).First().Date,
+                    LastEventDate = _dbContext.EventDetails.Where(o => o.EventId == s.Id).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay).Last().Date,
+                    Status = s.Status,
+                    ExchangePolicy = s.ExchangePolicy,
+                    AdmissionPolicy = s.AdmissionPolicy,
+                    Supllier = _dbContext.Suppilers.Where(x => x.Id == s.SupplierId).Select(s => s.FullName).FirstOrDefault(),
+                    SupplierId = s.SupplierId,
+                    IsExchange = s.IsExChange
+                })
+                .FirstOrDefault()
+               ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
+
+            var eventDetails = _dbContext.EventDetails
+                .Include(s => s.Event)
+                .Include(s => s.TicketEvents.Where(s => !s.Deleted))
+                .ThenInclude(x => x.Tickets)
+                .Where(s => s.EventId == eventinfo.Id && !s.Deleted)
+                .Select(s => new EventDetailDto
+                {
+                    Id = s.Id,
+                    EventId = s.EventId,
+                    EventName = s.Event!.EventName,
+                    EventImage = s.Event!.EventImage,
+                    EndSaleTicketDate = s.EndSaleTicketDate,
+                    EventSeatMapImage = s.EventSeatMapImage,
+                    OrganizationDay = s.OrganizationDay,
+                    StartSaleTicketDate = s.StartSaleTicketDate,
+                    Status = s.Status,
+                    VenueId = s.VenueId,
+                    HavingSeatMap = s.HavingSeatMap,
+                    SeatSelectType = s.SeatSelectType,
+                    VenueName = _dbContext.Venues.Where(x => x.Id == s.VenueId && !s.Deleted).Select(s => s.Name).FirstOrDefault(),
+                    VenueAddress = _dbContext.Venues.Where(x => x.Id == s.VenueId).Select(s => s.Address).FirstOrDefault()
+                }).ToList();
+            eventinfo.EventDetails = eventDetails;
+            foreach(var detail in eventinfo.EventDetails)
+            {
+                var ticketEvents = (from ticketEvent in _dbContext.TicketEvents
+                                    join ticket in _dbContext.Tickets on ticketEvent.Id equals ticket.TicketEventId into tickets
+                                    where ticketEvent.EventDetailId == detail.Id
+                                    select new TicketEventDto
+                                    {
+                                        Id = ticketEvent.Id,
+                                        Name = ticketEvent.Name,
+                                        EventDetailId = ticketEvent.EventDetailId,
+                                        IntQuantity = tickets.Count(),
+                                        Price = ticketEvent.Price,
+                                        Status = ticketEvent.Status,
+                                    }).ToList();
+                foreach (var ticketEvent in ticketEvents)
+                {
+                    var orderQuantity = _dbContext.OrderDetails.Include(s => s.Order).Include(s => s.Order).Where(s => s.Ticket.TicketEventId == ticketEvent.Id && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted && !s.Order.Deleted).Count();
+                    ticketEvent.Quantity = ticketEvent.IntQuantity - orderQuantity;
+                }
+                detail.TicketEvents = ticketEvents;
+            }
+            return eventinfo;
+        }
+
         public EventDetailDto GetEventDetailTicketById(int eventDetailId)
         {
             var eventDetails = _dbContext.EventDetails
@@ -260,6 +331,9 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                     Status = s.Status,
                     VenueId = s.VenueId,
                     VenueName = _dbContext.Venues.Where(x => x.Id == s.VenueId && !s.Deleted).Select(s => s.Name).FirstOrDefault(),
+                    HavingSeatMap = s.HavingSeatMap,
+                    SeatSelectType = s.SeatSelectType,
+                    VenueAddress = _dbContext.Venues.Where(x => x.Id == s.VenueId).Select(s => s.Address).FirstOrDefault(),
                     TicketEvents = s.TicketEvents.Select(x => new TicketEventDto
                     {
                         Id = x.Id,
@@ -309,6 +383,40 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             eventDetail.EndSaleTicketDate = input.EndSaleTicketDate;
             eventDetail.EventSeatMapImage = input.EventSeatMapImage;
             _dbContext.SaveChanges();
+        }
+
+        public void UpdateEventDetailStatus(UpdateEventDetailStatus input)
+        {
+            var evntDetail = _dbContext.EventDetails.FirstOrDefault(s => s.Id == input.Id && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
+            if(input.Status != EventDetailStatuses.CANCEL)
+            {
+                var evnt = _dbContext.Events.FirstOrDefault(s => s.Id == evntDetail.EventId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
+                evnt.Status = input.Status;
+            }
+            evntDetail.Status = input.Status;
+            _dbContext.SaveChanges();
+        }
+
+        public void UpdateEventStatus(UpdateEventStatus input)
+        {
+            var evnt = _dbContext.Events.FirstOrDefault(s => s.Id == input.Id && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
+            var transaction = _dbContext.Database.BeginTransaction();
+            if(input.Status == EventStatuses.CANCEL)
+            {
+                evnt.Status = input.Status;
+                var evntDetails = _dbContext.EventDetails.Where(s => s.EventId == input.Id && !s.Deleted);
+                foreach(var item in  evntDetails)
+                {
+                    item.Status = EventDetailStatuses.CANCEL;
+                }
+                _dbContext.SaveChanges();
+            }
+            else
+            {
+                evnt.Status = input.Status;
+            }
+            _dbContext.SaveChanges();
+            transaction.Commit();
         }
 
         private string GenerateCode(int length)

@@ -12,7 +12,7 @@ namespace MYTICKET.UTILS.ConstantVaribale.Shared
 
         public static int ONSALE = 2;
 
-        public static int SALE = 2;
+        public static int SALE = 3;
 
     }
 }

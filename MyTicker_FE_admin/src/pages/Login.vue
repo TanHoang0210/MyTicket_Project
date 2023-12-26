@@ -1,27 +1,27 @@
 <template>
     <div class="content">
         <div class="container-fluid">
-            <div class="row" style="display: flex;">
-                <div class="col-md-4" style="margin: auto;">
-                    <card>
+            <div class="row container-inner"
+                :style="{ display: 'flex', height: '100vh', backgroundImage: 'url(' + $fileUrl + bannerImage + ')' }">
+                <div class="col-md-7">
+
+                </div>
+                <div class="col-md-4">
+                    <card class="login" style="margin-top: 40% !important;">
                         <form>
                             <div class="row">
                                 <div class="col-md-12" style="display: flex; flex-direction: column;">
                                     <div>
                                         <h3 style="margin: auto;" slot="header" class="card-title col-md-6">Đăng Nhập</h3>
-                                        <base-input type="text" label="Tên đăng nhập"
-                                            placeholder="Tên đăng nhập" v-model="loginForm.username">
+                                        <base-input type="text" label="Tên đăng nhập" placeholder="Tên đăng nhập"
+                                            v-model="loginForm.username">
                                         </base-input>
-                                        <base-input type="text" label="Mật khẩu" placeholder="Mật Khẩu"
+                                        <base-input type="password" label="Mật khẩu" placeholder="Mật Khẩu"
                                             v-model="loginForm.password">
                                         </base-input>
                                     </div>
                                     <div>
-                                        <button type="submit" style="" class="btn btn-secondary btn-fill float-right "
-                                            @click.prevent="updateProfile">
-                                            Hủy
-                                        </button>
-                                        <button type="submit" class="btn btn-info btn-fill float-right "
+                                        <button type="submit" class="btn-login btn btn-info btn-fill float-right "
                                             @click="onSubmit">
                                             Đăng Nhập
                                         </button>
@@ -45,6 +45,7 @@ export default {
     },
     data() {
         return {
+            bannerImage: null,
             loginForm: {
                 username: '',
                 password: '',
@@ -117,6 +118,26 @@ export default {
                 }
             }
         }
+    },
+    mounted() {
+        this.bannerImage = 'api/file/get?folder=&file=bannerAdmin.webp';
     }
 }
 </script>
+<style>
+.card.login{
+    background-color: transparent !important;
+    color: #fff !important;
+}
+
+.btn-login {
+    background-color: #830158 !important;
+    border: none;
+}
+
+.container-inner {
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* Optional: Adjusts the size of the background image to cover the entire container */
+    height: 100vh;
+}</style>
