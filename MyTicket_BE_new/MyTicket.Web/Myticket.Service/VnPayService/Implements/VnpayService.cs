@@ -108,5 +108,50 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
 
             return paymentUrl;
         }
+
+        public string CreateRefundUrl(RefundOrderDto model, HttpContext context)
+        {
+            var tick = DateTime.Now.Ticks.ToString();
+            var orderTemp = (from ord in _dbContext.Orders
+                             join orderDetail in _dbContext.OrderDetails on ord.Id equals orderDetail.OrderId
+                             join ticket in _dbContext.Tickets on orderDetail.TicketId equals ticket.Id
+                             where ord.CustomerId == model.CustomerId && orderDetail.Id == model.OrderDetail
+                             select new
+                             {
+                                 Id = orderDetail.Id,
+                                 OrderType = orderDetail.EventDetailId,
+                                 TotalAmount = orderDetail.Price,
+                                 OrderDescription = "Hoàn tiền đơn đặt vé My Ticket",
+                                 TransactionNo = ord.TransactionNo,
+                             }).FirstOrDefault()
+                             ?? throw new UserFriendlyException(ErrorCode.OrderNotFound);
+            var order = new
+            {
+                Id = orderTemp.Id,
+                OrderType = orderTemp.OrderType,
+                TotalAmount = orderTemp.TotalAmount,
+                OrderDescription = orderTemp.OrderDescription,
+                TransactionNo = orderTemp.TransactionNo,
+            };
+            var pay = new VnPayLibrary();
+            pay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
+            pay.AddRequestData("vnp_Command", "refund");
+            pay.AddRequestData("vnp_TmnCode", _appSettings.Value.Vnp_TmnCode);
+            pay.AddRequestData("vnp_Amount", ((long)order.TotalAmount * 100).ToString());
+            pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            pay.AddRequestData("vnp_CurrCode", _appSettings.Value.Vnp_CurrCode);
+            pay.AddRequestData("vnp_TransactionType", "03");
+            pay.AddRequestData("vnp_IpAddr", "127.0.0.1");
+            pay.AddRequestData("vnp_Locale", _appSettings.Value.Vnp_Locale);
+            pay.AddRequestData("vnp_OrderInfo", order.Id.ToString());
+            pay.AddRequestData("vnp_OrderType", order.OrderType.ToString());
+            pay.AddRequestData("vnp_TransactionNo", order.TransactionNo.ToString());
+            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8080/#/admin/overview");
+            pay.AddRequestData("vnp_TxnRef", tick);
+            var paymentUrl =
+            pay.CreateRequestUrl("http://sandbox.vnpayment.vn/merchant_webapi/merchant.html", _appSettings.Value.Vnp_SecureHash);
+
+            return paymentUrl;
+        }
     }
 }

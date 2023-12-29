@@ -26,7 +26,17 @@
                                 </div>
                             </div>
                         </template>
-                        <b-table striped hover :fields="fields" :items="eventTypes">
+                        <div class="row">
+                            <div class="col-md-10">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="per-page-select" style="text-align: end;">Số bản ghi</label>
+                                <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize"
+                                    @change="getAllData()" :options="pageSizeOption" size="sm"></b-form-select>
+                            </div>
+                        </div>
+                        <b-table :current-page="pageNumber" id="table-event-type" striped hover :fields="fields"
+                            :items="eventTypes">
                             <template #cell(id)="data">
                                 {{ data.value }}
                             </template>
@@ -56,6 +66,8 @@
                                 </div>
                             </template>
                         </b-table>
+                        <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize"
+                            aria-controls="table-event-type"></b-pagination>
                     </card>
                     <b-modal style="height: 100%;" id="modal-add-edit" ref="modal-add-edit" size="lg"
                         title="Thêm Loại sự kiện">
@@ -133,6 +145,8 @@ export default {
             pageNumber: 1,
             eventTypes: [],
             imageUpload: null,
+            totals: 0,
+            pageSizeOption: [5, 10, 25, 50, 100],
             fields: ['id',
                 { key: 'name', label: 'Tên loại sự kiện' },
                 { key: 'description', label: 'Mô tả' },
@@ -164,6 +178,7 @@ export default {
                         },
                     }
                 )
+                this.totals = res.data.data.totalItems
                 return res.data.data.items;
             } catch (error) {
                 console.error('API Error:', error);
@@ -235,44 +250,52 @@ export default {
             }
         },
         async addEditType() {
-                if (this.updateEventType.id !== 0) {
-                    const response = await axios.put('myticket/api/event-type/update', this.updateEventType, {
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                    })
-                    if (response.data.code === 200) {
-                        this.notifyVue('Thành công', 'Cập nhật loại sự kiện thành công', 'top', 'right', 'success')
-                    }
-                    else {
-                        this.notifyVue('Thất bại', 'Cập nhật loại sự kiện thất bại', 'top', 'right', 'danger')
-                    }
-                } else {
-                    const response = await axios.post('myticket/api/event-type/create', {
-                        name: this.updateEventType.name,
-                        description: this.updateEventType.description,
-                        image: this.updateEventType.image
-                    }, {
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                    })
-                    if (response.data.code === 200) {
-                        this.notifyVue('Thành công', 'Cập nhật loại sự kiện thành công', 'top', 'right', 'success')
-                    }
-                    else {
-                        this.notifyVue('Thất bại', 'Cập nhật loại sự kiện thất bại', 'top', 'right', 'danger')
-                    }
+            if (this.updateEventType.id !== 0) {
+                const response = await axios.put('myticket/api/event-type/update', this.updateEventType, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                if (response.data.code === 200) {
+                    this.notifyVue('Thành công', 'Cập nhật loại sự kiện thành công', 'top', 'right', 'success')
                 }
-                this.$refs['modal-add-edit'].hide();
-                this.getAllData();
+                else {
+                    this.notifyVue('Thất bại', 'Cập nhật loại sự kiện thất bại', 'top', 'right', 'danger')
+                }
+            } else {
+                const response = await axios.post('myticket/api/event-type/create', {
+                    name: this.updateEventType.name,
+                    description: this.updateEventType.description,
+                    image: this.updateEventType.image
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                if (response.data.code === 200) {
+                    this.notifyVue('Thành công', 'Cập nhật loại sự kiện thành công', 'top', 'right', 'success')
+                }
+                else {
+                    this.notifyVue('Thất bại', 'Cập nhật loại sự kiện thất bại', 'top', 'right', 'danger')
+                }
+            }
+            this.$refs['modal-add-edit'].hide();
+            this.getAllData();
         },
     },
     mounted() {
         this.getAllData();
     },
     computed: {
-    }
+    },
+    watch: {
+        // Fetch data when the pageNumber changes
+        pageNumber(newPage, oldPage) {
+            if (newPage !== oldPage) {
+                this.getAllData();
+            }
+        },
+    },
 };
 </script>
     

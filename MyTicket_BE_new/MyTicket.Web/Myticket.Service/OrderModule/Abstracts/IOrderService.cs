@@ -133,7 +133,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Abstracts
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        PagingResult<OrderDetailDto> FindAllOrderTransferByCustomerId(FilterOrderCustomer input);
+        PagingResult<TicketTransferDto> FindAllOrderTransferByCustomerId(FilterOrderCustomer input);
 
         /// <summary>
         /// Danh sách vé chuyển nhượng của khách hàng

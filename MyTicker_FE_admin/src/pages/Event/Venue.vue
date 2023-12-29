@@ -26,7 +26,17 @@
                                 </div>
                             </div>
                         </template>
-                        <b-table striped hover :fields="fields" :items="venues">
+                        <div class="row">
+                            <div class="col-md-10">
+
+                            </div>
+                            <div class="col-md-2">
+                                <label for="per-page-select" style="text-align: end;">Số bản ghi</label>
+                                <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize"
+                                    @change="getAllData()" :options="pageSizeOption" size="sm"></b-form-select>
+                            </div>
+                        </div>
+                        <b-table :current-page="pageNumber" id="table-venue" striped hover :fields="fields" :items="venues">
                             <template #cell(id)="data">
                                 {{ data.value }}
                             </template>
@@ -53,6 +63,8 @@
                                 </div>
                             </template>
                         </b-table>
+                        <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize"
+                            aria-controls="table-venue"></b-pagination>
                     </card>
                     <b-modal id="modal-add-edit" ref="modal-add-edit" size="lg" title="Thêm sân vận động">
                         <form>
@@ -157,6 +169,8 @@ export default {
             pageSize: 100,
             pageNumber: 1,
             venues: [],
+            totals:0,
+            pageSizeOption:[5,10,25,50,100],
             imageUpload: null,
             fields: ['id',
                 { key: 'name', label: 'Tên sân vận động' },
@@ -189,6 +203,7 @@ export default {
                         },
                     }
                 )
+                this.totals = res.data.data.totalItems
                 return res.data.data.items;
             } catch (error) {
                 console.error('API Error:', error);
@@ -245,12 +260,13 @@ export default {
             try {
                 if (id !== 0) {
                     this.updateVenue = await this.getVenueById(id)
-                }else{
-                    this.updateVenue.name= null,
-                    this.updateVenue.address= null,
-                    this.updateVenue.capacity= null,
-                    this.updateVenue.description= null,
-                    this.updateVenue.image= this.null
+                } else {
+                    this.updateVenue.name = null,
+                        this.updateVenue.address = null,
+                        this.updateVenue.id = 0,
+                        this.updateVenue.capacity = null,
+                        this.updateVenue.description = null,
+                        this.updateVenue.image = null
                 }
                 console.log(this.updateVenue)
                 // this.venues = await this.findAllVenue();
@@ -302,7 +318,15 @@ export default {
         this.getAllData();
     },
     computed: {
-    }
+    },
+    watch: {
+        // Fetch data when the pageNumber changes
+        pageNumber(newPage, oldPage) {
+            if (newPage !== oldPage) {
+                this.getAllData();
+            }
+        },
+    },
 };
 </script>
     

@@ -1,256 +1,198 @@
 <template>
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <card class="strpied-tabled-with-hover" body-classes="table-full-width table-responsive">
-                        <template slot="header">
-                            <div class="row" style="display: flex; justify-content: space-between;">
-                                <div class="col-md-6">
-                                    <h4 class="card-title">Danh sách vé khách hàng</h4>
-                                </div>
-                                <div class="col-md-4">
-                                    <b-input-group class="float-right">
-                                        <b-form-input v-model="search.keyword"></b-form-input>
-                                        <b-input-group-append>
-                                            <b-button class="btn-search" @click="getAllData()" variant="outline-success">Tìm
-                                                kiếm</b-button>
-                                        </b-input-group-append>
-                                    </b-input-group>
-                                </div>
-                            </div>
-                        </template>
-                        <b-table striped hover :fields="fields" :items="orders">
-                            <template #cell(exchangeStatus)="data">
-                                <td style="color: blue;font-weight: 600;" v-if="data.item.exchangeStatus === 1">Khởi tạo</td>
-                                <td style="color:orange;font-weight: 600;" v-if="data.item.exchangeStatus === 2">Đã xác nhận</td>
-                                <td style="color: #888;font-weight: 600;" v-if="data.item.exchangeStatus === 3">Đã hủy
-                                </td>
-                                <td style="color: green;font-weight: 600;" v-if="data.item.exchangeStatus === 4">Trả vé thành công</td>
-                            </template>
-                            <template #cell(action)="data">
-                                <div style="font-size: 1.2rem; !important">
-                                    <b-button @click="showModalExchange(data.item.id)" class="table-btn" variant="secondary"
-                                        title="Xem chi tiết">
-                                        <b-icon icon="pencil-square">
-                                        </b-icon>
-                                    </b-button>
-                                </div>
-                            </template>
-                        </b-table>
-                    </card>
-                    <b-modal id="modal-add-edit" scrollable ref="modal-add-edit" size="lg" title="Thông tin trả vé" ok-only>
-                        <form>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <base-input type="text" label="Tên Sự kiện" :disabled="true"
-                                        v-model="exchange.eventName">
-                                    </base-input>
-                                </div>
-                                <div class="col-md-6">
-                                    <base-input type="text" label="Mã đặt vé" 
-                                        v-model="exchange.orderCode">
-                                    </base-input>
-                                    <base-input type="text" label="Ngày đặt vé" 
-                                        v-model="exchange.orderDate">
-                                    </base-input>
-                                    <base-input type="text" label="Ngày diễn ra" 
-                                        v-model="exchange.organizationDay">
-                                    </base-input>
-                                    <base-input type="text" label="Sân vận động" 
-                                        v-model="exchange.venueName">
-                                    </base-input>
-                                    <base-input type="text" label="Địa chỉ" 
-                                        v-model="exchange.venueAddress">
-                                    </base-input>
-                                    <base-input type="text" label="Ngày yêu cầu trả vé" 
-                                        v-model="exchange.exchangeDate">
-                                    </base-input>
-                                </div>
-                                <div class="col-md-6">
-                                    <base-input type="text" label="Hạng vé" 
-                                        v-model="exchange.ticketEventName">
-                                    </base-input>
-                                    <base-input type="text" label="Mã vé" 
-                                        v-model="exchange.ticketCode">
-                                    </base-input>
-                                    <base-input type="text" label="Mã chỗ ngồi" 
-                                        v-model="exchange.seatCode">
-                                    </base-input>
-                                    <base-input type="text" label="Giá" 
-                                        v-model="exchange.price">
-                                    </base-input>
-                                    <base-input v-if="exchange.exchangeStatus === 3" type="text" label="Ngày hủy trả vé" 
-                                        v-model="exchange.exchangeCancelDate">
-                                    </base-input>
-                                    <base-input v-if="exchange.exchangeStatus === 5" type="text" label="Ngày hoàn trả" 
-                                        v-model="exchange.exchangeDoneDate">
-                                    </base-input>
-                                    <label for="status">Trạng thái</label>
-                                    <br>
-                                    <span style="color: blue;font-weight: 600;" v-if="exchange.exchangeStatus === 1">Khởi tạo
-                                </span>
-                                <span style="color: green;font-weight: 600;" v-if="exchange.exchangeStatus === 2">Đã xác nhận
-                                </span>
-                                <span style="color: #888;font-weight: 600;" v-if="exchange.exchangeStatus === 3">Đã hủy</span>
-                                <span style="color: yellow;font-weight: 600;" v-if="exchange.exchangeStatus === 4">Trả vé thành công</span>
-                                </div>
-                            </div>
-                        </form>
-                        <template #modal-footer="{ ok, cancel }">
-                            <div style="margin: auto; width: 100%;">
-                                <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
-                                    Đóng
-                                </b-button>
-                            </div>
-                        </template>
-                    </b-modal>
+          <div class="col-12">
+            <card class="strpied-tabled-with-hover" body-classes="table-full-width table-responsive">
+              <template slot="header">
+                <div class="row" style="display: flex; justify-content: space-between;">
+                  <div class="col-md-3">
+                    <h4 class="card-title">Danh sách sự kiện</h4>
+                  </div>
+                  <div class="col-md-5">
+                    <b-input-group class="float-right">
+                      <b-form-input v-model="search.keyword"></b-form-input>
+                      <b-input-group-append>
+                        <b-button @click="getAllData()" variant="outline-success">Tìm kiếm</b-button>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </div>
+                  <div class="col-md-2">
+                    <b-form-select v-model="search.status" @change="getAllData()">
+                      <b-form-select-option :value="null">Tất cả</b-form-select-option>
+                      <b-form-select-option v-for="item in eventStatuses" :value="item.id">{{ item.name
+                      }}</b-form-select-option>
+                    </b-form-select>
+                  </div>
+                  <div class="col-md-2">
+                    <router-link class="btn btn-success btn-fill float-right" style="color: #fff;"
+                      :to="{ name: 'CreateEvent' }">
+                      Thêm mới
+                    </router-link>
+                  </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</template>
+              </template>
+              <div class="row">
+                <div class="col-md-10">
+  
+                </div>
+                <div class="col-md-2">
+                  <label for="per-page-select" style="text-align: end;">Số bản ghi</label>
+                  <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize" @change="getAllData()" :options="pageSizeOption"
+                  size="sm"></b-form-select>
+                </div>
+              </div>
+              <b-table :current-page="pageNumber" id="table-event" striped hover :fields="eventFields" :items="events">
+                <template #cell(status)="data">
+                  <td style="color: blue;font-weight: 600;" v-if="data.item.status === 1">Khởi tạo</td>
+                  <td style="color: greenyellow;font-weight: 600;" v-if="data.item.status === 2">Mở bán
+                    vé</td>
+                  <td style="color: orange;font-weight: 600;" v-if="data.item.status === 3">Đóng bán vé
+                  </td>
+                  <td style="color: #888;font-weight: 600;" v-if="data.item.status === 4">Đang diễn ra</td>
+                  <td style="color: red;font-weight: 600;" v-if="data.item.status === 5">Đã hủy</td>
+                </template>
+                <template #cell(action)="data">
+                  <router-link class="btn btn-info" :style="{ border: 'none' }"
+                    :to="{ name: 'EventDetail', query: { id: data.item.id } }">
+                    <b-icon icon="pencil-square">
+                    </b-icon>
+                  </router-link>
+                </template>
+              </b-table>
+              <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize" aria-controls="table-event"></b-pagination>
+            </card>
+          </div>
+  </template>
     
-<script>
-import LTable from 'src/components/Table.vue'
-import Card from 'src/components/Cards/Card.vue'
-import axios from 'axios'
-import helpService from 'src/service/help/helpService'
-export default {
+  <script>
+  import LTable from 'src/components/Table.vue'
+  import Card from 'src/components/Cards/Card.vue'
+  import axios from 'axios'
+  
+  const tableColumns = [
+    { label: "ID", field: "id" },
+    { label: "Tên sự kiện", field: "eventName" },
+    { label: "Loại sự kiện", field: "eventTypeName" },
+    { label: "Nhà cung cấp", field: "supllier" },
+    { label: "Trạng thái", field: "status" }
+  ];
+  
+  export default {
     components: {
-        LTable,
-        Card
+      LTable,
+      Card
     },
     data() {
-        return {
-            search: {
-                keyword: null,
-                status: null
-            },
-            id: 0,
-            isUpdate: false,
-            pageSize: 100,
-            pageNumber: 1,
-            orders: [],
-            exchange: {
-                id: 0,
-                orderId: 0,
-                orderCode: "string",
-                orderDate: "2023-12-24T17:54:45.118Z",
-                eventDetailId: 0,
-                eventName: "string",
-                organizationDay: "2023-12-24T17:54:45.118Z",
-                venueName: "string",
-                venueAddress: "string",
-                ticketId: 0,
-                ticketEventName: "string",
-                ticketCode: "string",
-                seatCode: "string",
-                price: 0,
-                exchangeStatus: 0,
-                exchangeDate: "2023-12-24T17:54:45.118Z",
-                exchangeDoneDate: "2023-12-24T17:54:45.118Z",
-                exchangeCancelDate: "2023-12-24T17:54:45.118Z"
-            },
-            imageUpload: null,
-            fields: ['id',
-                { key: 'orderCode', label: 'Mã đơn đặt vé ' },
-                { key: 'orderDate', label: 'Ngày đặt vé' },
-                { key: 'eventName', label: 'Tên sự kiện' },
-                { key: 'ticketEventName', label: 'Hạng vé' },
-                { key: 'exchangeStatus', label: 'Trạng thái trả vé' },
-                { key: 'action', label: 'Thao tác' },
-            ]
-        };
+      return {
+        search: {
+          keyword: null,
+          status: null
+        },
+  
+        eventStatuses: [
+          {
+            id: 1,
+            name: "Khởi tạo"
+          },
+          {
+            id: 2,
+            name: "Mở bán vé"
+          },
+          {
+            id: 3,
+            name: "Ngừng bán vé"
+          },
+          {
+            id: 4,
+            name: "Đang diễn ra"
+          },
+          {
+            id: 5,
+            name: "Đã hủy"
+          },
+        ],
+        id: 1,
+        pageSizeOption: [5, 10, 25, 50, 100],
+        pageSize: 10,
+        totals:0,
+        pageNumber: 1,
+        events: [],
+        eventFields: [
+          { key: 'id', label: 'ID' },
+          { key: 'eventName', label: 'Tên sự kiện' },
+          { key: 'supllier', label: 'Nhà cung cấp' },
+          { key: 'eventTypeName', label: 'Loại sự kiện' },
+          { key: 'status', label: 'Trạng thái' },
+          { key: 'action', label: 'Thao tác' },
+        ]
+      };
     },
     methods: {
-        async getOrder() {
-            try {
-                const res = await axios.get(
-                    "myticket/api/order/admin/exchange/find-all",
-                    {
-                        params: {
-                            customerId: this.$route.query.id,
-                            pageSize: this.pageSize,
-                            pageNumber: this.pageNumber,
-                            keyword: this.search.keyword,
-                            status: this.search.status
-                        },
-                    }
-                )
-                return res.data.data.items;
-            } catch (error) {
-                console.error('API Error:', error);
-                throw error;
+      async getEvent() {
+        try {
+          const res = await axios.get(
+            "myticket/api/event/find-by-supplier",
+            {
+              params: {
+                pageSize: this.pageSize,
+                pageNumber: this.pageNumber,
+                startDate: this.startDate,
+                endDate: this.endDate,
+                keyword: this.search.keyword,
+                status: this.search.status,
+                supplierId:this.$route.query.id
+              },
             }
-        },
-        async getAllData() {
-            try {
-                this.orders = await this.getOrder();
-                this.orders.forEach(element => {
-                    element.orderDate = helpService.formatDate(element.orderDate)
-                });
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        },
-        async getExchangeById(id) {
-            try {
-                const res = await axios.get(
-                    "myticket/api/order/exchange/find-by-id",
-                    {
-                        params: {
-                            id: id,
-                        },
-                    }
-                )
-                return res.data.data;
-            } catch (error) {
-                console.error('API Error:', error);
-                throw error;
-            }
-        },
-        notifyVue(type, message, verticalAlign, horizontalAlign, color) {
-            this.$notifications.notify(
-                {
-                    message: `<span><b>${type}</b> - ${message}</span>`,
-                    icon: 'nc-icon nc-app',
-                    horizontalAlign: horizontalAlign,
-                    verticalAlign: verticalAlign,
-                    type: color
-                })
-        },
-        async showModalExchange(id) {
-            console.log(id)
-            try {
-                this.exchange = await this.getExchangeById(id)
-                this.exchange.exchangeCancelDate = helpService.formatDate(this.exchange.exchangeCancelDate)
-                this.exchange.exchangeDate = helpService.formatDate(this.exchange.exchangeDate)
-                this.exchange.exchangeDoneDate = helpService.formatDate(this.exchange.exchangeDoneDate)
-                this.exchange.orderDate = helpService.formatDate(this.exchange.orderDate)
-                this.exchange.organizationDay = helpService.formatDate(this.exchange.organizationDay)
-                this.exchange.price = helpService.formatCurrency(this.exchange.price)
-                // this.venues = await this.findAllVenue();
-                this.$nextTick(() => {
-                    // Using $nextTick to ensure the modal component is updated
-                    this.$refs['modal-add-edit'].show();
-                });
-            } catch (error) {
-                console.error("Error fetching ticket details:", error);
-            }
-        },
+          )
+          this.totals = res.data.data.totalItems
+          return res.data.data.items;
+        } catch (error) {
+          console.error('API Error:', error);
+          throw error;
+        }
+      },
+      async getAllData() {
+        try {
+          this.events = await this.getEvent();
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      },
+      formatStatus(status) {
+        let statusColor = "blue";
+  
+        switch (status) {
+          case 1:
+            statusColor = "green"; // Đổi màu thành xanh lá cây cho status 1
+            return { status: "Khởi tạo", statusColor };
+          case 2:
+            statusColor = "orange"; // Đổi màu thành cam cho status 2
+            return { status: "Đang mở bán", statusColor };
+          case 3:
+            statusColor = "red"; // Đổi màu thành đỏ cho status 3
+            return { status: "Ngừng bán vé", statusColor };
+          case 4:
+            statusColor = "purple"; // Đổi màu thành tím cho status 4
+            return { status: "Đang diễn ra", statusColor };
+          case 5:
+            statusColor = "gray"; // Đổi màu thành xám cho status 5
+            return { status: "Đã hủy", statusColor };
+          default:
+            return { status, statusColor };
+        }
+      }
     },
     mounted() {
-        this.getAllData();
+      this.getAllData();
     },
-    computed: {
-    }
-};
-</script>
+    watch: {
+      // Fetch data when the pageNumber changes
+      pageNumber(newPage, oldPage) {
+        if (newPage !== oldPage) {
+          this.getAllData();
+        }
+      },
+    },
+  };
+  </script>
     
-<style>
-.table-btn.btn {
-    border: none !important;
-}
-</style>
+  <style></style>
     

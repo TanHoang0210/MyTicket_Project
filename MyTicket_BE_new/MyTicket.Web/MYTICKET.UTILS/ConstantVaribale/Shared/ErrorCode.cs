@@ -59,5 +59,8 @@
         CannotCancelTransfer = 9002,
         CannotCancelExchange = 9003,
         OrderIsFullNow = 9004,
+
+        CannotUpdateStatusEvent = 9005,
+
     }
 }

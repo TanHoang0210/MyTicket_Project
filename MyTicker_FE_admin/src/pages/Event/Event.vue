@@ -20,7 +20,8 @@
                 <div class="col-md-2">
                   <b-form-select v-model="search.status" @change="getAllData()">
                     <b-form-select-option :value="null">Tất cả</b-form-select-option>
-                    <b-form-select-option v-for="item in eventStatuses" :value="item.id">{{ item.name }}</b-form-select-option>
+                    <b-form-select-option v-for="item in eventStatuses" :value="item.id">{{ item.name
+                    }}</b-form-select-option>
                   </b-form-select>
                 </div>
                 <div class="col-md-2">
@@ -31,12 +32,35 @@
                 </div>
               </div>
             </template>
-            <l-table class="table-hover table-striped" :columns="table1.columns" :data="formattedData"
-              :action="table1.action">
-              <template v-slot:cell(status)="props">
-                <span :style="{ color: props.row.statusColor }">{{ props.row.status }}</span>
+            <div class="row">
+              <div class="col-md-10">
+
+              </div>
+              <div class="col-md-2">
+                <label for="per-page-select" style="text-align: end;">Số bản ghi</label>
+                <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize" @change="getAllData()" :options="pageSizeOption"
+                size="sm"></b-form-select>
+              </div>
+            </div>
+            <b-table :current-page="pageNumber" id="table-event" striped hover :fields="eventFields" :items="events">
+              <template #cell(status)="data">
+                <td style="color: blue;font-weight: 600;" v-if="data.item.status === 1">Khởi tạo</td>
+                <td style="color: greenyellow;font-weight: 600;" v-if="data.item.status === 2">Mở bán
+                  vé</td>
+                <td style="color: orange;font-weight: 600;" v-if="data.item.status === 3">Đóng bán vé
+                </td>
+                <td style="color: #888;font-weight: 600;" v-if="data.item.status === 4">Đang diễn ra</td>
+                <td style="color: red;font-weight: 600;" v-if="data.item.status === 5">Đã hủy</td>
               </template>
-            </l-table>
+              <template #cell(action)="data">
+                <router-link class="btn btn-info" :style="{ border: 'none' }"
+                  :to="{ name: 'EventDetail', query: { id: data.item.id } }">
+                  <b-icon icon="pencil-square">
+                  </b-icon>
+                </router-link>
+              </template>
+            </b-table>
+            <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize" aria-controls="table-event"></b-pagination>
           </card>
         </div>
       </div>
@@ -64,40 +88,47 @@ export default {
   },
   data() {
     return {
-      search:{
-        keyword:null,
-        status:null
+      search: {
+        keyword: null,
+        status: null
       },
-      eventStatuses:[
-          {
-            id:1,
-            name:"Khởi tạo"
-          },
-          {
-            id:2,
-            name:"Mở bán vé"
-          },
-          {
-            id:3,
-            name:"Ngừng bán vé"
-          },
-          {
-            id:4,
-            name:"Đang diễn ra"
-          },
-          {
-            id:5,
-            name:"Đã hủy"
-          },
+
+      eventStatuses: [
+        {
+          id: 1,
+          name: "Khởi tạo"
+        },
+        {
+          id: 2,
+          name: "Mở bán vé"
+        },
+        {
+          id: 3,
+          name: "Ngừng bán vé"
+        },
+        {
+          id: 4,
+          name: "Đang diễn ra"
+        },
+        {
+          id: 5,
+          name: "Đã hủy"
+        },
       ],
       id: 1,
-      pageSize: 100,
+      pageSizeOption: [5, 10, 25, 50, 100],
+      pageSize: 10,
+      totals:0,
       pageNumber: 1,
-      table1: {
-        columns: tableColumns,
-        data: [],
-        action: 'event/detail'
-      },
+      events: [],
+      eventFields: [
+        { key: 'id', label: 'ID' },
+        { key: 'eventName', label: 'Tên sự kiện' },
+        { key: 'supllier', label: 'Nhà cung cấp' },
+        { key: 'eventTypeName', label: 'Loại sự kiện' },
+        { key: 'status', label: 'Trạng thái' },
+        { key: 'action', label: 'Thao tác' },
+      ]
     };
   },
   methods: {
@@ -113,10 +144,11 @@ export default {
               endDate: this.endDate,
               keyword: this.search.keyword,
               eventTypeId: this.$route.query.eventTypeId,
-              status:this.search.status
+              status: this.search.status
             },
           }
         )
+        this.totals = res.data.data.totalItems
         return res.data.data.items;
       } catch (error) {
         console.error('API Error:', error);
@@ -125,7 +157,7 @@ export default {
     },
     async getAllData() {
       try {
-        this.table1.data = await this.getEvent();
+        this.events = await this.getEvent();
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -157,14 +189,14 @@ export default {
   mounted() {
     this.getAllData();
   },
-  computed: {
-    formattedData() {
-      return this.table1.data.map(element => ({
-        ...element,
-        ...this.formatStatus(element.status)
-      }));
-    }
-  }
+  watch: {
+    // Fetch data when the pageNumber changes
+    pageNumber(newPage, oldPage) {
+      if (newPage !== oldPage) {
+        this.getAllData();
+      }
+    },
+  },
 };
 </script>
   

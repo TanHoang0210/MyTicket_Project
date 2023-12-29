@@ -45,7 +45,7 @@ namespace MYTICKET.BASE.SERVICE
         /// Dịch sang ngôn ngữ đích dựa theo keyName và request ngôn ngữ là gì và dùng <c>string.Format()</c> để format chuỗi<br/>
         /// Ví dụ có thẻ <c>&lt;text name="hello"&gt;Xin chào {0}, {1} tuổi&lt;/text&gt;</c> trong file <c>xml</c> <br/>
         /// Input: <paramref name="keyName"/> = "hello" <paramref name="values"/> = ["Minh", 20] <br/>
-        /// Return: "Xin chào Minh, 20 tuổi"
+        /// Return: "Xin chào Tan, 20 tuổi"
         /// </summary>
         /// <returns></returns>
         protected string L(string keyName, params string[] values)

@@ -289,6 +289,43 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.ToTable("EventType", "dbo");
                 });
 
+            modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EventDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsSeen")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("OrderDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notification", "dbo");
+                });
+
             modelBuilder.Entity("MYTICKET.WEB.DOMAIN.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -296,6 +333,9 @@ namespace MYTICKET.Hostconsle.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BackgroundJobId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -338,6 +378,9 @@ namespace MYTICKET.Hostconsle.Migrations
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("TransactionNo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -389,6 +432,9 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<DateTime?>("ExchangeDoneDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("ExchangeRefundRequest")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("ExchangeStatus")
                         .HasColumnType("int");
 
@@ -407,8 +453,14 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("QrCode")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("RefundRequest")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -428,8 +480,14 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<DateTime?>("TransferDoneDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("TransferRefundRequest")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("TransferStatus")
                         .HasColumnType("int");
+
+                    b.Property<string>("TransferTransactionNo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

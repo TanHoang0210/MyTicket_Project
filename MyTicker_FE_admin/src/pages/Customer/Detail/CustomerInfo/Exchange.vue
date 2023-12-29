@@ -7,7 +7,7 @@
                         <template slot="header">
                             <div class="row" style="display: flex; justify-content: space-between;">
                                 <div class="col-md-6">
-                                    <h4 class="card-title">Danh sách vé khách hàng</h4>
+                                    <h4 class="card-title">Danh sách trả vé khách hàng</h4>
                                 </div>
                                 <div class="col-md-4">
                                     <b-input-group class="float-right">

@@ -7,13 +7,15 @@
                         <div class="row">
                             <h4 slot="header" class="card-title col-md-6">Thông tin chi tiết sự kiện</h4>
                             <div class="text-center col-md-6">
-                                <button v-if="eventInfo.status !== 5" type="button" style="margin: 0 5px;"
-                                    class="btn btn-warning btn-fill float-right " @click.prevent="cancelEvent">
-                                    Hủy Sự kiện
-                                </button>
-                                <button v-else type="button" style="margin: 0 5px;"
-                                    class="btn btn-success btn-fill float-right " @click.prevent="openEvent">
+                                <button v-if="eventInfo.status === 5" type="button" style="margin: 0 5px;"
+                                    class="btn btn-success btn-fill float-right "
+                                    @click.prevent="updateEventStatus(eventInfo.id, 1)">
                                     Mở Sự kiện
+                                </button>
+                                <button v-else-if="eventInfo.status === 1 || eventInfo.status === 3" type="button"
+                                    style="margin: 0 5px;" class="btn btn-warning btn-fill float-right "
+                                    @click.prevent="updateEventStatus(eventInfo.id, 5)">
+                                    Hủy Sự kiện
                                 </button>
                                 <button v-if="!isUpdate" style="margin: 0 5px;" type="button"
                                     class="btn btn-info btn-fill float-right " @click="setUpdate">
@@ -105,100 +107,92 @@
                             </div>
                         </form>
                     </card>
-                    <div v-if="eventInfo.eventDetails.length > 0">
-                        <h4 slot="header" class="card-title">Danh sách các ngày diễn ra sự kiện
-                        </h4>
-
-                        <card v-for="(item, index) in eventInfo.eventDetails" :key="index">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <base-input type="text" label="Ngày diễn ra" :disabled="index"
-                                        placeholder="Light dashboard" v-model="item.organizationDay">
-                                    </base-input>
-                                    <base-input type="text" label="Ngày mở bán vé" :disabled="true" placeholder="Username"
-                                        v-model="item.startSaleTicketDate">
-                                    </base-input>
-                                    <base-input type="text" label="Ngày đóng bán vé" :disabled="true" placeholder="Username"
-                                        v-model="item.endSaleTicketDate">
-                                    </base-input>
-                                    <base-input type="text" label="Sân vận động" :disabled="true" placeholder="Username"
-                                        v-model="item.venueName">
-                                    </base-input>
-                                    <base-input type="text" label="Địa điểm" :disabled="true" placeholder="Username"
-                                        v-model="item.venueAddress">
-                                    </base-input>
-                                </div>
-                                <div class="col-md-8">
-                                    <div>
-                                        <label for="image">Ảnh Sơ đồ sự kiện</label>
-                                        <button type="submit" class="btn btn-info btn-fill float-right "
-                                            @click.prevent="showModalUpdateDetail(item)">
-                                            Cập nhật
-                                        </button>
-                                        <button v-if="item.status === 3 || item.status === 1" type="button"
-                                            style="margin: 0 5px;" class="btn btn-success btn-fill float-right "
-                                            @click.prevent="onSaleEvent(item.id)">
-                                            Mở bán vé
-                                        </button>
-                                        <button v-if="item.status === 2" type="button" style="margin: 0 5px;"
-                                            class="btn btn-success btn-fill float-right "
-                                            @click.prevent="offSaleEvent(item.id)">
-                                            Ngừng bán vé
-                                        </button>
-                                        <button type="button" style="margin: 0 5px;"
-                                            class="btn btn-warning btn-fill float-right " @click.prevent="cancelEvent">
-                                            Hủy Sự kiện
-                                        </button>
-                                    </div>
-                                    <br>
-                                    <div v-if="item.eventSeatMapImage">
-                                        <br>
-                                        <img style="max-width: 100%;" slot="image" :src="$fileUrl + item.eventSeatMapImage"
-                                            alt="..." />
-                                        <br>
-                                        <div style="display: flex; margin: 10px;">
-                                            <div style="margin: auto;">
-                                                <button class="btn btn-info btn-fill btn-img">
-                                                    <i class="nc-icon nc-zoom-split"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <card style="display: flex; margin: 10px;">
-                                        <h4 slot="header" class="card-title">Danh sách các loại vé</h4>
-                                        <b-table striped hover :fields="ticketField" :items="item.ticketEvents">
-                                            <template #cell(action)="data">
+                    <card>
+                        <div v-if="eventInfo.eventDetails.length > 0">
+                            <h4 slot="header" class="card-title">Danh sách các ngày diễn ra sự kiện
+                            </h4>
+                            <b-table striped hover :fields="detailEventField" :items="eventInfo.eventDetails">
+                                <template #row-details="data">
+                                    <b-card>
+                                        <b-table striped hover :fields="ticketField" :items="data.item.ticketEvents">
+                                            <template #cell(action)="ticket">
                                                 <div style="font-size: 1.2rem; !important">
-                                                    <b-button @click.prevent="showModalTicket(data.item.id,item.id)"
+                                                    <b-button class="table-btn" @click="deleteTicket()" variant="danger"
+                                                        title="Xóa loại vé">
+                                                        <b-icon icon="trash">
+                                                        </b-icon>
+                                                    </b-button>
+                                                    <b-button @click.prevent="showModalTicket(ticket.item.id, data.item.id)"
                                                         title="Chi tiết" class="btn btn-info" :style="{ border: 'none' }">
                                                         <b-icon icon="pencil-square">
                                                         </b-icon>
                                                     </b-button>
-                                                    <b-button v-if="data.item.status === 2" class="btn btn-warning"
+                                                    <b-button v-if="ticket.item.status === 2" class="btn btn-warning"
                                                         :style="{ border: 'none' }" title="Ngừng bán vé">
                                                         <b-icon icon="lock"></b-icon>
                                                     </b-button>
-                                                    <b-button v-if="data.item.status === 3 || 1" class="btn btn-warning"
+                                                    <b-button v-if="ticket.item.status === 3 || 1" class="btn btn-warning"
                                                         :style="{ border: 'none' }" title="Mở bán vé">
                                                         <b-icon icon="unlock"></b-icon>
                                                     </b-button>
                                                 </div>
                                             </template>
                                         </b-table>
-                                        <button type="button" style="margin: 0 5px;"
+                                        <b-button type="button" style="margin: 0 5px;"
                                             class="btn btn-warning btn-fill float-right "
-                                            @click.prevent="showModalTicket(0,item.id)">
+                                            @click.prevent="showModalTicket(0, data.item.id)">
                                             Thêm mới loại vé
-                                        </button>
-                                    </card>
-                                </div>
-                            </div>
-                        </card>
-                    </div>
+                                        </b-button>
+                                    </b-card>
+                                </template>
+                                <template #cell(status)="data">
+                                    <td style="color: blue;font-weight: 600;" v-if="data.item.status === 1">Khởi tạo</td>
+                                    <td style="color: greenyellow;font-weight: 600;" v-if="data.item.status === 2">Mở bán
+                                        vé</td>
+                                    <td style="color: orange;font-weight: 600;" v-if="data.item.status === 3">Đóng bán vé
+                                    </td>
+                                    <td style="color: #888;font-weight: 600;" v-if="data.item.status === 4">Đang diễn ra
+                                    </td>
+                                    <td style="color: red;font-weight: 600;" v-if="data.item.status === 5">Đã hủy</td>
+                                </template>
+                                <template #cell(action)="data">
+                                    <div style="font-size: 1.2rem; !important">
+                                        <b-button @click="showModalUpdateDetail(data.item)" class="table-btn"
+                                            variant="secondary" title="Xem chi tiết">
+                                            <b-icon icon="pencil-square">
+                                            </b-icon>
+                                        </b-button>
+                                        <b-button v-if="data.item.status === 3 || data.item.status === 1" title="Mở bán vé"
+                                            type="button" style=" border: none;" variant="success" class="table-btn "
+                                            @click.prevent="updateEventDetailStatus(data.item.id, 2)">
+                                            <b-icon icon="unlock"></b-icon>
+                                        </b-button>
+                                        <b-button v-if="data.item.status === 2" type="button" style="border: none;"
+                                            class="table-btn" variant="warning" title="Đóng bán vé"
+                                            @click.prevent="updateEventDetailStatus(data.item.id, 3)">
+                                            <b-icon icon="lock"></b-icon>
+                                        </b-button>
+                                        <b-button v-if="data.item.status === 1 || data.item.status === 3"
+                                            title="Hủy sự kiện" type="button" style="border: none;" class="table-btn "
+                                            variant="danger" @click.prevent="updateEventDetailStatus(data.item.id, 5)">
+                                            <b-icon icon="toggle2-off"></b-icon>
+                                        </b-button>
+                                        <b-button v-if="data.item.status === 5" title="Mở sự kiện" type="button"
+                                            style="border: none;" class="table-btn " variant="success"
+                                            @click.prevent="updateEventDetailStatus(data.item.id, 1)">
+                                            <b-icon icon="toggle2-on"></b-icon>
+                                        </b-button>
+                                        <b-button type="button" style="border: none;" class="table-btn"
+                                            @click="data.toggleDetails()">
+                                            <b-icon icon="eye" title="Xem danh sách vé"
+                                                v-if="!data.detailsShowing"></b-icon>
+                                            <b-icon icon="eye-slash" title="Ẩn danh sách vé" v-else></b-icon>
+                                        </b-button>
+                                    </div>
+                                </template>
+                            </b-table>
+                        </div>
+                    </card>
                     <div style="display: flex;">
                         <button style="margin: auto;" type="button" class="btn btn-info btn-fill"
                             @click="showModalAddDetail">
@@ -352,13 +346,12 @@
                 <form>
                     <div class="row">
                         <div class="col-md-12">
-                            <base-input type="text" label="Hạng vé"  placeholder="Nhập tên hạng vé"
+                            <base-input type="text" label="Hạng vé" placeholder="Nhập tên hạng vé"
                                 v-model="updateTicket.name">
                             </base-input>
-                            <base-input type="text" label="Giá"  placeholder="Nhập giá vé"
-                                v-model="updateTicket.price">
+                            <base-input type="text" label="Giá" placeholder="Nhập giá vé" v-model="updateTicket.price">
                             </base-input>
-                            <base-input type="number" label="Số lượng"  placeholder="Nhập số lượng"
+                            <base-input type="number" label="Số lượng" placeholder="Nhập số lượng"
                                 v-model="updateTicket.quantity">
                             </base-input>
                         </div>
@@ -406,6 +399,7 @@ export default {
                     eventTypeImage: "string"
                 }
             ],
+            _showDetails: true,
             selectSeatTypes: [
                 {
                     type: 1,
@@ -423,6 +417,15 @@ export default {
                 { key: 'intQuantity', label: 'Số lượng' },
                 { key: 'quantity', label: 'Số lượng còn lại' },
                 { key: 'action', label: 'Thao tác' },
+            ],
+            detailEventField: [
+                { key: 'id' },
+                { key: 'organizationDay', label: 'Ngày diễn ra' },
+                { key: 'startSaleTicketDate', label: 'Ngày mở bán vé' },
+                { key: 'endSaleTicketDate', label: 'Ngày đóng bán vé' },
+                { key: 'status', label: 'Trạng thái' },
+                { key: 'action', label: 'Thao tác' },
+                // { key: 'ticketEvents', label: 'Danh sách vé' },
             ],
             addEventDetail: {
                 eventId: 0,
@@ -652,16 +655,20 @@ export default {
             }
             console.log(this.updateEventDetail)
         },
-        async showModalTicket(id,ticketEventId) {
+        async showModalTicket(id, ticketEventId) {
             this.updateTicket.eventDetailId = ticketEventId;
             if (id !== 0) {
-                    this.updateTicket = await this.getTicketById(id)
-                } else {
-                        this.updateTicket.id = 0,
-                        this.updateTicket.name = null,
-                        this.updateTicket.price = 0,
-                        this.updateTicket.quantity = 0
-                }
+                const res = await this.getTicketById(id)
+                this.updateTicket.id = res.id,
+                    this.updateTicket.name = res.name,
+                    this.updateTicket.price = res.price,
+                    this.updateTicket.quantity = res.intQuantity
+            } else {
+                this.updateTicket.id = 0,
+                    this.updateTicket.name = null,
+                    this.updateTicket.price = 0,
+                    this.updateTicket.quantity = 0
+            }
             this.$nextTick(() => {
                 // Using $nextTick to ensure the modal component is updated
                 this.$refs['modal-add-edit-ticket'].show();
@@ -718,7 +725,7 @@ export default {
             this.$refs['modal-update-detail'].hide();
             this.fetchData()
         },
-        async updateTicketFunc(){
+        async updateTicketFunc() {
             if (this.updateTicket.id !== 0) {
                 const response = await axios.put('myticket/api/user/account/update-by-suplier', {
                     eventDetailId: this.updateTicket.eventDetailId,
@@ -758,7 +765,7 @@ export default {
             this.$refs['modal-add-edit-ticket'].hide();
             this.fetchData();
         },
-        async getTicketById(id){
+        async getTicketById(id) {
             try {
                 const res = await axios.get(
                     "myticket/api/ticket/find-by-id",
@@ -827,6 +834,77 @@ export default {
                 throw error;
             }
         },
+        async updateEventDetailStatus(id, status) {
+            let message = "message"; // Initialize with a default value
+
+            switch (status) {
+                case 1:
+                    message = "Mở sự kiện";
+                    break;
+                case 2:
+                    message = "Mở bán vé";
+                    break;
+                case 3:
+                    message = "Ngừng bán vé";
+                    break;
+                case 4:
+                    message = "Sự kiện diễn ra";
+                    break;
+                case 5:
+                    message = "Hủy sự kiện";
+                    break;
+                default:
+                    break;
+            }
+
+            const response = await axios.put('myticket/api/event/detail/update-status', {
+                id: id,
+                status: status
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (response.data.code === 200) {
+                this.notifyVue('Thành công', `${message} thành công`, 'top', 'right', 'success');
+            } else {
+                this.notifyVue('Thất bại', `${message} thất bại`, 'top', 'right', 'danger');
+            }
+
+            this.fetchData();
+        },
+        async updateEventStatus(id, status) {
+            let message = "message"; // Initialize with a default value
+
+            switch (status) {
+                case 1:
+                    message = "Mở sự kiện";
+                    break;
+                case 5:
+                    message = "Hủy sự kiện";
+                    break;
+                default:
+                    break;
+            }
+
+            const response = await axios.put('myticket/api/event/update-status', {
+                id: id,
+                status: status
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (response.data.code === 200) {
+                this.notifyVue('Thành công', `${message} thành công`, 'top', 'right', 'success');
+            } else {
+                this.notifyVue('Thất bại', `${message} thất bại`, 'top', 'right', 'danger');
+            }
+
+            this.fetchData();
+        }
     }, mounted() {
         this.fetchData();
         console.log(this.listType)
@@ -862,5 +940,32 @@ export default {
 .modal-title {
     font-size: 1.6rem !important;
 }
+
+<style>.sub-table {
+    width: 100%;
+    margin-top: 10px;
+    /* Adjust the margin as needed */
+}
+
+.sub-table .table-btn {
+    font-size: 1rem;
+    /* Adjust the font size as needed */
+}
+
+.sub-table .btn-fill {
+    background-color: #ffc107;
+    /* Yellow color, change as needed */
+    color: #212529;
+    /* Text color, change as needed */
+}
+
+.sub-table .float-right {
+    float: right;
+}
+
+.sub-table .b-card {
+    width: 100%;
+    margin-top: 10px;
+    /* Adjust the margin as needed */
+}
 </style>
-  

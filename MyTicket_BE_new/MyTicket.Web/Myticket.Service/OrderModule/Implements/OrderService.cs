@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ using MYTICKET.WEB.SERVICE.MailService.Abstracts;
 using MYTICKET.WEB.SERVICE.MailService.Dtos;
 using MYTICKET.WEB.SERVICE.OrderModule.Abstracts;
 using MYTICKET.WEB.SERVICE.OrderModule.Dtos;
+using MYTICKET.WEB.SERVICE.SystemModule.Abstracts;
 using QRCoder;
 using SixLabors.ImageSharp;
 using System.Text.Json;
@@ -62,6 +64,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                         {
                             foreach (var ticketType in input.TicketTypes)
                             {
+                                var price = _dbContext.TicketEvents.Where(s => s.Id == ticketType.TicketEventId).Select(s => s.Price).FirstOrDefault();
                                 var ticketQuery = _dbContext.Tickets
                                     .Where(s => s.TicketEventId == ticketType.TicketEventId
                                         && (!_dbContext.OrderDetails
@@ -85,6 +88,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                         EventDetailId = ticketType.EventDetailId,
                                         TicketId = ticketId,
                                         Status = OrderDetailStatuses.INIT,
+                                        Price = price
                                     };
                                     _dbContext.OrderDetails.Add(orderDetail);
                                 }
@@ -102,6 +106,8 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                             {
                                 foreach (var ticket in input.Tickets)
                                 {
+                                    var tk = _dbContext.Tickets.Where(s => s.Id == ticket.TicketId).FirstOrDefault();
+                                    var price = _dbContext.TicketEvents.Where(s => s.Id == tk.TicketEventId).Select(s => s.Price).FirstOrDefault();
                                     if (_dbContext.OrderDetails
                                         .Include(s => s.Order)
                                         .Any(s => s.TicketId == ticket.TicketId
@@ -115,6 +121,8 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                         OrderId = orderId,
                                         EventDetailId = ticket.EventDetailId,
                                         TicketId = ticket.TicketId,
+                                        Status = OrderDetailStatuses.INIT,
+                                        Price = price
                                     });
 
                                     await _dbContext.SaveChangesAsync();
@@ -163,6 +171,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                         {
                             foreach (var ticketType in input.TicketTypes)
                             {
+                                var price = _dbContext.TicketEvents.Where(s => s.Id == ticketType.TicketEventId).Select(s => s.Price).FirstOrDefault();
                                 var ticketQuery = _dbContext.Tickets
                                     .Where(s => s.TicketEventId == ticketType.TicketEventId
                                         && (!_dbContext.OrderDetails
@@ -180,14 +189,14 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
 
                                 foreach (var ticketId in ticketIds)
                                 {
-                                    var orderDetail = new OrderDetail
+                                    await _dbContext.OrderDetails.AddAsync(new OrderDetail
                                     {
                                         OrderId = orderId,
                                         EventDetailId = ticketType.EventDetailId,
                                         TicketId = ticketId,
                                         Status = OrderDetailStatuses.INIT,
-                                    };
-                                    _dbContext.OrderDetails.Add(orderDetail);
+                                        Price = price
+                                    });
                                 }
 
                                 await _dbContext.SaveChangesAsync();
@@ -205,6 +214,8 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                         {
                             foreach (var ticket in input.Tickets)
                             {
+                                var tk = _dbContext.Tickets.Where(s => s.Id == ticket.TicketId).FirstOrDefault();
+                                var price = _dbContext.TicketEvents.Where(s => s.Id == tk.TicketEventId).Select(s => s.Price).FirstOrDefault();
                                 if (_dbContext.OrderDetails
                                     .Include(s => s.Order)
                                     .Any(s => s.TicketId == ticket.TicketId
@@ -213,14 +224,15 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                     throw new UserFriendlyException(ErrorCode.TicketInvalid);
                                 }
 
-                                _dbContext.OrderDetails.Add(new OrderDetail
+                                await _dbContext.OrderDetails.AddAsync(new OrderDetail
                                 {
                                     OrderId = orderId,
                                     EventDetailId = ticket.EventDetailId,
                                     TicketId = ticket.TicketId,
+                                    Status = OrderDetailStatuses.INIT,
+                                    Price = price
                                 });
 
-                                await _dbContext.SaveChangesAsync();
 
                                 var subTotal2 = _dbContext.TicketEvents
                                     .Where(s => s.Id == ticket.TicketEventId)
@@ -230,12 +242,12 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                 totalOrder = totalOrder + subTotal2;
                             }
                         }
+                        var jobId = BackgroundJob.Schedule<ISystemService>(x => x.CancelOrderExpired(orderId), TimeSpan.FromMinutes(5));
 
                         orderAdd.Entity.Total = totalOrder;
                         orderAdd.Entity.Status = OrderStatuses.READY_TO_PAY;
-
+                        orderAdd.Entity.BackgroundJobId = jobId;
                         await _dbContext.SaveChangesAsync();
-
                         await transaction.CommitAsync();
                     }
                     catch (Exception ex)
@@ -245,7 +257,6 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                     }
                 }
             }
-
             var result = await _dbContext.Orders
                 .Where(s => s.Id == orderId)
                 .Select(s => new OrderDto
@@ -290,12 +301,9 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                         .FirstOrDefault(),
                 })
                 .ToListAsync();
-
             result.OrderDetails = resultDetail;
-
             return result;
         }
-
         private async Task<string> CreateQr(QRCodeDto input)
         {
             var currentUserId = CommonUtils.GetCurrentUserId(_httpContext);
@@ -396,6 +404,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         QrCode = s.QrCode,
                                                         status = s.Status,
                                                         IsExchange = _dbContext.Events.Where(x => x.Id == s.EventDetail.EventId).Select(x => x.IsExChange).FirstOrDefault(),
+                                                        EventStatus = s.EventDetail.Status
                                                     });
             var listTransfer = _dbContext.OrderDetails.Include(s => s.EventDetail)
                                                     .Include(s => s.Ticket)
@@ -420,6 +429,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         QrCode = s.QrCode,
                                                         status = 10,
                                                         IsExchange = _dbContext.Events.Where(x => x.Id == s.EventDetail.EventId).Select(x => x.IsExChange).FirstOrDefault(),
+                                                        EventStatus = s.EventDetail.Status
                                                     });
             query = query.Concat(listTransfer);
             result.TotalItems = query.Count();
@@ -579,7 +589,10 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             }
             if (input.Status == OrderStatuses.SUCCESS && order.Status == OrderStatuses.PAYING)
             {
+                BackgroundJob.Delete(order.BackgroundJobId);
+                order.BackgroundJobId = null;
                 order.Status = input.Status;
+                order.TransactionNo = input.TransactionNo;
                 var orderDetails = await _dbContext.OrderDetails.Include(s => s.Ticket).ThenInclude(s => s.TicketEvent).Where(s => s.OrderId == input.Id && !s.Deleted).ToListAsync();
                 foreach (var item in orderDetails)
                 {
@@ -643,6 +656,11 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             else
             {
                 order.Status = input.Status;
+                if(order.Status == OrderStatuses.CANCEL)
+                {
+                    BackgroundJob.Delete(order.BackgroundJobId);
+                    order.BackgroundJobId = null;
+                }
                 var orderDetails = await _dbContext.OrderDetails.Where(s => s.OrderId == input.Id && !s.Deleted).ToListAsync();
                 foreach (var item in orderDetails)
                 {
@@ -712,6 +730,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         SeatCode = s.Ticket.SeatCode,
                                                         TicketCode = s.Ticket.TicketCode,
                                                         TicketId = s.TicketId,
+                                                        Status = s.Status,
                                                         Price = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Price).FirstOrDefault(),
                                                         TicketEventName = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Name).FirstOrDefault(),
                                                         VenueName = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Name).FirstOrDefault(),
@@ -803,6 +822,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         SeatCode = s.Ticket.SeatCode,
                                                         TicketCode = s.Ticket.TicketCode,
                                                         TicketId = s.TicketId,
+                                                        Status = s.Status,
                                                         Price = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Price).FirstOrDefault(),
                                                         TicketEventName = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Name).FirstOrDefault(),
                                                         VenueName = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Name).FirstOrDefault(),
@@ -882,6 +902,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             }
             ticketExchange.ExchangeStatus = ExchangeStatuses.CANCEL;
             ticketExchange.ExchangeCancelDate = DateTime.Now;
+            ticketExchange.ExchangeRefundRequest = false;
             await _dbContext.SaveChangesAsync();
         }
 
@@ -960,6 +981,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             if (orderDetail.ExchangeCode.ToLower() == input.ConfirmCode.ToLower())
             {
                 orderDetail.ExchangeStatus = ExchangeStatuses.READY_TO_EXCHANGE;
+                orderDetail.ExchangeRefundRequest = true;
                 try
                 {
                     // Lấy dịch vụ sendmailservice
@@ -1074,6 +1096,8 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             {
                 orderDetail.TransferStatus = input.TransferStatus;
                 orderDetail.CustomerTransfer = currentCustomer.Id;
+                orderDetail.TransferRefundRequest = true;
+                orderDetail.TransferTransactionNo = input.TransferTransactionNo;
                 orderDetail.TransferDoneDate = DateTime.Now;
                 orderDetail.QrCode = await CreateQr(new QRCodeDto
                 {
@@ -1213,6 +1237,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         QrCode = s.QrCode,
                                                         status = s.Status,
                                                         IsExchange = _dbContext.Events.Where(x => x.Id == s.EventDetail.EventId).Select(x => x.IsExChange).FirstOrDefault(),
+                                                        RefundRequest = s.RefundRequest
                                                     });
             result.TotalItems = query.Count();
             query = query.OrderDynamic(input.Sort);
@@ -1226,14 +1251,14 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             return result;
         }
 
-        public PagingResult<OrderDetailDto> FindAllOrderTransferByCustomerId(FilterOrderCustomer input)
+        public PagingResult<TicketTransferDto> FindAllOrderTransferByCustomerId(FilterOrderCustomer input)
         {
-            var result = new PagingResult<OrderDetailDto>();
+            var result = new PagingResult<TicketTransferDto>();
             var query = _dbContext.OrderDetails.Include(s => s.EventDetail)
                                                     .Include(s => s.Ticket)
                                                     .Include(s => s.Order)
                                                     .Where(s => s.IsTransfer != null && s.CustomerTransfer == input.CustomerId)
-                                                    .Select(s => new OrderDetailDto
+                                                    .Select(s => new TicketTransferDto
                                                     {
                                                         Id = s.Id,
                                                         OrderId = s.OrderId,
@@ -1245,13 +1270,15 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         SeatCode = s.Ticket.SeatCode,
                                                         TicketCode = s.Ticket.TicketCode,
                                                         TicketId = s.TicketId,
+                                                        Status = s.Status,
                                                         Price = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Price).FirstOrDefault(),
                                                         TicketEventName = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Name).FirstOrDefault(),
                                                         VenueName = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Name).FirstOrDefault(),
                                                         VenueAddress = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Address).FirstOrDefault(),
-                                                        QrCode = s.QrCode,
-                                                        status = s.Status,
-                                                        IsExchange = _dbContext.Events.Where(x => x.Id == s.EventDetail.EventId).Select(x => x.IsExChange).FirstOrDefault(),
+                                                        TransferDate = s.TransferDate,
+                                                        TransferStatus = s.TransferStatus,
+                                                        TransferCancelDate = s.TransferCancelDate,
+                                                        TransferDoneDate = s.TransferDoneDate,
                                                     });
             result.TotalItems = query.Count();
             query = query.OrderDynamic(input.Sort);
@@ -1275,6 +1302,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                     .Include(s => s.Order)
                                                     .Where(s => s.Order.CustomerId == input.CustomerId
                                                     && s.Order.Status == OrderStatuses.SUCCESS
+                                                    && new int[]{ TransferStatuses.TRANSFERING,TransferStatuses.SUCCESS}.Contains(s.TransferStatus!.Value)
                                                     && !s.Deleted && s.IsTransfer != null)
                                                     .Select(s => new TicketTransferDto
                                                     {
@@ -1288,6 +1316,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         SeatCode = s.Ticket.SeatCode,
                                                         TicketCode = s.Ticket.TicketCode,
                                                         TicketId = s.TicketId,
+                                                        Status = s.Status,
                                                         Price = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Price).FirstOrDefault(),
                                                         TicketEventName = _dbContext.TicketEvents.Where(x => x.Id == s.Ticket.TicketEventId).Select(x => x.Name).FirstOrDefault(),
                                                         VenueName = _dbContext.Venues.Where(x => x.Id == s.EventDetail.VenueId).Select(s => s.Name).FirstOrDefault(),
@@ -1296,6 +1325,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         TransferStatus = s.TransferStatus,
                                                         TransferCancelDate = s.TransferCancelDate,
                                                         TransferDoneDate = s.TransferDoneDate,
+                                                        TransferRefundRequest = s.TransferRefundRequest
                                                     });
             result.TotalItems = query.Count();
             query = query.OrderDynamic(input.Sort);
@@ -1340,6 +1370,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         ExchangeStatus = s.ExchangeStatus,
                                                         ExchangeDoneDate = s.ExchangeDoneDate,
                                                         ExchangeCancelDate = s.ExchangeCancelDate,
+                                                        ExchangeRefundRequest = s.ExchangeRefundRequest
                                                     });
             result.TotalItems = query.Count();
             query = query.OrderDynamic(input.Sort);

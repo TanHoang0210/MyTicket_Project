@@ -22,7 +22,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6" style="display: flex;">
+                                <div class="col-md-4">
                                     <div>
                                         <label for="eventTypeId">Loại sự kiện</label>
                                         <br>
@@ -32,14 +32,6 @@
                                             <option v-for="item in listType" :value="item.id">{{ item.name }}</option>
                                         </select>
                                     </div>
-                                    <div style="margin-left: 30px;">
-                                        <br>
-                                        <button type="submit" class="btn btn-success btn-fill" @click.prevent="createEvent">
-                                            Thêm loại sự kiện
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="col-md-6" style="display: flex;">
                                     <div>
                                         <label for="supplierId">Nhà cung cấp</label>
                                         <br>
@@ -50,16 +42,6 @@
                                                 item.shortName }}</option>
                                         </select>
                                     </div>
-                                    <div style="margin-left: 30px;">
-                                        <br>
-                                        <button type="submit" class="btn btn-success btn-fill" @click.prevent="createEvent">
-                                            Thêm nhà cung cấp
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Mô tả sự kiện</label>
                                         <textarea rows="10" class="form-control border-input"

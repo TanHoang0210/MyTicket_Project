@@ -150,5 +150,14 @@ namespace MYTICKET.WEB.API.Controllers
         [HttpGet("admin/find-by-id")]
         public APIResponse<EventDto> FindByIdAdmin([FromQuery] int id)
                => new(_eventService.GetEventByIdAdmin(id));
+
+        /// <summary>
+        /// lây danh sách sự kiện nha cc
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpGet("find-by-supplier")]
+        public APIResponse<PagingResult<EventDto>> FindAllEventSupplier([FromQuery] FilterEventDto input)
+               => new(_eventService.FindAllEventBySupplier(input));
     }
 }

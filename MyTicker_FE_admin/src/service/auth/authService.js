@@ -5,7 +5,7 @@ const authService = axios.create({
     baseURL: 'connect/token',
 });
 export const refreshAccessToken = async (refreshTokenNow) => {
-    if (store.getters.currentUser !== null) {
+    // if (store.getters.currentUser !== null) {
         try {
             const requestConfig = {
                 withCredentials: true,
@@ -38,15 +38,15 @@ export const refreshAccessToken = async (refreshTokenNow) => {
                 duration: 3000, // Thời gian hiển thị toast (ms)
             });
         }
-    } else {
-        await axios.post('connect/logout', {}, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        })
-        store.dispatch('logout');
-        alert("Phiên hết hạn")
-    }
+    // } else {
+    //     await axios.post('connect/logout', {}, {
+    //         headers: {
+    //             'Content-Type': 'application/x-www-form-urlencoded',
+    //         }
+    //     })
+    //     store.dispatch('logout');
+    //     alert("Phiên hết hạn")
+    // }
 };
 
 export const Login = async (username, password) => {

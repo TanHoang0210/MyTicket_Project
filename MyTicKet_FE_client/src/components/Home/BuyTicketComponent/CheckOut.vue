@@ -336,9 +336,6 @@ export default {
                     if (this.countdownTime > 0) {
                         this.countdownTime--;
                         store.commit('setCoutDownOrder', this.countdownTime)
-                    } else {
-                        //Hủy đơn hàng khi hết thời gian
-                        this.cancelOrder();
                     }
                 }
             }, 1000);

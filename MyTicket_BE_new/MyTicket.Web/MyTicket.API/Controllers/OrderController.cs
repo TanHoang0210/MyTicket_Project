@@ -272,7 +272,7 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpGet("admin/order-transfer/find-all")]
-        public APIResponse<PagingResult<OrderDetailDto>> FindAllTicketTransferByCustomerIdAdmin([FromQuery] FilterOrderCustomer input)
+        public APIResponse<PagingResult<TicketTransferDto>> FindAllTicketTransferByCustomerIdAdmin([FromQuery] FilterOrderCustomer input)
                => new(_orderService.FindAllOrderTransferByCustomerId(input));
 
         /// <summary>

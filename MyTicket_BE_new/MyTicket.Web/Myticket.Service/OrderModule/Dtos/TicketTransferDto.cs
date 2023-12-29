@@ -33,10 +33,13 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
 
         public decimal Price { get; set; }
 
+        public int? Status { get; set; }
+
         public int? TransferStatus { get; set; }
 
         public DateTime? TransferDate { get; set; }
         public DateTime? TransferDoneDate { get; set; }
         public DateTime? TransferCancelDate { get; set; }
+        public bool TransferRefundRequest { get; set; }
     }
 }

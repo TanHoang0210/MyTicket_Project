@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.SERVICE.Common;
@@ -9,6 +10,7 @@ using MYTICKET.WEB.DOMAIN.Entities;
 using MYTICKET.WEB.SERVICE.Common;
 using MYTICKET.WEB.SERVICE.EventModule.Abstracts;
 using MYTICKET.WEB.SERVICE.EventModule.Dtos;
+using MYTICKET.WEB.SERVICE.SystemModule.Abstracts;
 using MYTICKET.WEB.SERVICE.TicketModule.Dtos;
 using System.Text.Json;
 
@@ -16,7 +18,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
 {
     public class EventService : ServiceBase, IEventService
     {
-        public EventService(ILogger<EventService> logger, IHttpContextAccessor httpContext) : base(logger, httpContext)
+        public EventService(ILogger<EventService> logger,
+            IHttpContextAccessor httpContext) : base(logger, httpContext)
         {
         }
 
@@ -74,6 +77,46 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                          join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
                          join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
                          where (!ev.Deleted
+                                && (input.Keyword == null || ev.EventName.ToLower().Contains(input.Keyword.ToLower()))
+                                && (input.EventTypeId == null || evType.Id == input.EventTypeId)
+                                && ((input.StartDate == null || evDetails.Any(ed => ed.OrganizationDay.Date >= input.StartDate.Value.Date))
+                                && ((input.Status == null || ev.Status == input.Status))
+                                && (input.EndDate == null || evDetails.Any(ed => ed.OrganizationDay.Date <= input.EndDate.Value.Date))))
+                         select new EventDto
+                         {
+                             Id = ev.Id,
+                             EventName = ev.EventName,
+                             EventDescription = ev.EventDescription,
+                             EventImage = ev.EventImage,
+                             EventTypeId = ev.EventTypeId,
+                             EventTypeName = evType.Name,
+                             FirstEventDate = evDetails.OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
+                             LastEventDate = evDetails.OrderByDescending(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
+                             Status = ev.Status, // Assuming Status is a property of EventDetail,
+                             Supllier = _dbContext.Suppilers.Where(s => s.Id == ev.SupplierId).Select(s => s.FullName).FirstOrDefault(),
+                             SupplierId = ev.SupplierId,
+                         });
+            result.TotalItems = query.Count();
+            query = query.OrderByDescending(s => s.FirstEventDate);
+
+            if (input.PageSize != -1)
+            {
+                query = query.Skip(input.GetSkip()).Take(input.PageSize);
+            }
+
+            result.Items = query;
+            return result;
+        }
+
+        public PagingResult<EventDto> FindAllEventBySupplier(FilterEventDto input)
+        {
+            _logger.LogInformation($"{nameof(FindAll)}: input = {JsonSerializer.Serialize(input)}");
+            var result = new PagingResult<EventDto>();
+
+            var query = (from ev in _dbContext.Events
+                         join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
+                         join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
+                         where (!ev.Deleted && ev.SupplierId == input.SupplierId
                                 && (input.Keyword == null || ev.EventName.ToLower().Contains(input.Keyword.ToLower()))
                                 && (input.EventTypeId == null || evType.Id == input.EventTypeId)
                                 && ((input.StartDate == null || evDetails.Any(ed => ed.OrganizationDay.Date >= input.StartDate.Value.Date))
@@ -287,7 +330,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                     VenueAddress = _dbContext.Venues.Where(x => x.Id == s.VenueId).Select(s => s.Address).FirstOrDefault()
                 }).ToList();
             eventinfo.EventDetails = eventDetails;
-            foreach(var detail in eventinfo.EventDetails)
+            foreach (var detail in eventinfo.EventDetails)
             {
                 var ticketEvents = (from ticketEvent in _dbContext.TicketEvents
                                     join ticket in _dbContext.Tickets on ticketEvent.Id equals ticket.TicketEventId into tickets
@@ -388,26 +431,105 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
         public void UpdateEventDetailStatus(UpdateEventDetailStatus input)
         {
             var evntDetail = _dbContext.EventDetails.FirstOrDefault(s => s.Id == input.Id && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
-            if(input.Status != EventDetailStatuses.CANCEL)
+            var evnt = _dbContext.Events.FirstOrDefault(s => s.Id == evntDetail.EventId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
+            if (input.Status == EventDetailStatuses.CANCEL)
             {
-                var evnt = _dbContext.Events.FirstOrDefault(s => s.Id == evntDetail.EventId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
+                if (_dbContext.EventDetails.Any(s => s.EventId == evnt.Id && s.Status != EventStatuses.CANCEL && !s.Deleted))
+                {
+                    var orderDetails = _dbContext.OrderDetails.Where(s => s.EventDetailId == evntDetail.Id && !s.Deleted
+                    && s.Status == OrderDetailStatuses.SUCCESS);
+                    foreach (var orderDetail in orderDetails)
+                    {
+                        if (orderDetail.ExchangeStatus != ExchangeStatuses.SUCCESS)
+                        {
+                            orderDetail.RefundRequest = true;
+                            orderDetail.ExchangeRefundRequest = false;
+                        }
+                        else
+                        {
+                            orderDetail.RefundRequest = true;
+                        }
+                    }
+                    evnt.Status = input.Status;
+                    var jobId = BackgroundJob.Enqueue<ISystemService>(x => x.CancelEventNotification(evntDetail.Id));
+                }
+            }
+            else if (input.Status == EventDetailStatuses.ONSALE)
+            {
+                if (!_dbContext.EventDetails.Any(s => s.EventId == evnt.Id && s.Status == EventStatuses.TAKING_PLACE && !s.Deleted))
+                {
+                    evnt.Status = input.Status;
+                }
+            }
+            else if (input.Status == EventDetailStatuses.STOP_SALE)
+            {
+                if (_dbContext.EventDetails.Any(s => s.EventId == evnt.Id && s.Status != EventStatuses.STOP_SALE && !s.Deleted))
+                {
+                    evnt.Status = input.Status;
+                }
+            }
+            else if (input.Status == EventDetailStatuses.TAKING_PLACE)
+            {
                 evnt.Status = input.Status;
+            }
+            else if (input.Status == EventDetailStatuses.INIT)
+            {
+                if (!_dbContext.EventDetails.Any(s => s.EventId == evnt.Id && !s.Deleted && !(new int[] { EventStatuses.INIT, EventStatuses.CANCEL }.Contains(s.Status))))
+                {
+                    var orderDetails = _dbContext.OrderDetails.Where(s => s.EventDetailId == evntDetail.Id && !s.Deleted);
+                    foreach (var orderDetail in orderDetails)
+                    {
+                        if (orderDetail.ExchangeStatus == ExchangeStatuses.READY_TO_EXCHANGE)
+                        {
+                            orderDetail.RefundRequest = false;
+                            orderDetail.ExchangeRefundRequest = true;
+                        }
+                        else
+                        {
+                            orderDetail.RefundRequest = false;
+                        }
+                    }
+                    evnt.Status = input.Status;
+                }
             }
             evntDetail.Status = input.Status;
             _dbContext.SaveChanges();
+
         }
 
         public void UpdateEventStatus(UpdateEventStatus input)
         {
             var evnt = _dbContext.Events.FirstOrDefault(s => s.Id == input.Id && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.EventNotFound);
+            var evntDetails = _dbContext.EventDetails.Where(s => s.EventId == input.Id && !s.Deleted);
             var transaction = _dbContext.Database.BeginTransaction();
-            if(input.Status == EventStatuses.CANCEL)
+            if (input.Status == EventStatuses.CANCEL)
             {
                 evnt.Status = input.Status;
-                var evntDetails = _dbContext.EventDetails.Where(s => s.EventId == input.Id && !s.Deleted);
-                foreach(var item in  evntDetails)
+                if (evntDetails.Any(s => new int[] { EventDetailStatuses.ONSALE, EventDetailStatuses.TAKING_PLACE }.Contains(s.Status)))
                 {
-                    item.Status = EventDetailStatuses.CANCEL;
+                    throw new UserFriendlyException(ErrorCode.CannotUpdateStatusEvent);
+                }
+                else
+                {
+                    foreach (var item in evntDetails)
+                    {
+                        var orderDetails = _dbContext.OrderDetails.Where(s => s.EventDetailId == item.Id && !s.Deleted
+                    && s.Status == OrderDetailStatuses.SUCCESS);
+                        foreach (var orderDetail in orderDetails)
+                        {
+                            if (orderDetail.ExchangeStatus != ExchangeStatuses.SUCCESS)
+                            {
+                                orderDetail.RefundRequest = true;
+                                orderDetail.ExchangeRefundRequest = false;
+                            }
+                            else
+                            {
+                                orderDetail.RefundRequest = true;
+                            }
+                        }
+                        var jobId = BackgroundJob.Enqueue<ISystemService>(x => x.CancelEventNotification(item.Id));
+                        item.Status = EventDetailStatuses.CANCEL;
+                    }
                 }
                 _dbContext.SaveChanges();
             }

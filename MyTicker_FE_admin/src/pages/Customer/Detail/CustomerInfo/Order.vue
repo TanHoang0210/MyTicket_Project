@@ -27,7 +27,17 @@
                                 </div>
                             </div>
                         </template>
-                        <b-table striped hover :fields="fields" :items="orders">
+                        <div class="row">
+                            <div class="col-md-10">
+
+                            </div>
+                            <div class="col-md-2">
+                                <label for="per-page-select" style="text-align: end;">Số bản ghi</label>
+                                <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize"
+                                    @change="getAllData()" :options="pageSizeOption" size="sm"></b-form-select>
+                            </div>
+                        </div>
+                        <b-table :current-page="pageNumber" id="table-order" striped hover :fields="fields" :items="orders">
                             <template #cell(status)="data">
                                 <td style="color: blue;font-weight: 600;" v-if="data.item.status === 1">Khởi tạo</td>
                                 <td style="color: greenyellow;font-weight: 600;" v-if="data.item.status === 2">Chưa thanh
@@ -45,61 +55,58 @@
                                         <b-icon icon="pencil-square">
                                         </b-icon>
                                     </b-button>
+                                    <b-button v-if="data.item.refundRequest" @click="Refund(data.item.id,customerId)" class="table-btn"
+                                        variant="warning" title="Hoàn tiền">
+                                        <b-icon icon="currency-exchange">
+                                        </b-icon>
+                                    </b-button>
                                 </div>
                             </template>
                         </b-table>
+                        <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize"
+                            aria-controls="table-order"></b-pagination>
                     </card>
                 </div>
             </div>
         </div>
-        <b-modal scrollable  id="modal-add-edit" size="lg" ref="modal-add-edit" title="Thông tin vé">
+        <b-modal scrollable id="modal-add-edit" size="lg" ref="modal-add-edit" title="Thông tin vé">
             <form>
                 <div class="row">
                     <div class="col-md-12">
-                        <base-input type="text" label="Tên Sự kiện" :disabled="true"
-                            v-model="order.eventName">
+                        <base-input type="text" label="Tên Sự kiện" :disabled="true" v-model="order.eventName">
                         </base-input>
                     </div>
                     <div class="col-md-6">
-                        <base-input type="text" label="Mã đặt vé" 
-                            v-model="order.orderCode">
+                        <base-input type="text" label="Mã đặt vé" v-model="order.orderCode">
                         </base-input>
-                        <base-input type="text" label="Ngày đặt vé" 
-                            v-model="order.orderDate">
+                        <base-input type="text" label="Ngày đặt vé" v-model="order.orderDate">
                         </base-input>
-                        <base-input type="text" label="Ngày diễn ra" 
-                            v-model="order.organizationDay">
+                        <base-input type="text" label="Ngày diễn ra" v-model="order.organizationDay">
                         </base-input>
-                        <base-input type="text" label="Sân vận động" 
-                            v-model="order.venueName">
+                        <base-input type="text" label="Sân vận động" v-model="order.venueName">
                         </base-input>
-                        <base-input type="text" label="Địa chỉ" 
-                            v-model="order.venueAddress">
+                        <base-input type="text" label="Địa chỉ" v-model="order.venueAddress">
                         </base-input>
                     </div>
                     <div class="col-md-6">
-                        <base-input type="text" label="Hạng vé" 
-                            v-model="order.ticketEventName">
+                        <base-input type="text" label="Hạng vé" v-model="order.ticketEventName">
                         </base-input>
-                        <base-input type="text" label="Mã vé" 
-                            v-model="order.ticketCode">
+                        <base-input type="text" label="Mã vé" v-model="order.ticketCode">
                         </base-input>
-                        <base-input type="text" label="Mã chỗ ngồi" 
-                            v-model="order.seatCode">
+                        <base-input type="text" label="Mã chỗ ngồi" v-model="order.seatCode">
                         </base-input>
-                        <base-input type="text" label="Giá" 
-                            v-model="order.price">
+                        <base-input type="text" label="Giá" v-model="order.price">
                         </base-input>
                         <label for="status">Trạng thái</label>
                         <br>
                         <span style="color: blue;font-weight: 600;" v-if="order.status === 1">Khởi tạo</span>
-                    <span style="color: greenyellow;font-weight: 600;" v-if="order.status === 2">Chưa thanh
-                        toán</span>
-                    <span style="color: yellow;font-weight: 600;" v-if="order.status === 3">Đang thanh toán
-                    </span>
-                    <span style="color: #888;font-weight: 600;" v-if="order.status === 4">Đã hủy</span>
-                    <span style="color: orange;font-weight: 600;" v-if="order.status === 5">Đã thanh toán</span>
-                    <span style="color: green;font-weight: 600;" v-if="order.status === 6">Đã thanh toán</span>
+                        <span style="color: greenyellow;font-weight: 600;" v-if="order.status === 2">Chưa thanh
+                            toán</span>
+                        <span style="color: yellow;font-weight: 600;" v-if="order.status === 3">Đang thanh toán
+                        </span>
+                        <span style="color: #888;font-weight: 600;" v-if="order.status === 4">Đã hủy</span>
+                        <span style="color: orange;font-weight: 600;" v-if="order.status === 5">Đã thanh toán</span>
+                        <span style="color: green;font-weight: 600;" v-if="order.status === 6">Đã thanh toán</span>
                     </div>
                 </div>
             </form>
@@ -131,14 +138,16 @@ export default {
                 status: null
             },
             id: 0,
+            customerId:0,
             isUpdate: false,
             pageSize: 100,
             pageNumber: 1,
+            totals: 0,
+            pageSizeOption: [5, 10, 25, 50, 100],
             orders: [],
             fields: ['id',
                 { key: 'orderCode', label: 'Mã đơn đặt vé ' },
                 { key: 'orderDate', label: 'Ngày đặt vé' },
-                { key: 'eventName', label: 'Tên sự kiện' },
                 { key: 'ticketEventName', label: 'Hạng vé' },
                 { key: 'status', label: 'Trạng thái' },
                 { key: 'action', label: 'Thao tác' },
@@ -197,7 +206,7 @@ export default {
                     "myticket/api/order/admin/order/find-all",
                     {
                         params: {
-                            customerId: this.$route.query.id,
+                            customerId: this.customerId,
                             pageSize: this.pageSize,
                             pageNumber: this.pageNumber,
                             keyword: this.search.keyword,
@@ -205,11 +214,25 @@ export default {
                         },
                     }
                 )
+                this.totals = res.data.data.totalItems
                 return res.data.data.items;
             } catch (error) {
                 console.error('API Error:', error);
                 throw error;
             }
+        },
+        async Refund(orderDetailId, customerId) {
+                const res = await axios.post('api/Vnpay/refund/payment-vn-pay', 
+                {
+                    orderDetail: orderDetailId,
+                    customerId: customerId
+                }
+                ,{
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }})
+                    alert(res)
+            
         },
         async getAllData() {
             try {
@@ -250,10 +273,10 @@ export default {
         async showModalOrder(id) {
             console.log(id)
             try {
-                    this.order = await this.getOrderById(id)
-                    this.order.organizationDay = helpService.formatDate(this.order.organizationDay)
-                    this.order.orderDate = helpService.formatDate(this.order.orderDate)
-                    this.order.price = helpService.formatCurrency(this.order.price)
+                this.order = await this.getOrderById(id)
+                this.order.organizationDay = helpService.formatDate(this.order.organizationDay)
+                this.order.orderDate = helpService.formatDate(this.order.orderDate)
+                this.order.price = helpService.formatCurrency(this.order.price)
                 // this.venues = await this.findAllVenue();
                 this.$nextTick(() => {
                     // Using $nextTick to ensure the modal component is updated
@@ -265,6 +288,7 @@ export default {
         },
     },
     mounted() {
+        this.customerId = this.$route.query.id;
         this.getAllData();
     },
     computed: {
@@ -277,7 +301,12 @@ export default {
         search: function (newVal) {
             // Custom logic when 'search' changes
             this.search.keyword = newVal;
-        }
+        },
+        pageNumber(newPage, oldPage) {
+            if (newPage !== oldPage) {
+                this.getAllData();
+            }
+        },
     }
 };
 </script>

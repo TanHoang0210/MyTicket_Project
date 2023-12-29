@@ -9,5 +9,6 @@
         public string Vnp_TmnCode { get; set; }
         public string Vnp_Command { get; set; }
         public string Vnp_Version { get; set; }
+
     }
 }

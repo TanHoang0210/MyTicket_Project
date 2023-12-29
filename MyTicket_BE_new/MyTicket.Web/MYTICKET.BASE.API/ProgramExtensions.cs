@@ -1,5 +1,6 @@
 ﻿using Hangfire;
-using Hangfire.Redis.StackExchange;
+using Hangfire.SqlServer;
+//using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
@@ -195,38 +196,6 @@ namespace MYTICKET.BASE.API
             services.AddDistributedMemoryCache();
             services.AddSession();
             services.AddDataProtection();
-
-            // Add Hangfire services.
-            services.AddHangfire(configuration =>
-            {
-                configuration
-                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseLog4NetLogProvider()
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseSerializerSettings(new JsonSerializerSettings
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    });
-                if (!string.IsNullOrWhiteSpace(redisConnectionString))
-                {
-                    configuration.UseRedisStorage(redisConnectionString, new RedisStorageOptions
-                    {
-                        Prefix = $"{{hangfire-{Assembly.GetExecutingAssembly().GetName().Name}}}:",
-                    });
-                }
-                else
-                {
-                    configuration.UseInMemoryStorage();
-                }
-            });
-
-            // Add the processing server as IHostedService
-            services.AddHangfireServer((service, options) =>
-            {
-                options.ServerName = Assembly.GetExecutingAssembly().GetName().Name;
-                options.WorkerCount = 100;
-            });
-
             //signalR
             var signalRBuilder = services.AddSignalR();
             if (!string.IsNullOrWhiteSpace(redisConnectionString))
@@ -271,6 +240,44 @@ namespace MYTICKET.BASE.API
             app.UseAuthorization();
             app.UseSession();
         }
+        public static void ConfigureHangfire(this WebApplicationBuilder builder)
+        {
+            var services = builder.Services;
+
+            //nếu có cấu hình redis
+            string? redisConnectionString = builder.Configuration.GetConnectionString(Redis);
+
+            // Add Hangfire services.
+            services.AddHangfire(configuration =>
+            {
+                configuration
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseLog4NetLogProvider()
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseSerializerSettings(new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
+                //if (!string.IsNullOrWhiteSpace(redisConnectionString))
+                //{
+                //    configuration.UseRedisStorage(redisConnectionString, new RedisStorageOptions
+                //    {
+                //        Prefix = $"{{hangfire-{Assembly.GetExecutingAssembly().GetName().Name}}}:",
+                //    });
+                //}
+                //else
+                //{
+                //    configuration.UseInMemoryStorage();
+                //}
+            });
+
+            // Add the processing server as IHostedService
+            services.AddHangfireServer((service, options) =>
+            {
+                options.ServerName = Assembly.GetExecutingAssembly().GetName().Name;
+                options.WorkerCount = 100;
+            });
+        }
 
         public static void ConfigureEndpoint(this WebApplication app)
         {
@@ -279,7 +286,29 @@ namespace MYTICKET.BASE.API
             app.MapHangfireDashboard("/hangfire");
             app.MapControllers();
         }
+        public static void ConfigureHangfire(this WebApplicationBuilder builder, string connectionString, string schemaName)
+        {
+            builder.Services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSerilogLogProvider()
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(connectionString, new SqlServerStorageOptions
+                {
+                    SchemaName = schemaName,
+                }));
 
+            JobStorage.Current = new SqlServerStorage(connectionString, new SqlServerStorageOptions
+            {
+                SchemaName = schemaName,
+            });
+
+            builder.Services.AddHangfireServer((service, options) =>
+            {
+                options.ServerName = Assembly.GetEntryAssembly()?.GetName().Name;
+                options.WorkerCount = 200;
+            });
+        }
         /// <summary>
         /// Kiểm tra resolve service
         /// </summary>

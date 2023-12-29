@@ -23,11 +23,11 @@ namespace MYTICKET.WEB.SERVICE.VenueModule.Dtos
         /// <summary>
         /// Mô tả
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
         /// <summary>
         /// ảnh svd
         /// </summary>
         [CustomMaxLength(1024)]
-        public string Image { get; set; }
+        public string? Image { get; set; }
     }
 }

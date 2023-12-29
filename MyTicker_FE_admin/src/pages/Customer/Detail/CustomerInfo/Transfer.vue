@@ -7,7 +7,7 @@
                         <template slot="header">
                             <div class="row" style="display: flex; justify-content: space-between;">
                                 <div class="col-md-6">
-                                    <h4 class="card-title">Danh sách vé khách hàng</h4>
+                                    <h4 class="card-title">Danh sách chuyển nhượng vé khách hàng</h4>
                                 </div>
                                 <div class="col-md-4">
                                     <b-input-group class="float-right">
@@ -20,7 +20,18 @@
                                 </div>
                             </div>
                         </template>
-                        <b-table striped hover :fields="fields" :items="orders">
+                        <div class="row">
+                            <div class="col-md-10">
+
+                            </div>
+                            <div class="col-md-2">
+                                <label for="per-page-select" style="text-align: end;">Số bản ghi</label>
+                                <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize"
+                                    @change="getAllData()" :options="pageSizeOption" size="sm"></b-form-select>
+                            </div>
+                        </div>
+                        <b-table :current-page="pageNumber" id="table-transfer" striped hover :fields="fields"
+                            :items="orders">
                             <template #cell(transferStatus)="data">
                                 <td style="color: blue;font-weight: 600;" v-if="data.item.transferStatus === 1">Khởi tạo
                                 </td>
@@ -42,8 +53,11 @@
                                 </div>
                             </template>
                         </b-table>
+                        <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize"
+                            aria-controls="table-transfer"></b-pagination>
                     </card>
-                    <b-modal id="modal-add-edit" scrollable ref="modal-add-edit" size="lg" title="Thông tin chuyển nhượng" ok-only>
+                    <b-modal id="modal-add-edit" scrollable ref="modal-add-edit" size="lg" title="Thông tin chuyển nhượng"
+                        ok-only>
                         <form>
                             <div class="row">
                                 <div class="col-md-12">
@@ -52,55 +66,51 @@
                                     </base-input>
                                 </div>
                                 <div class="col-md-6">
-                                    <base-input type="text" label="Mã đặt vé" 
-                                        v-model="transfer.orderCode">
+                                    <base-input type="text" label="Mã đặt vé" v-model="transfer.orderCode">
                                     </base-input>
-                                    <base-input type="text" label="Ngày đặt vé" 
-                                        v-model="transfer.orderDate">
+                                    <base-input type="text" label="Ngày đặt vé" v-model="transfer.orderDate">
                                     </base-input>
-                                    <base-input type="text" label="Ngày diễn ra" 
-                                        v-model="transfer.organizationDay">
+                                    <base-input type="text" label="Ngày diễn ra" v-model="transfer.organizationDay">
                                     </base-input>
-                                    <base-input type="text" label="Sân vận động" 
-                                        v-model="transfer.venueName">
+                                    <base-input type="text" label="Sân vận động" v-model="transfer.venueName">
                                     </base-input>
-                                    <base-input type="text" label="Địa chỉ" 
-                                        v-model="transfer.venueAddress">
+                                    <base-input type="text" label="Địa chỉ" v-model="transfer.venueAddress">
                                     </base-input>
-                                    <base-input type="text" label="Ngày yêu cầu chuyển nhượng" 
+                                    <base-input type="text" label="Ngày yêu cầu chuyển nhượng"
                                         v-model="transfer.transferDate">
                                     </base-input>
                                 </div>
                                 <div class="col-md-6">
-                                    <base-input type="text" label="Hạng vé" 
-                                        v-model="transfer.ticketEventName">
+                                    <base-input type="text" label="Hạng vé" v-model="transfer.ticketEventName">
                                     </base-input>
-                                    <base-input type="text" label="Mã vé" 
-                                        v-model="transfer.ticketCode">
+                                    <base-input type="text" label="Mã vé" v-model="transfer.ticketCode">
                                     </base-input>
-                                    <base-input type="text" label="Mã chỗ ngồi" 
-                                        v-model="transfer.seatCode">
+                                    <base-input type="text" label="Mã chỗ ngồi" v-model="transfer.seatCode">
                                     </base-input>
-                                    <base-input type="text" label="Giá" 
-                                        v-model="transfer.price">
+                                    <base-input type="text" label="Giá" v-model="transfer.price">
                                     </base-input>
-                                    <base-input v-if="transfer.transferStatus === 3" type="text" label="Ngày hủy chuyển nhượng" 
-                                        v-model="transfer.transferCancelDate">
+                                    <base-input v-if="transfer.transferStatus === 3" type="text"
+                                        label="Ngày hủy chuyển nhượng" v-model="transfer.transferCancelDate">
                                     </base-input>
-                                    <base-input v-if="transfer.transferStatus === 5" type="text" label="Ngày chuyển nhượng" 
+                                    <base-input v-if="transfer.transferStatus === 5" type="text" label="Ngày chuyển nhượng"
                                         v-model="transfer.transferDoneDate">
                                     </base-input>
                                     <label for="status">Trạng thái</label>
                                     <br>
-                                    <span style="color: blue;font-weight: 600;" v-if="transfer.transferStatus === 1">Khởi tạo
-                                </span>
-                                <span style="color: green;font-weight: 600;" v-if="transfer.transferStatus === 2">Đã xác nhận
-                                </span>
-                                <span style="color: #888;font-weight: 600;" v-if="transfer.transferStatus === 3">Đã hủy</span>
-                                <span style="color: yellow;font-weight: 600;" v-if="transfer.transferStatus === 4">Đang thanh
-                                    toán</span>
-                                <span style="color: orange;font-weight: 600;" v-if="transfer.transferStatus === 5">Đã chuyển
-                                    nhượng</span>
+                                    <span style="color: blue;font-weight: 600;" v-if="transfer.transferStatus === 1">Khởi
+                                        tạo
+                                    </span>
+                                    <span style="color: green;font-weight: 600;" v-if="transfer.transferStatus === 2">Đã xác
+                                        nhận
+                                    </span>
+                                    <span style="color: #888;font-weight: 600;" v-if="transfer.transferStatus === 3">Đã
+                                        hủy</span>
+                                    <span style="color: yellow;font-weight: 600;" v-if="transfer.transferStatus === 4">Đang
+                                        thanh
+                                        toán</span>
+                                    <span style="color: orange;font-weight: 600;" v-if="transfer.transferStatus === 5">Đã
+                                        chuyển
+                                        nhượng</span>
                                 </div>
                             </div>
                         </form>
@@ -134,6 +144,8 @@ export default {
                 keyword: null,
                 status: null
             },
+            totals: 0,
+            pageSizeOption: [5, 10, 25, 50, 100],
             id: 0,
             isUpdate: false,
             pageSize: 100,
@@ -185,6 +197,7 @@ export default {
                         },
                     }
                 )
+                this.totals = res.data.data.totalItems
                 return res.data.data.items;
             } catch (error) {
                 console.error('API Error:', error);
@@ -244,13 +257,13 @@ export default {
         async showModalTransfer(id) {
             console.log(id)
             try {
-                    this.transfer = await this.getTransferById(id)
-                    this.transfer.transferCancelDate = helpService.formatDate(this.transfer.transferCancelDate)
-                    this.transfer.transferDate = helpService.formatDate(this.transfer.transferDate)
-                    this.transfer.transferDoneDate = helpService.formatDate(this.transfer.transferDoneDate)
-                    this.transfer.orderDate = helpService.formatDate(this.transfer.orderDate)
-                    this.transfer.organizationDay = helpService.formatDate(this.transfer.organizationDay)
-                    this.transfer.price = helpService.formatCurrency(this.transfer.price)
+                this.transfer = await this.getTransferById(id)
+                this.transfer.transferCancelDate = helpService.formatDate(this.transfer.transferCancelDate)
+                this.transfer.transferDate = helpService.formatDate(this.transfer.transferDate)
+                this.transfer.transferDoneDate = helpService.formatDate(this.transfer.transferDoneDate)
+                this.transfer.orderDate = helpService.formatDate(this.transfer.orderDate)
+                this.transfer.organizationDay = helpService.formatDate(this.transfer.organizationDay)
+                this.transfer.price = helpService.formatCurrency(this.transfer.price)
                 // this.venues = await this.findAllVenue();
                 this.$nextTick(() => {
                     // Using $nextTick to ensure the modal component is updated
@@ -346,12 +359,21 @@ export default {
         this.getAllData();
     },
     computed: {
-    }
+    },
+    watch: {
+        // Fetch data when the pageNumber changes
+        pageNumber(newPage, oldPage) {
+            if (newPage !== oldPage) {
+                this.getAllData();
+            }
+        },
+    },
 };
 </script>
     
 <style>
 .table-btn.btn {
     border: none !important;
-}</style>
+}
+</style>
     

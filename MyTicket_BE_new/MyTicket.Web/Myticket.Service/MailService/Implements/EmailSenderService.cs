@@ -13,13 +13,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MailKit.Security;
+using MYTICKET.WEB.Infrastructure.Persistence;
+using MYTICKET.WEB.SERVICE.SystemModule.Implements;
+
 namespace MYTICKET.WEB.SERVICE.MailService.Implements
 {
-    public class EmailSenderService : ServiceBase, IEmailSenderService
+    public class EmailSenderService : IEmailSenderService
     {
+        private readonly MyTicketDbContext _dbContext;
+        private readonly ILogger<EmailSenderService> _logger;
         private readonly IOptions<MailSettings> _mailSettings;
-        public EmailSenderService(IOptions<MailSettings> setting,ILogger<EmailSenderService> logger, IHttpContextAccessor httpContext) : base(logger, httpContext)
+        public EmailSenderService(IOptions<MailSettings> setting, ILogger<EmailSenderService> logger, MyTicketDbContext dbContext)
         {
+            _dbContext = dbContext;
+            _logger = logger;
             _mailSettings = setting;
         }
 

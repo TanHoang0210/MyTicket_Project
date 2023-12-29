@@ -10,6 +10,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
 {
     public class FilterEventDto : PagingRequestBaseDto
     {
+        [FromQuery(Name = "supplierId")]
+        public int? SupplierId { get; set; }
         [FromQuery(Name = "eventTypeId")]
         public int? EventTypeId { get; set; }
         [FromQuery(Name = "startDate")]

@@ -25,7 +25,7 @@
 	<ItemGroup>
 		<Folder Include="DemoModule\Dtos\" />
 		<Folder Include="FileModule\Abstract\" />
-		<Folder Include="Shared\" />
+		<Folder Include="SystemModule\Dtos\" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="Common\Localization\SourceFiles\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />

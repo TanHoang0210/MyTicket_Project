@@ -13,7 +13,6 @@
                         <th class="text-center firstCol">#ID</th>
                         <th>Tên Sự Kiện</th>
                         <th>Thời Gian</th>
-                        <th>Địa Điểm</th>
                         <th>Hạng Vé</th>
                         <th>Trạng Thái</th>
                         <th class="lastCol">Thao Tác</th>
@@ -33,33 +32,40 @@
                         <td class="ticket-infomation">
                             {{ formatDate(item.organizationDay) }}
                         </td>
-                        <td class="ticket-infomation">
+                        <!-- <td class="ticket-infomation">
                             {{ item.venueName }} - {{ item.venueAddress }}
-                        </td>
+                        </td> -->
                         <td class="ticket-infomation">
                             {{ item.ticketEventName }}
                         </td>
                         <td class="ticket-infomation">
-                            <span style="color: blue;font-weight: 600;" v-if="item.status === 1">Khởi tạo</span>
-                            <span style="color: greenyellow;font-weight: 600;" v-if="item.status === 2">Chưa thanh
-                                toán</span>
-                            <span style="color: yellow;font-weight: 600;" v-if="item.status === 3">Đang thanh toán
-                            </span>
-                            <span style="color: #888;font-weight: 600;" v-if="item.status === 4">Đã hủy</span>
-                            <span style="color: orange;font-weight: 600;" v-if="item.status === 5">Đã thanh toán</span>
-                            <span style="color: green;font-weight: 600;" v-if="item.status === 6">Đã thanh toán</span>
-                            <span style="color: chocolate;font-weight: 600;" v-if="item.status === 10">Mua Lại</span>
+                            <div v-if="item.eventStatus !== 5">
+                                <span style="color: blue;font-weight: 600;" v-if="item.status === 1">Khởi tạo</span>
+                                <span style="color: greenyellow;font-weight: 600;" v-if="item.status === 2">Chưa thanh
+                                    toán</span>
+                                <span style="color: yellow;font-weight: 600;" v-if="item.status === 3">Đang thanh toán
+                                </span>
+                                <span style="color: #888;font-weight: 600;" v-if="item.status === 4">Đã hủy</span>
+                                <span style="color: orange;font-weight: 600;" v-if="item.status === 5">Đã thanh toán</span>
+                                <span style="color: green;font-weight: 600;" v-if="item.status === 6">Đã thanh toán</span>
+                                <span style="color: chocolate;font-weight: 600;" v-if="item.status === 10">Mua Lại</span>
+                            </div>
+                            <span v-else style="color: red;font-weight: 600;">Hủy Sự Kiện</span>
+
                         </td>
+                        
                         <td class="lastCol ticket-infomation">
                             <div class="ticket-action ">
-                                <div v-if="item.status !== 10">
-                                    <b-button id="showTransfer" title="Chuyển nhượng vé" @click="showTranferModal(item.id)"
-                                        class="btn-myticket" variant="info"> <b-icon icon="people">
-                                        </b-icon></b-button>
-                                    <b-button v-if="item.isExchange == true" title="Trả vé" id="showTransfer"
-                                        @click="showExchangeModal(item.id)" class="btn-myticket" variant="warning"> <b-icon
-                                            icon="currency-exchange">
-                                        </b-icon></b-button>
+                                <div v-if="item.eventStatus !== 5">
+                                    <div v-if="item.status !== 10">
+                                        <b-button id="showTransfer" title="Chuyển nhượng vé" @click="showTranferModal(item.id)"
+                                            class="btn-myticket" variant="info"> <b-icon icon="people">
+                                            </b-icon></b-button>
+                                        <b-button v-if="item.isExchange == true" title="Trả vé" id="showTransfer"
+                                            @click="showExchangeModal(item.id)" class="btn-myticket" variant="warning"> <b-icon
+                                                icon="currency-exchange">
+                                            </b-icon></b-button>
+                                    </div>
                                 </div>
                                 <b-button id="showDetail" title="Xem chi tiết" @click="showTicketDetail(item.id)"
                                     class="btn-myticket" variant="">

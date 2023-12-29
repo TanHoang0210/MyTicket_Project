@@ -20,7 +20,18 @@
                                 </div>
                             </div>
                         </template>
-                        <b-table striped hover :fields="fields" :items="customers">
+                        <div class="row">
+                            <div class="col-md-10">
+
+                            </div>
+                            <div class="col-md-2">
+                                <label for="per-page-select" style="text-align: end;">Số bản ghi</label>
+                                <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize"
+                                    @change="getAllData()" :options="pageSizeOption" size="sm"></b-form-select>
+                            </div>
+                        </div>
+                        <b-table :current-page="pageNumber" id="table-customer" striped hover :fields="fields"
+                            :items="customers">
                             <template #cell(gender)="data">
                                 <td v-if="data.item.gender === 1">Nam</td>
                                 <td v-else-if="data.item.gender === 2">Nữ</td>
@@ -28,14 +39,15 @@
                             </template>
                             <template #cell(action)="data">
                                 <div style="font-size: 1.2rem; !important">
-                                    <router-link class="btn btn-info" :style="{ border:'none' }"
-                                        :to="{path:'customer/info',query:{id:data.item.id}}">
+                                    <router-link class="btn btn-info" :style="{ border: 'none' }"
+                                        :to="{ path: 'customer/info', query: { id: data.item.id } }">
                                         <b-icon icon="pencil-square">
                                         </b-icon>
                                     </router-link>
                                 </div>
                             </template>
                         </b-table>
+                        <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize" aria-controls="table-customer"></b-pagination>
                     </card>
                     <b-modal id="modal-add-edit" ref="modal-add-edit" size="lg" title="Thông tin nhà cung cấp" ok-only>
                         <form>
@@ -151,10 +163,12 @@ export default {
                 keyword: null,
                 status: null
             },
+            pageSizeOption:[5,10,25,50,100],
             id: 0,
             isUpdate: false,
             pageSize: 100,
             pageNumber: 1,
+            totals:0,
             customers: [],
             imageUpload: null,
             fields: ['id',
@@ -212,6 +226,7 @@ export default {
                         },
                     }
                 )
+                this.totals = res.data.data.totalItems
                 return res.data.data.items;
             } catch (error) {
                 console.error('API Error:', error);
@@ -243,7 +258,15 @@ export default {
         this.getAllData();
     },
     computed: {
-    }
+    },
+    watch: {
+    // Fetch data when the pageNumber changes
+    pageNumber(newPage, oldPage) {
+      if (newPage !== oldPage) {
+        this.getAllData();
+      }
+    },
+  },
 };
 </script>
     

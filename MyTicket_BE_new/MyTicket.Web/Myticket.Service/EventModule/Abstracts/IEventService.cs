@@ -91,5 +91,12 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Abstracts
         /// <returns></returns>
         EventDto GetEventByIdAdmin(int eventId);
 
+        /// <summary>
+        /// danh sách sự kiện có phân trang theo nhà cc
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        PagingResult<EventDto> FindAllEventBySupplier(FilterEventDto input);
+
     }
 }

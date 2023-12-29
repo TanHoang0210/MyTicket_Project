@@ -7,7 +7,7 @@
                         <template slot="header">
                             <div class="row" style="display: flex; justify-content: space-between;">
                                 <div class="col-md-6">
-                                    <h4 class="card-title">Danh sách vé khách hàng</h4>
+                                    <h4 class="card-title">Danh sách chuyển nhượng vé khách hàng</h4>
                                 </div>
                                 <div class="col-md-4">
                                     <b-input-group class="float-right">
@@ -20,18 +20,32 @@
                                 </div>
                             </div>
                         </template>
-                        <b-table striped hover :fields="fields" :items="orders">
-                            <template #cell(status)="data">
-                                <td style="color: blue;font-weight: 600;" v-if="data.item.status === 1">Khởi tạo</td>
-                                <td style="color: greenyellow;font-weight: 600;" v-if="data.item.status === 2">Chưa thanh toán</td>
-                                <td style="color: yellow;font-weight: 600;" v-if="data.item.status === 3">Đang thanh toán</td>
-                                <td style="color: #888;font-weight: 600;" v-if="data.item.status === 4">Đã hủy</td>
-                                <td style="color: orange;font-weight: 600;" v-if="data.item.status === 5">Đã thanh toán</td>
-                                <td style="color: green;font-weight: 600;" v-if="data.item.status === 6">Đã nhận vé</td>
+                        <div class="row">
+                            <div class="col-md-10">
+
+                            </div>
+                            <div class="col-md-2">
+                                <label for="per-page-select" style="text-align: end;">Số bản ghi</label>
+                                <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize"
+                                    @change="getAllData()" :options="pageSizeOption" size="sm"></b-form-select>
+                            </div>
+                        </div>
+                        <b-table :current-page="pageNumber" id="table-transfer" striped hover :fields="fields"
+                            :items="orders">
+                            <template #cell(transferStatus)="data">
+                                <td style="color: blue;font-weight: 600;" v-if="data.item.transferStatus === 1">Khởi tạo
+                                </td>
+                                <td style="color: green;font-weight: 600;" v-if="data.item.transferStatus === 2">Đã xác nhận
+                                </td>
+                                <td style="color: #888;font-weight: 600;" v-if="data.item.transferStatus === 3">Đã hủy</td>
+                                <td style="color: yellow;font-weight: 600;" v-if="data.item.transferStatus === 4">Đang thanh
+                                    toán</td>
+                                <td style="color: orange;font-weight: 600;" v-if="data.item.transferStatus === 5">Đã chuyển
+                                    nhượng</td>
                             </template>
                             <template #cell(action)="data">
                                 <div style="font-size: 1.2rem; !important">
-                                    <b-button @click="showModalSupplier(data.item.id)" class="table-btn" variant="secondary"
+                                    <b-button @click="showModalTransfer(data.item.id)" class="table-btn" variant="secondary"
                                         title="Xem chi tiết">
                                         <b-icon icon="pencil-square">
                                         </b-icon>
@@ -39,7 +53,65 @@
                                 </div>
                             </template>
                         </b-table>
+                        <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize"
+                            aria-controls="table-transfer"></b-pagination>
                     </card>
+                    <b-modal id="modal-add-edit" scrollable ref="modal-add-edit" size="lg" title="Thông tin chuyển nhượng"
+                        ok-only>
+                        <form>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <base-input type="text" label="Tên Sự kiện" :disabled="true"
+                                        v-model="transfer.eventName">
+                                    </base-input>
+                                </div>
+                                <div class="col-md-6">
+                                    <base-input type="text" label="Mã đặt vé" v-model="transfer.orderCode">
+                                    </base-input>
+                                    <base-input type="text" label="Ngày đặt vé" v-model="transfer.orderDate">
+                                    </base-input>
+                                    <base-input type="text" label="Ngày diễn ra" v-model="transfer.organizationDay">
+                                    </base-input>
+                                    <base-input type="text" label="Sân vận động" v-model="transfer.venueName">
+                                    </base-input>
+                                    <base-input type="text" label="Địa chỉ" v-model="transfer.venueAddress">
+                                    </base-input>
+                                    <label for="status">Trạng thái</label>
+                                    <br>
+                                    <div v-if="transfer.status !== 6">
+                                        <span style="color: yellow;font-weight: 600;" v-if="transfer.transferStatus === 4">Đang
+                                            thanh
+                                            toán</span>
+                                        <span style="color: orange;font-weight: 600;" v-if="transfer.transferStatus === 5">Đã
+                                            chuyển
+                                            nhượng</span>
+                                    </div>
+                                        <span style="color: green;font-weight: 600;" v-else>Đã
+                                        nhận vé</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <base-input type="text" label="Hạng vé" v-model="transfer.ticketEventName">
+                                    </base-input>
+                                    <base-input type="text" label="Mã vé" v-model="transfer.ticketCode">
+                                    </base-input>
+                                    <base-input type="text" label="Mã chỗ ngồi" v-model="transfer.seatCode">
+                                    </base-input>
+                                    <base-input type="text" label="Giá" v-model="transfer.price">
+                                    </base-input>
+                                    <base-input v-if="transfer.transferStatus === 5" type="text" label="Ngày mua vé"
+                                        v-model="transfer.transferDoneDate">
+                                    </base-input>
+                                </div>
+                            </div>
+                        </form>
+                        <template #modal-footer="{ ok, cancel }">
+                            <div style="margin: auto; width: 100%;">
+                                <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
+                                    Đóng
+                                </b-button>
+                            </div>
+                        </template>
+                    </b-modal>
                 </div>
             </div>
         </div>
@@ -62,20 +134,42 @@ export default {
                 keyword: null,
                 status: null
             },
+            totals: 0,
+            pageSizeOption: [5, 10, 25, 50, 100],
             id: 0,
-            isUpdate:false,
+            isUpdate: false,
             pageSize: 100,
             pageNumber: 1,
             orders: [],
             imageUpload: null,
             fields: ['id',
                 { key: 'orderCode', label: 'Mã đơn đặt vé ' },
-                { key: 'orderDate', label: 'Ngày đặt vé' },
+                { key: 'transferDoneDate', label: 'Ngày đặt vé' },
                 { key: 'eventName', label: 'Tên sự kiện' },
                 { key: 'ticketEventName', label: 'Hạng vé' },
-                { key: 'status', label: 'Trạng thái' },
+                { key: 'transferStatus', label: 'Trạng thái' },
                 { key: 'action', label: 'Thao tác' },
-            ]
+            ],
+            transfer: {
+                id: 0,
+                orderId: 0,
+                orderCode: "string",
+                orderDate: "2023-12-24T15:35:00.181Z",
+                eventDetailId: 0,
+                eventName: "string",
+                organizationDay: "2023-12-24T15:35:00.181Z",
+                venueName: "string",
+                venueAddress: "string",
+                ticketId: 0,
+                ticketEventName: "string",
+                ticketCode: "string",
+                seatCode: "string",
+                price: 0,
+                transferStatus: 0,
+                transferDate: "2023-12-24T15:35:00.181Z",
+                transferDoneDate: "2023-12-24T15:35:00.181Z",
+                transferCancelDate: "2023-12-24T15:35:00.181Z"
+            }
         };
     },
     methods: {
@@ -93,6 +187,7 @@ export default {
                         },
                     }
                 )
+                this.totals = res.data.data.totalItems
                 return res.data.data.items;
             } catch (error) {
                 console.error('API Error:', error);
@@ -116,33 +211,19 @@ export default {
         async getAllData() {
             try {
                 this.orders = await this.getOrder();
-                this.orders.forEach(element => {
+                this.orders.forEach(element => {if(element.transferDoneDate != null){
+                    element.transferDoneDate = helpService.formatDate(element.transferDoneDate)
+                }
                     element.orderDate = helpService.formatDate(element.orderDate)
                 });
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         },
-        async getSupplierById(id) {
+        async getTransferById(id) {
             try {
                 const res = await axios.get(
-                    "myticket/api/user/supplier/find-by-id",
-                    {
-                        params: {
-                            id: id,
-                        },
-                    }
-                )
-                return res.data.data;
-            } catch (error) {
-                console.error('API Error:', error);
-                throw error;
-            }
-        },
-        async getSupplierAccountById(id) {
-            try {
-                const res = await axios.get(
-                    "myticket/api/user/supplier/account/find-by-id",
+                    "myticket/api/order/transfer/find-by-id",
                     {
                         params: {
                             id: id,
@@ -165,45 +246,20 @@ export default {
                     type: color
                 })
         },
-        async showModalSupplier(id) {
+        async showModalTransfer(id) {
             console.log(id)
             try {
-                if (id !== 0) {
-                    this.updateSupplier = await this.getSupplierById(id)
-                } else {
-                    this.updateSupplier.id = 0,
-                        this.updateSupplier.fullName = null,
-                        this.updateSupplier.shortName = null,
-                        this.updateSupplier.address = null,
-                        this.updateSupplier.taxCode = null,
-                        this.updateSupplier.accounts = []
-                }
+                this.transfer = await this.getTransferById(id)
+                this.transfer.transferCancelDate = helpService.formatDate(this.transfer.transferCancelDate)
+                this.transfer.transferDate = helpService.formatDate(this.transfer.transferDate)
+                this.transfer.transferDoneDate = helpService.formatDate(this.transfer.transferDoneDate)
+                this.transfer.orderDate = helpService.formatDate(this.transfer.orderDate)
+                this.transfer.organizationDay = helpService.formatDate(this.transfer.organizationDay)
+                this.transfer.price = helpService.formatCurrency(this.transfer.price)
                 // this.venues = await this.findAllVenue();
                 this.$nextTick(() => {
                     // Using $nextTick to ensure the modal component is updated
                     this.$refs['modal-add-edit'].show();
-                });
-            } catch (error) {
-                console.error("Error fetching ticket details:", error);
-            }
-        },
-        async showModalAccount(id) {
-            try {
-                if (id !== 0) {
-                    this.updateAccount = await this.getSupplierAccountById(id)
-                    this.isUpdate = true;
-                } else {
-                        this.isUpdate = false;
-                        this.updateAccount.id = 0,
-                        this.updateAccount.username = null,
-                        this.updateAccount.password = null,
-                        this.updateAccount.email = null,
-                        this.updateAccount.phone = null
-                }
-                // this.venues = await this.findAllVenue();
-                this.$nextTick(() => {
-                    // Using $nextTick to ensure the modal component is updated
-                    this.$refs['modal-add-edit-account'].show();
                 });
             } catch (error) {
                 console.error("Error fetching ticket details:", error);
@@ -295,7 +351,15 @@ export default {
         this.getAllData();
     },
     computed: {
-    }
+    },
+    watch: {
+        // Fetch data when the pageNumber changes
+        pageNumber(newPage, oldPage) {
+            if (newPage !== oldPage) {
+                this.getAllData();
+            }
+        },
+    },
 };
 </script>
     

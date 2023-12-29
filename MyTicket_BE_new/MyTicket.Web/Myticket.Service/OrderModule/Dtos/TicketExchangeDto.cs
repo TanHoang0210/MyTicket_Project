@@ -38,5 +38,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
         public DateTime? ExchangeDate { get; set; }
         public DateTime? ExchangeDoneDate { get; set; }
         public DateTime? ExchangeCancelDate { get; set; }
+
+        public bool ExchangeRefundRequest { get; set; }
     }
 }

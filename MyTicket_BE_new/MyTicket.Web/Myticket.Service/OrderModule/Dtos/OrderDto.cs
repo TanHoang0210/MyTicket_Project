@@ -26,9 +26,9 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
         /// </summary>
         public DateTime OrderDate { get; set; }
 
-        public string? QrCode { get; set; }
-
         public decimal? Total { get; set; }
+
+        public bool RefundRequest { get; set; }
 
         public List<OrderDetailDto>? OrderDetails { get; set; }
     }

@@ -26,17 +26,30 @@
                                 </div>
                             </div>
                         </template>
-                        <b-table striped hover :fields="fields" :items="suppliers">
+                        <div class="row">
+                            <div class="col-md-10">
+
+                            </div>
+                            <div class="col-md-2">
+                                <label for="per-page-select" style="text-align: end;">Số bản ghi</label>
+                                <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize"
+                                    @change="getAllData()" :options="pageSizeOption" size="sm"></b-form-select>
+                            </div>
+                        </div>
+                        <b-table :current-page="pageNumber" id="table-supplier" striped hover :fields="fields"
+                            :items="suppliers">
                             <template #cell(action)="data">
                                 <div style="font-size: 1.2rem; !important">
-                                    <router-link class="btn btn-info" :style="{ border:'none' }"
-                                        :to="{path:'supplier/info',query:{id:data.item.id}}">
+                                    <router-link class="btn btn-info" :style="{ border: 'none' }"
+                                        :to="{ path: 'supplier/info', query: { id: data.item.id } }">
                                         <b-icon icon="pencil-square">
                                         </b-icon>
                                     </router-link>
                                 </div>
                             </template>
                         </b-table>
+                        <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize"
+                            aria-controls="table-supplier"></b-pagination>
                     </card>
                     <b-modal id="modal-add-edit" ref="modal-add-edit" size="lg" title="Thông tin nhà cung cấp" ok-only>
                         <form>
@@ -121,9 +134,11 @@ export default {
                 status: null
             },
             id: 0,
-            isUpdate:false,
+            isUpdate: false,
             pageSize: 100,
             pageNumber: 1,
+            totals: 0,
+            pageSizeOption: [5, 10, 25, 50, 100],
             suppliers: [],
             imageUpload: null,
             fields: ['id',
@@ -178,6 +193,7 @@ export default {
                         },
                     }
                 )
+                this.totals = res.data.data.totalItems
                 return res.data.data.items;
             } catch (error) {
                 console.error('API Error:', error);
@@ -275,8 +291,8 @@ export default {
                     this.updateAccount = await this.getSupplierAccountById(id)
                     this.isUpdate = true;
                 } else {
-                        this.isUpdate = false;
-                        this.updateAccount.id = 0,
+                    this.isUpdate = false;
+                    this.updateAccount.id = 0,
                         this.updateAccount.username = null,
                         this.updateAccount.password = null,
                         this.updateAccount.email = null,
@@ -377,7 +393,15 @@ export default {
         this.getAllData();
     },
     computed: {
-    }
+    },
+    watch: {
+        // Fetch data when the pageNumber changes
+        pageNumber(newPage, oldPage) {
+            if (newPage !== oldPage) {
+                this.getAllData();
+            }
+        },
+    },
 };
 </script>
     

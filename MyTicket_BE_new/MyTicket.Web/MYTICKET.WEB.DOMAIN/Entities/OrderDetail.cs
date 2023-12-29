@@ -29,6 +29,7 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public int TicketId { get; set;}
 
         public Ticket Ticket { get; set; } = null!;
+        public bool RefundRequest { get; set; }
         /// <summary>
         /// chuyển nhượng vé
         /// </summary>
@@ -41,6 +42,7 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         /// mã xác nhận chuyển 
         /// </summary>
         public string? TransferCode { get; set; }
+        public decimal Price { get; set; }
         /// <summary>
         /// ngay chuyen nhuong
         /// </summary>
@@ -49,6 +51,10 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public DateTime? TransferDoneDate { get; set; }
 
         public DateTime? TransferCancelDate { get; set; }
+
+        public string? TransferTransactionNo { get; set; }
+
+        public bool TransferRefundRequest { get; set; }
 
         /// <summary>
         /// người được chuyển nhượng
@@ -65,6 +71,7 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public DateTime? ExchangeDoneDate { get; set; }
 
         public DateTime? ExchangeCancelDate { get; set; }
+        public bool ExchangeRefundRequest { get; set; }
 
         public string? QrCode { get; set; }
 

@@ -23,6 +23,10 @@ namespace MYTICKET.WEB.SERVICE.VenueModule.Implements
         public VenueDto Create(CreateVenueDto input)
         {
             _logger.LogInformation($"{nameof(Create)}: input = {JsonSerializer.Serialize(input)}");
+            if(input.Image == null)
+            {
+                input.Image = "api/file/get?folder=Asset&file=logo-pink-textcolor.webp";
+            }
             var result = _dbContext.Add(_mapper.Map<Venue>(input)).Entity;
             _dbContext.SaveChanges();
             return _mapper.Map<VenueDto>(result);
@@ -102,6 +106,10 @@ namespace MYTICKET.WEB.SERVICE.VenueModule.Implements
             _logger.LogInformation($"{nameof(Update)}: input = {JsonSerializer.Serialize(input)}");
             var venue = _dbContext.Venues.FirstOrDefault(p => p.Id == input.Id && !p.Deleted)
                           ?? throw new UserFriendlyException(ErrorCode.VenueNotFound);
+            if (input.Image == null)
+            {
+                input.Image = "api/file/get?folder=Asset&file=logo-pink-textcolor.webp";
+            }
             _mapper.Map(input, venue);
             _dbContext.SaveChanges();
             return _mapper.Map<VenueDto>(venue);

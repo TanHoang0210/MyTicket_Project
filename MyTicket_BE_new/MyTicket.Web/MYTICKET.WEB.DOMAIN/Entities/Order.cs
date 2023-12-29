@@ -42,6 +42,10 @@ namespace MYTICKET.WEB.DOMAIN.Entities
 
         public decimal Total { get; set; }
 
+        public string? TransactionNo { get; set; }
+
+        public string? BackgroundJobId { get; set; }
+
         public List<OrderDetail> OrderDetails { get; } = new();
         #region fullaudit
         public DateTime? CreatedDate { get ; set ; }
