@@ -39,5 +39,13 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Abstracts
         /// <returns></returns>
         CurrentCustomerDto GetById(int id);
 
+        /// <summary>
+        /// Cấp mật khẩu khách hàng
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task SetCustomerPassword(SetPasswordCustomerDto input);
+
+
     }
 }

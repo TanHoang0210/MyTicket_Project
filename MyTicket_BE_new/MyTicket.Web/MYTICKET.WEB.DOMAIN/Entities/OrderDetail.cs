@@ -53,6 +53,7 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public DateTime? TransferCancelDate { get; set; }
 
         public string? TransferTransactionNo { get; set; }
+        public string? TransferTransDate { get; set; }
 
         public bool TransferRefundRequest { get; set; }
 

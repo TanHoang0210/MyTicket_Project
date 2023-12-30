@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS.ConstantVariables.Shared;
@@ -9,20 +10,28 @@ using MYTICKET.UTILS.Security;
 using MYTICKET.WEB.DOMAIN.Entities;
 using MYTICKET.WEB.SERVICE.AuthModule.Abstracts;
 using MYTICKET.WEB.SERVICE.AuthModule.Dtos.UserDto;
+using MYTICKET.WEB.SERVICE.MailService.Abstracts;
+using MYTICKET.WEB.SERVICE.MailService.Dtos;
 using System.Text.Json;
 
 namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
 {
     public class CustomerService : UserService, ICustomerService
     {
-        public CustomerService(ILogger<UserService> logger, IHttpContextAccessor httpContext) : base(logger, httpContext)
+        private readonly IEmailSenderService _mail;
+        public CustomerService(ILogger<UserService> logger, IEmailSenderService mail, IHttpContextAccessor httpContext) : base(logger, httpContext)
         {
+            _mail = mail;
         }
         public void CreateCustomerUser(CreateCustomerUserDto input)
         {
             _logger.LogInformation($"{nameof(CreateCustomerUser)}: input = {JsonSerializer.Serialize(input)}");
             input.Password = CryptographyUtils.CreateMD5(input.Password);
             var transaction = _dbContext.Database.BeginTransaction();
+            if (_dbContext.Users.Any(s => s.Email == input.Email && s.UserType == UserTypes.CUSTOMER && !s.Deleted))
+            {
+                throw new UserFriendlyException(ErrorCode.EmailUsed);
+            }
             var addCustomer = _dbContext.Customers.Add(new Customer
             {
                 FirstName = input.FirstName,
@@ -37,7 +46,7 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
                 Status = UserStatus.ACTIVE,
                 UserType = UserTypes.CUSTOMER,
                 Password = input.Password,
-                Username = input.Username,     
+                Username = input.Username,
             });
             _dbContext.SaveChanges();
 
@@ -50,7 +59,7 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
             var query = (from user in _dbContext.Users
                          join customer in _dbContext.Customers on user.CustomerId equals customer.Id
                          where !user.Deleted && !customer.Deleted
-                         && (input.Keyword == null || (customer.FirstName.Contains(input.Keyword)|| customer.LastName.Contains(input.Keyword)))
+                         && (input.Keyword == null || (customer.FirstName.Contains(input.Keyword) || customer.LastName.Contains(input.Keyword)))
                          select new CurrentCustomerDto
                          {
                              Id = customer.Id,
@@ -101,15 +110,61 @@ namespace MYTICKET.WEB.SERVICE.AuthModule.Implements
             return query;
         }
 
+        public async Task SetCustomerPassword(SetPasswordCustomerDto input)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(e => e.Email == input.Email && !e.Deleted)
+    ?? throw new UserFriendlyException(ErrorCode.UserNotFound);
+            var password = CommonUtils.GenerateCode(8);
+            user.Password = CryptographyUtils.CreateMD5(password);
+            await _dbContext.SaveChangesAsync();
+            // Lấy dịch vụ sendmailservice
+            try
+            {
+                // Lấy dịch vụ sendmailservice
+                MailContent content = new MailContent
+                {
+                    To = user.Email,
+                    Subject = $"[Yêu cầu đổi mật khẩu thành công!]",
+                    Body = $@"
+                                <div  style=""background-color: rgb(226, 168, 140);
+                                 width: 50%;flex-direction: column; margin: auto;
+                                 "">
+                                    <h1 style=""font-weight: bold; width: 100%;
+                                    text-align: center;
+                                    background-color:rgb(188, 101, 60) ; 
+                                    color: white;
+                                    padding: 10px 0;
+                                    "">
+                                    MyTicket - Ứng dụng đặt vé số 1 Việt Nam
+                                    </h1>
+                                 <div style="" display: flex; padding: 20px 0;"">
+                                     <div>
+                                         <img style=""width: 200px; height: 200px;"" src=""https://i.postimg.cc/jdzQ25TR/logo-pink-textcolor.png"" alt="""">
+                                     </div>
+                                     <div style=""margin: auto; flex-direction: column; text-align: center; color: #555; font-size:1.3rem;"">
+                                          Mật khẩu mới của bạn là: <strong>{password}</strong>
+                                     </div>
+                                 </div>
+                                </div>
+                                "
+                };
+                await _mail.SendMail(content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to send email: " + ex.Message);
+            }
+        }
+
         public void UpdateCustomerUser(UpdateCustomerUserDto input)
         {
             var currentUserId = CommonUtils.GetCurrentUserId(_httpContext);
             _logger.LogInformation($"{nameof(UpdateCustomerUser)}: input = {JsonSerializer.Serialize(input)}, currentUserId = {currentUserId}");
             var currentUser = _dbContext.Users.FirstOrDefault(s => s.Id == currentUserId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.UserNotFound);
             var currentCustomer = _dbContext.Customers.FirstOrDefault(s => s.Id == currentUser.CustomerId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.CustomerNotFound);
-            if(input.FirstName != null)
+            if (input.FirstName != null)
             {
-            currentCustomer.FirstName = input.FirstName;
+                currentCustomer.FirstName = input.FirstName;
             }
             if (input.LastName != null)
             {

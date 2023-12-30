@@ -141,7 +141,6 @@ export default {
       }
     },
     async register() {
-      try {
         // Gọi API đăng ký với Axios
         const response = await axios.post('myticket/api/user/add-by-customer',
           {
@@ -158,18 +157,18 @@ export default {
         });
 
         // Xử lý kết quả từ API
-        console.log('Đăng ký thành công:', response.data);
-        this.$router.push('/login');
-        this.$toasted.success('Đăng ký thành công', {
+        if(response.data.code === 200){
+          this.$router.push('/login');
+          this.$toasted.success('Đăng ký thành công', {
+            position: 'top-right',
+            duration: 3000, // Thời gian hiển thị toast (ms)
+          });
+        }else{
+          this.$toasted.error(response.data.message, {
           position: 'top-right',
           duration: 3000, // Thời gian hiển thị toast (ms)
         });
-      } catch (error) {
-        this.$toasted.error('Đăng ký thất bại', {
-          position: 'top-right',
-          duration: 3000, // Thời gian hiển thị toast (ms)
-        });
-      }
+        }
     },
   }
 }

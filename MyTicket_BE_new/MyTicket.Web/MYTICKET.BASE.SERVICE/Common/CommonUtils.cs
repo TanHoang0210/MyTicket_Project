@@ -37,7 +37,17 @@ namespace MYTICKET.BASE.SERVICE.Common
             int userId = int.Parse(claim.Value);
             return userId;
         }
+        public static string GenerateCode(int length)
+        {
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@!$";
 
+            // Tạo một chuỗi với ký tự ngẫu nhiên từ tập hợp chars
+            string randomString = new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return randomString;
+        }
         public static string RandomNumber(int length = 6)
         {
             Random random = new();

@@ -15,5 +15,6 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
         public int CustomerTransferOwnerId { get; set; }
 
         public string? TransferTransactionNo { get; set; }
+        public string? TransferTransdate { get; set; }
     }
 }

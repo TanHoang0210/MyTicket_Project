@@ -33,7 +33,7 @@
                 icon="eye"></b-icon>
               <b-icon v-else class="show-password-btn" @click="showPassword = !showPassword" icon="eye-slash"></b-icon>
             </div>
-            <router-link class="forgot-password" to="/">Quên mật khẩu</router-link>
+            <span class="forgot-password" @click="showModelSetPass()">Quên mật khẩu</span>
           </b-form-group>
 
           <b-button class="login-btn" type="submit">Đăng Nhập</b-button>
@@ -44,6 +44,19 @@
       </div>
       <span class="right-context-label">Bản quyền thuộc MyTicket @2022</span>
     </div>
+    <b-modal ref="modal-set-pass" centered title="Quên mật khẩu">
+              <b-form-input class="set-password" :type="'email'" id="email"
+                v-model="setPassword.email" placeholder="Nhập email cấp mật khẩu" required>
+              </b-form-input>
+                <template #modal-footer="{ ok, cancel }">
+                    <b-button size="lg" variant="success" @click="confirmSetPass()">
+                        OK
+                    </b-button>
+                    <b-button size="lg" variant="secondary" @click="cancel()">
+                        Cancel
+                    </b-button>
+                </template>
+            </b-modal>
   </div>
 </template>
 <script>
@@ -52,7 +65,7 @@ import gsap from 'gsap'
 import { useRouter } from "vue-router"
 import { getCurrentUser, Login, refreshAccessToken } from '@/service/auth/authService'
 import store from '@/store'
-import { join } from 'vue-carousel-3d'
+import axios from 'axios'
 export default {
   setup() {
     const beforeEnter = (el) => {
@@ -71,6 +84,9 @@ export default {
   },
   data() {
     return {
+      setPassword:{
+        email:null,
+      },
       loginForm: {
         username: '',
         password: '',
@@ -109,6 +125,9 @@ export default {
         clearInterval(this.refreshIntervalId);
       }
     },
+    async showModelSetPass() {
+                    this.$refs['modal-set-pass'].show();
+        },
     async onSubmit(event) {
       event.preventDefault()
       await this.onLogin();
@@ -117,6 +136,30 @@ export default {
       sessionStorage.setItem("tokenExpiration", store.getters.tokenExpiration)
       sessionStorage.setItem("currentUser", JSON.stringify(store.getters.currentUser))
       console.log(store.getters.currentUser)
+    },
+    async confirmSetPass(){
+      const response = await axios.put('myticket/api/user/forgot-password',
+          {
+            email: this.setPassword.email,
+          }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        // Xử lý kết quả từ API
+        if(response.data.code === 200){
+          this.$refs['modal-set-pass'].show();
+          this.$toasted.success('Đổi mật khẩu thành công', {
+            position: 'top-right',
+            duration: 3000, // Thời gian hiển thị toast (ms)
+          });
+        }else{
+          this.$toasted.error(response.data.message, {
+          position: 'top-right',
+          duration: 3000, // Thời gian hiển thị toast (ms)
+        });
+        }
     },
     onReset(event) {
       event.preventDefault()
@@ -184,6 +227,7 @@ export default {
 }
 .forgot-password:hover{
   color: var(--primary-color-hover-bold);
+  cursor: pointer;
 }
 .login-content-right {
   width: 50%;

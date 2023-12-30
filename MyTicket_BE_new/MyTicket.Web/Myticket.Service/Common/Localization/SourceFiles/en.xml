@@ -28,6 +28,9 @@
 		<text name="error_OrderCannotOnDayOff">Can't order on day off</text>
 		<text name="error_OrderCannotDelete">Only newly created or canceled orders can be deleted</text>
 		<text name="error_OrderDateCannotNull">Please select an order date</text>
+		<text name="error_EmailUsed">Email is used</text>
+		<text name="error_UsernameOrPasswordIncorrect">UsernameOrPasswordIncorrect</text>
+
 
 		<!--Lỗi tài liệu-->
 		<text name="error_DocumentNotFound">Document not found</text>

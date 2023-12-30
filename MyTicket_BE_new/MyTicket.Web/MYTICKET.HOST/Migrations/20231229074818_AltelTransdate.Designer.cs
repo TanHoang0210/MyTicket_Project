@@ -4,6 +4,7 @@ using MYTICKET.WEB.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MYTICKET.Hostconsle.Migrations
 {
     [DbContext(typeof(MyTicketDbContext))]
-    partial class MyTicketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231229074818_AltelTransdate")]
+    partial class AltelTransdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -379,8 +382,8 @@ namespace MYTICKET.Hostconsle.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("TransDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("TransDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TransactionNo")
                         .HasColumnType("nvarchar(max)");
@@ -488,9 +491,6 @@ namespace MYTICKET.Hostconsle.Migrations
 
                     b.Property<int?>("TransferStatus")
                         .HasColumnType("int");
-
-                    b.Property<string>("TransferTransDate")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TransferTransactionNo")
                         .HasColumnType("nvarchar(max)");

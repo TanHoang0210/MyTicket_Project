@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MYTICKET.BASE.API.Controller;
+using MYTICKET.BASE.API.Filters;
 using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS;
 using MYTICKET.WEB.DOMAIN.Entities;
@@ -174,6 +175,12 @@ namespace MYTICKET.WEB.API.Controllers
             return new();
         }
 
+        [HttpPut("forgot-password")]
+        public async Task<APIResponse> ForgotPassword(SetPasswordCustomerDto input)
+        {
+                await _customerService.SetCustomerPassword(input);
+                return new(); 
+        }
         [Authorize]
         [HttpGet("current-user")]
         public APIResponse GetMe()

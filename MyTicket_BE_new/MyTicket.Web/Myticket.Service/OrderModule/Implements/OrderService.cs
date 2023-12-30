@@ -451,15 +451,13 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                     .Include(s => s.EventDetail)
                                                     .Include(s => s.Ticket)
                                                     .Include(s => s.Order)
-                                                    .Where(s => s.Id == id && !s.Deleted
-                                                    && (s.IsTransfer == null || (s.IsTransfer != null && s.TransferStatus == TransferStatuses.CANCEL))
-                                                    && (s.IsExchange == null || (s.IsExchange != null && s.ExchangeStatus == ExchangeStatuses.CANCEL)))
+                                                    .Where(s => s.Id == id && !s.Deleted)
                                                     .Select(s => new OrderDetailDto
                                                     {
                                                         Id = s.Id,
                                                         OrderId = s.OrderId,
-                                                        OrderCode = s.Order.OrderCode,
-                                                        OrderDate = s.Order.OrderDate,
+                                                        OrderCode = s.Order.OrderCode, 
+                                                        OrderDate = s.CustomerTransfer == null ? s.Order.OrderDate : s.TransferDoneDate,
                                                         EventDetailId = s.EventDetailId,
                                                         EventName = _dbContext.Events.Where(x => x.Id == s.EventDetail.EventId).Select(x => x.EventName).FirstOrDefault(),
                                                         OrganizationDay = s.EventDetail.OrganizationDay,
@@ -593,6 +591,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                 order.BackgroundJobId = null;
                 order.Status = input.Status;
                 order.TransactionNo = input.TransactionNo;
+                order.TransDate = input.TransDate;
                 var orderDetails = await _dbContext.OrderDetails.Include(s => s.Ticket).ThenInclude(s => s.TicketEvent).Where(s => s.OrderId == input.Id && !s.Deleted).ToListAsync();
                 foreach (var item in orderDetails)
                 {
@@ -1098,6 +1097,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                 orderDetail.CustomerTransfer = currentCustomer.Id;
                 orderDetail.TransferRefundRequest = true;
                 orderDetail.TransferTransactionNo = input.TransferTransactionNo;
+                orderDetail.TransferTransDate = input.TransferTransdate;
                 orderDetail.TransferDoneDate = DateTime.Now;
                 orderDetail.QrCode = await CreateQr(new QRCodeDto
                 {

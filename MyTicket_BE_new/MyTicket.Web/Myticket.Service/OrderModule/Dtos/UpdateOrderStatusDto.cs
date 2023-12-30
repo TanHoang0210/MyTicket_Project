@@ -13,5 +13,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
         public int Status {  get; set; }
 
         public string? TransactionNo { get; set; }
+
+        public string? TransDate { get; set;}
     }
 }

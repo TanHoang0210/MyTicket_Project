@@ -4,6 +4,7 @@ using MYTICKET.WEB.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MYTICKET.Hostconsle.Migrations
 {
     [DbContext(typeof(MyTicketDbContext))]
-    partial class MyTicketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231229075211_AltelTransdateString")]
+    partial class AltelTransdateString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

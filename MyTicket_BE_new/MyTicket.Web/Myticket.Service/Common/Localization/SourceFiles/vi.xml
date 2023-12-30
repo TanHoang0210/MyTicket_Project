@@ -29,6 +29,9 @@
 		<text name="error_OrderCannotOnDayOff">Không thể đặt hàng vào ngày nghỉ</text>
 		<text name="error_OrderCannotDelete">Chỉ có thể xóa các đơn hàng mới được tạo hoặc bị hủy</text>
 		<text name="error_OrderDateCannotNull">Vui lòng chọn ngày đặt hàng</text>
+		<text name="error_EmailUsed">Email đã được sử dụng</text>
+		<text name="error_UsernameOrPasswordIncorrect">Tên tài khoản hoặc mật khẩu không đúng</text>
+
 
 		<!--Tài liệu lỗi-->
 		<text name="error_DocumentNotFound">Không tìm thấy tài liệu</text>

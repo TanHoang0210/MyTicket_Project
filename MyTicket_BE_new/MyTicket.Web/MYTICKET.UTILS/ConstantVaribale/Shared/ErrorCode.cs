@@ -62,5 +62,8 @@
 
         CannotUpdateStatusEvent = 9005,
 
+        EmailUsed = 9006,
+
+
     }
 }

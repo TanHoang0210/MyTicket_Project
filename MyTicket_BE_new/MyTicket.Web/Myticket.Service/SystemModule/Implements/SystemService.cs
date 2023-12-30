@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MYTICKET.BASE.Infrastructure.Hangfire.Attributes;
 using MYTICKET.UTILS.ConstantVariables.Shared;
@@ -119,10 +120,11 @@ namespace MYTICKET.WEB.SERVICE.SystemModule.Implements
                 }
             }
         }
+        [AutomaticRetry(Attempts = 6, DelaysInSeconds = new int[] { 10, 20, 20, 60, 120, 60 })]
         [HangfireLogEverything]
         public async Task CancelOrderExpired(int orderId)
         {
-            var order = _dbContext.Orders.FirstOrDefault(s => s.Id == orderId) ?? throw new UserFriendlyException(ErrorCode.OrderNotFound);
+            var order = await _dbContext.Orders.FirstOrDefaultAsync(s => s.Id == orderId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.OrderNotFound);
             if(!new int[] {OrderStatuses.PAYING, OrderStatuses.SUCCESS}.Contains(order.Status))
             {
                 order.Status = OrderStatuses.CANCEL;

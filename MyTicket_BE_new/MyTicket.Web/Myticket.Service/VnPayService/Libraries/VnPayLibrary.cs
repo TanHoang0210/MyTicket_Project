@@ -75,6 +75,29 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Libraries
             return baseUrl;
         }
 
+        public string CreateRefundUrl(string baseUrl, string vnp_HashSecret)
+        {
+            StringBuilder data = new StringBuilder();
+            foreach (KeyValuePair<string, string> kv in _requestData)
+            {
+                if (!String.IsNullOrEmpty(kv.Value))
+                {
+                    data.Append(WebUtility.UrlEncode(kv.Key) + "=" + WebUtility.UrlEncode(kv.Value) + "&");
+                }
+            }
+            string queryString = data.ToString();
+
+            baseUrl += "?" + queryString;
+            String signData = queryString;
+            if (signData.Length > 0)
+            {
+
+                signData = signData.Remove(data.Length - 1, 1);
+            }
+            baseUrl += "vnp_SecureHash=" + vnp_HashSecret;
+            return baseUrl;
+        }
+
 
 
         #endregion
@@ -127,6 +150,23 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Libraries
             byte[] keyBytes = Encoding.UTF8.GetBytes(key);
             byte[] inputBytes = Encoding.UTF8.GetBytes(inputData);
             using (var hmac = new HMACSHA512(keyBytes))
+            {
+                byte[] hashValue = hmac.ComputeHash(inputBytes);
+                foreach (var theByte in hashValue)
+                {
+                    hash.Append(theByte.ToString("x2"));
+                }
+            }
+
+            return hash.ToString();
+        }
+
+        public static String HmacSHA256(string key, String inputData)
+        {
+            var hash = new StringBuilder();
+            byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+            byte[] inputBytes = Encoding.UTF8.GetBytes(inputData);
+            using (var hmac = new HMACSHA256(keyBytes))
             {
                 byte[] hashValue = hmac.ComputeHash(inputBytes);
                 foreach (var theByte in hashValue)

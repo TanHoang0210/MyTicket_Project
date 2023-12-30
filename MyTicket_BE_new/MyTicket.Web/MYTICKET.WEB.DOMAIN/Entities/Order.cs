@@ -43,6 +43,7 @@ namespace MYTICKET.WEB.DOMAIN.Entities
         public decimal Total { get; set; }
 
         public string? TransactionNo { get; set; }
+        public string? TransDate { get; set; }
 
         public string? BackgroundJobId { get; set; }
 
