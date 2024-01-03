@@ -55,42 +55,5 @@
 		<!--SystemModule-->
 		<text name="permission_SystemModule">Trình quản lý hệ thống</text>
 
-		<!--vai trò-->
-		<text name="permission_RoleMenu">Menu vai trò</text>
-		<text name="permission_RoleTable">Bảng vai trò</text>
-		<text name="permission_RoleCreate">Tạo vai trò</text>
-		<text name="permission_RoleUpdate">Cập nhật vai trò</text>
-		<text name="permission_RoleDelete">Xóa vai trò</text>
-
-		<!--tài khoản-->
-		<text name="permission_UserMenu">Menu người dùng</text>
-		<text name="permission_UserTable">Bảng người dùng</text>
-		<text name="permission_UserCreate">Tạo người dùng</text>
-		<text name="permission_UserUpdate">Cập nhật người dùng</text>
-		<text name="permission_UserDelete">Xóa người dùng</text>
-		<text name="permission_UserChangeStatus">Thay đổi trạng thái người dùng</text>
-
-		<!--lịch-->
-		<text name="permission_CalendarMenu">Menu Lịch</text>
-		<text name="permission_CalendarTable">Bảng lịch</text>
-		<text name="permission_CalendarUpdate">Cập nhật lịch</text>
-
-		<!--BusinessCustomerModule-->
-		<text name="permission_BusinessCustomerModule">Trình quản lý khách hàng doanh nghiệp</text>
-
-		<text name="permission_BusinessCustomerMenu">Menu khách hàng doanh nghiệp</text>
-		<text name="permission_BusinessCustomerTable">Bảng khách hàng doanh nghiệp</text>
-		<text name="permission_BusinessCustomerCreate">Tạo khách hàng doanh nghiệp</text>
-		<text name="permission_BusinessCustomerUpdate">Cập nhật khách hàng doanh nghiệp</text>
-		<text name="permission_BusinessCustomerDelete">Xóa khách hàng doanh nghiệp</text>
-		<text name="permission_BusinessCustomerIsBeingUsed">Khách hàng doanh nghiệp đang được sử dụng ở đâu đó</text>
-
-		<text name="permission_ProductpriceMenu">Menu giá sản phẩm</text>
-		<text name="permission_ProductPriceTable">Bảng giá sản phẩm</text>
-		<text name="permission_ProductPriceCreate">Tạo giá sản phẩm</text>
-		<text name="permission_ProductpriceUpdate">Cập nhật giá sản phẩm</text>
-		<text name="permission_ProductPriceDelete">Xóa người định giá sản phẩm</text>
-
-		<text name="permission_BusinessCustomerAccountMenu">Menu tài khoản khách hàng doanh nghiệp</text>
 	</texts>
 </localizationDictionary>
