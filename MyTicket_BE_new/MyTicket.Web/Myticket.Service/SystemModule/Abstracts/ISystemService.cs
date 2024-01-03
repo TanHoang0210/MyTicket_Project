@@ -33,5 +33,7 @@
         Task NotRefundExchangeNotificationForAdmin();
 
         Task CancelOrderExpired(int orderId);
+
+        Task NotiSuccessTransfer(string buyTicketUserEmail, int ownerUserId);
     }
 }

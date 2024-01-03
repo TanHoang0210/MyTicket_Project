@@ -81,7 +81,7 @@ export default {
             const dataRes = params.vnp_OrderInfo.split('_')
             if (params.vnp_ResponseCode === '00' && params.vnp_TransactionStatus === '00') {
                 // Giao dịch thành công, bạn có thể xử lý dữ liệu khác từ params nếu cần thiết
-                await this.completedTransfer(dataRes[0], dataRes[1])
+                await this.completedTransfer(dataRes[0], dataRes[1],params.vnp_TxnRef,params.vnp_PayDate)
                 this.isComplete = true;
                 this.expression = 'Đơn hàng của bạn đã hoàn thành!<br>Vào mục vé của bạn để xem thông tin vé đã đặt nhé!'
             } else {
@@ -101,13 +101,15 @@ export default {
             }
 
         },
-        async completedTransfer(id, customerId) {
+        async completedTransfer(id, customerId,vnp_TxnRef,vnp_PayDate) {
             try {
                 await axios.put('myticket/api/order/transfer/update-status',
                     {
                         ticketId: id,
                         transferStatus: 5,
-                        customerTransferOwnerId: customerId
+                        customerTransferOwnerId: customerId,
+                        transferTransactionNo: vnp_TxnRef,
+                        transferTransdate: vnp_PayDate
                     })
             } catch (error) {
                 this.$toasted.error('Oops! Đã xảy ra lỗi! Vui lòng thử lại', {

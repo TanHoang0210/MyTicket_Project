@@ -7,75 +7,59 @@
                 <br>
                 Bạn có quyền chuyển nhượng vé cho người khách hoặc hoàn trả vé (với sự đồng ý từ bên thứ 3).
             </div>
-            <table class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-                <thead class="tb_head">
-                    <tr>
-                        <th class="text-center firstCol">#ID</th>
-                        <th>Tên Sự Kiện</th>
-                        <th>Thời Gian</th>
-                        <th>Hạng Vé</th>
-                        <th>Trạng Thái</th>
-                        <th class="lastCol">Thao Tác</th>
-                    </tr>
-                </thead>
-                <tbody v-if="noData">
-                    <tr>
-                        <td colspan="4" class="text-center">Giỏ vé của bạn hiện đang trống</td>
-                    </tr>
-                </tbody>
-                <tbody v-else>
-                    <tr v-for="(item, index) in tickets">
-                        <td class="firstCol text-center ticket-infomation">{{ index + 1 }}</td>
-                        <td class="ticket-infomation">
-                            {{ item.eventName }}
-                        </td>
-                        <td class="ticket-infomation">
-                            {{ formatDate(item.organizationDay) }}
-                        </td>
-                        <!-- <td class="ticket-infomation">
-                            {{ item.venueName }} - {{ item.venueAddress }}
-                        </td> -->
-                        <td class="ticket-infomation">
-                            {{ item.ticketEventName }}
-                        </td>
-                        <td class="ticket-infomation">
-                            <div v-if="item.eventStatus !== 5">
-                                <span style="color: blue;font-weight: 600;" v-if="item.status === 1">Khởi tạo</span>
-                                <span style="color: greenyellow;font-weight: 600;" v-if="item.status === 2">Chưa thanh
-                                    toán</span>
-                                <span style="color: yellow;font-weight: 600;" v-if="item.status === 3">Đang thanh toán
-                                </span>
-                                <span style="color: #888;font-weight: 600;" v-if="item.status === 4">Đã hủy</span>
-                                <span style="color: orange;font-weight: 600;" v-if="item.status === 5">Đã thanh toán</span>
-                                <span style="color: green;font-weight: 600;" v-if="item.status === 6">Đã thanh toán</span>
-                                <span style="color: chocolate;font-weight: 600;" v-if="item.status === 10">Mua Lại</span>
-                            </div>
-                            <span v-else style="color: red;font-weight: 600;">Hủy Sự Kiện</span>
+            <div class="row">
+                <div class="col-md-10">
 
-                        </td>
-                        
-                        <td class="lastCol ticket-infomation">
-                            <div class="ticket-action ">
-                                <div v-if="item.eventStatus !== 5">
-                                    <div v-if="item.status !== 10">
-                                        <b-button id="showTransfer" title="Chuyển nhượng vé" @click="showTranferModal(item.id)"
-                                            class="btn-myticket" variant="info"> <b-icon icon="people">
-                                            </b-icon></b-button>
-                                        <b-button v-if="item.isExchange == true" title="Trả vé" id="showTransfer"
-                                            @click="showExchangeModal(item.id)" class="btn-myticket" variant="warning"> <b-icon
-                                                icon="currency-exchange">
-                                            </b-icon></b-button>
-                                    </div>
-                                </div>
-                                <b-button id="showDetail" title="Xem chi tiết" @click="showTicketDetail(item.id)"
-                                    class="btn-myticket" variant="">
-                                    <b-icon icon="pencil-square">
-                                    </b-icon></b-button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                </div>
+                <div class="col-md-2">
+                    <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize" @change="fetchData()"
+                        :options="pageSizeOption" size="sm"></b-form-select>
+                </div>
+            </div>
+            <b-table :current-page="pageNumber" id="table-ticket" class="custom-table" striped hover :fields="orderFields"
+                :items="tickets">
+                <template #cell(id)="data">
+                    {{ data.index + 1 }}
+                </template>
+                <template #cell(organizationDay)="data">
+                    {{ formatDate(data.item.organizationDay) }}
+                </template>
+                <template #cell(status)="data">
+                    <div v-if="data.item.eventStatus !== 5">
+                        <span style="color: blue;font-weight: 600;" v-if="data.item.status === 1">Khởi tạo</span>
+                        <span style="color: greenyellow;font-weight: 600;" v-if="data.item.status === 2">Chưa thanh
+                            toán</span>
+                        <span style="color: yellow;font-weight: 600;" v-if="data.item.status === 3">Đang thanh toán
+                        </span>
+                        <span style="color: #888;font-weight: 600;" v-if="data.item.status === 4">Đã hủy</span>
+                        <span style="color: orange;font-weight: 600;" v-if="data.item.status === 5">Đã thanh toán</span>
+                        <span style="color: green;font-weight: 600;" v-if="data.item.status === 6">Đã thanh toán</span>
+                        <span style="color: chocolate;font-weight: 600;" v-if="data.item.status === 10">Mua Lại</span>
+                    </div>
+                    <span v-else style="color: red;font-weight: 600;">Hủy Sự Kiện</span>
+                </template>
+                <template v-slot:cell(action)="data">
+                    <b-dropdown variant="none" no-caret>
+                        <template #button-content>
+                            <b-icon icon="three-dots"></b-icon>
+                        </template>
+                        <b-dropdown-item v-if="data.item.eventStatus !== 5 && data.item.status !== 10"
+                            @click="showTranferModal(data.item.id)">
+                            Chuyển nhượng vé
+                        </b-dropdown-item>
+                        <b-dropdown-item
+                            v-if="data.item.eventStatus !== 5 && data.item.status !== 10 && data.item.isExchange == true"
+                            @click="showExchangeModal(data.item.id)">
+                            Trả vé
+                        </b-dropdown-item>
+                        <b-dropdown-item @click="showTicketDetail(data.item.id)">
+                            Xem chi tiết
+                        </b-dropdown-item>
+                    </b-dropdown>
+                </template>
+            </b-table>
+            <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize"
+                aria-controls="table-ticket"></b-pagination>
         </div>
         <div>
             <b-modal v-if="currentTicket !== null" ref="modal-transfer" centered title="Xác nhận chuyển nhượng vé">
@@ -255,7 +239,17 @@ export default {
             pageNumber: 1,
             total: 0,
             tickets: null,
-            currentTicket: null
+            currentTicket: null,
+            pageSizeOption: [5, 10, 25, 50],
+            totals: 0,
+            orderFields: [
+                { key: 'id', label: 'ID' },
+                { key: 'eventName', label: 'Tên sự kiện' },
+                { key: 'organizationDay', label: 'Ngày diễn ra' },
+                { key: 'ticketEventName', label: 'Hạng vé' },
+                { key: 'status', label: 'Trạng thái' },
+                { key: 'action', label: 'Thao tác' },
+            ]
         }
     },
     methods: {
@@ -315,7 +309,6 @@ export default {
                         iconColor: 'white', // Màu của icon
                         containerClass: 'custom-toast-container-class', // Thêm class cho container
                         singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
-
                     })
                 ).catch(err =>
                     this.$toasted.error(err.response.data.error_description, {
@@ -345,16 +338,16 @@ export default {
             }
         },
         async confirmExchange(id) {
-            try {
-                await axios.put('myticket/api/order/exchange-ticker',
-                    {
-                        orderDetailId: id
-                    },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    })
+            const res = await axios.put('myticket/api/order/exchange-ticker',
+                {
+                    orderDetailId: id
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+            if (res.data.code === 200) {
                 this.$refs['modal-exchange'].hide(),
                     this.$router.push('/refund'),
                     this.$toasted.success("Yêu cầu trả vé thành công", {
@@ -367,7 +360,9 @@ export default {
                         containerClass: 'custom-toast-container-class', // Thêm class cho container
                         singleton: true // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
                     })
-            } catch (error) {
+                this.fetchData()
+
+            } else {
                 this.$toasted.error(err.response.data.error_description, {
                     position: 'top-center',
                     duration: 3000, // Thời gian hiển thị toast (ms)
@@ -379,11 +374,6 @@ export default {
                     singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
                 })
             }
-
-
-
-
-            this.fetchData()
         },
         async showTranferModal(id) {
             try {
@@ -406,7 +396,20 @@ export default {
                         }
                     }
                 )
-                return res.data.data;
+                if (res.data.code === 200) {
+                    return res.data.data;
+                } else {
+                    this.$toasted.error(res.data.message, {
+                        position: 'top-center',
+                        duration: 3000, // Thời gian hiển thị toast (ms)
+                        theme: 'outline', // Theme: 'outline', 'bubble'
+                        iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                        icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                        iconColor: 'white', // Màu của icon
+                        containerClass: 'custom-toast-container-class', // Thêm class cho container
+                        singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
+                    })
+                }
             } catch (error) {
                 console.error('API 1 Error:', error);
                 throw error;
@@ -424,26 +427,32 @@ export default {
                         },
                     }
                 )
-                this.total = res.data.data.totalItems
-                return res.data.data.items;
+                if (res.data.code === 200) {
+                    this.totals = res.data.data.totalItems
+                    return res.data.data.items;
+                } else {
+                    this.$toasted.error(res.data.message, {
+                        position: 'top-center',
+                        duration: 3000, // Thời gian hiển thị toast (ms)
+                        theme: 'outline', // Theme: 'outline', 'bubble'
+                        iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
+                        icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
+                        iconColor: 'white', // Màu của icon
+                        containerClass: 'custom-toast-container-class', // Thêm class cho container
+                        singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
+                    })
+                }
             } catch (error) {
                 console.error('API 1 Error:', error);
                 throw error;
             }
         },
         async fetchData() {
-            try {
-                this.tickets = await this.getMyOrderInfo();
-                if (this.tickets.length === 0) {
-                    this.noData = true
-                } else {
-                    this.noData = false
-                }
-            } catch (error) {
-                this.$toasted.error(error.message, {
-                    position: 'top-right',
-                    duration: 3000, // Thời gian hiển thị toast (ms)
-                });
+            this.tickets = await this.getMyOrderInfo();
+            if (this.tickets.length === 0) {
+                this.noData = true
+            } else {
+                this.noData = false
             }
         },
         formatDate(date) {
@@ -456,6 +465,14 @@ export default {
     },
     mounted() {
         this.fetchData()
+    },
+    watch: {
+        // Fetch data when the pageNumber changes
+        pageNumber(newPage, oldPage) {
+            if (newPage !== oldPage) {
+                this.fetchData();
+            }
+        },
     },
 }
 </script>
@@ -479,12 +496,6 @@ export default {
     flex-direction: column;
 }
 
-table {
-    text-align: center;
-    border-collapse: collapse;
-    width: 100%;
-    /* Màu và độ dày của border cho bảng */
-}
 
 .btn-primary {
     margin: 0 !important;
@@ -495,49 +506,23 @@ table {
     width: 250px;
 }
 
+.custom-table th {
+    background-color: var(--primary-color-bold);
+    /* Set your desired background color */
+    color: #ffffff;
+    /* Set your desired text color */
+    border-color: var(--primary-color-bold);
+    /* Set your desired border color */
+}
+
 .title-ticket {
     margin-left: 10px;
 }
 
-th,
-td {
-    border-top: none;
-}
-
-.firstCol {
-    border-right: 1px solid #ccc;
-}
-
-.lastCol {
-    border-left: 1px solid #ccc;
-}
-
-th {
-    font-size: 1.2rem;
-    padding: 5px 10px;
-}
-
-.tb_head {
-    background-color: #f2f2f2;
-    /* Màu nền cho phần head của bảng */
-}
-
-.tb_col {
-    font-weight: bold;
-    /* In đậm cho các ô header */
-}
 
 .btn-myticket {
     margin: auto;
     width: 90%;
     margin-bottom: 5px;
 }
-
-tr,
-td {
-    border: none;
-    border-bottom: 1px solid #ccc;
-}
-
-.ticket-infomation {}
 </style>

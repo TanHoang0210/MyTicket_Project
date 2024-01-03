@@ -7,63 +7,51 @@
                 <br>
                 Bạn có thể hủy yêu cầu trả vé nếu vé đang trong trạng thái xét duyệt nhé!
             </div>
-            <table class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-                <thead class="tb_head">
-                    <tr>
-                        <th class="text-center firstCol">#ID</th>
-                        <th>Tên Sự Kiện</th>
-                        <th>Hạng vé</th>
-                        <th>Ngày yêu cầu</th>
-                        <th>Ngày trả vé</th>
-                        <th>Trạng thái</th>
-                        <th class="lastCol">Thao Tác</th>
-                    </tr>
-                </thead>
-                <tbody v-if="noData">
-                    <tr>
-                        <td colspan="4" class="text-center">Giỏ vé của bạn hiện đang trống</td>
-                    </tr>
-                </tbody>
-                <tbody v-else>
-                    <tr v-for="(item, index) in tickets">
-                        <td class="firstCol text-center ticket-infomation">{{ index + 1 }}</td>
-                        <td class="ticket-infomation">
-                            {{ item.eventName }}
-                        </td>
-                        <td class="ticket-infomation">
-                            {{ item.ticketEventName }}
-                        </td>
-                        <td class="ticket-infomation">
-                            {{ formatDate(item.exchangeDate)}}
-                        </td>
-                        <td class="ticket-infomation">
-                            {{ formatDate(item.exchangeDate)}}
-                        </td>
-                        <td class="ticket-infomation">
-                            <span style="color: blue; font-weight: 600;" v-if="item.exchangeStatus === 1">
-                                Khởi tạo
-                            </span>
-                            <span style="color: orange; font-weight: 600;" v-if="item.exchangeStatus === 2">
-                                Đang xử lý
-                            </span>
-                            <span style="color: green; font-weight: 600;" v-if="item.exchangeStatus === 3">
-                                Đã chuyển nhượng
-                            </span>
-                        </td>
-                        <td class="lastCol ticket-infomation">
-                            <div class="ticket-action " v-if="item.exchangeStatus !== 3">
-                                <b-button v-if="item.exchangeStatus === 1" id="showTransfer" @click="showConfirmToExchangeModal(item.id)" class="btn-myticket"
-                                    variant="success">Xác nhận</b-button>
-                                <b-button id="showTransfer" @click="showExchangeModal(item.id)" class="btn-myticket"
-                                    variant="danger">Hủy Yêu cầu</b-button>
-                                <b-button id="showDetail" @click="showTicketDetail(item.id)" class="btn-myticket"
-                                    variant="secondary">Xem chi
-                                    tiết</b-button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="row">
+                <div class="col-md-10">
+
+                </div>
+                <div class="col-md-2">
+                    <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize" @change="fetchData()"
+                        :options="pageSizeOption" size="sm"></b-form-select>
+                </div>
+            </div>
+            <b-table :current-page="pageNumber" id="table-ticket" class="custom-table" striped hover :fields="orderFields"
+                :items="tickets">
+                <template #cell(id)="data">
+                    {{ data.index + 1 }}
+                </template>
+                <template #cell(exchangeDate)="data">
+                    {{ formatDate(data.item.exchangeDate) }}
+                </template>
+                <template #cell(exchangeStatus)="data">
+                    <div v-if="data.item.eventStatus !== 5">
+                        <span style="color: blue;font-weight: 600;" v-if="data.item.exchangeStatus === 1">Khởi tạo</span>
+                        <span style="color: orange;font-weight: 600;"
+                            v-if="data.item.exchangeStatus === 2">Đang Xử lý</span>
+                        <span style="color: greenyellow;font-weight: 600;" v-if="data.item.exchangeStatus === 3">Đã trả vé</span>
+                    </div>
+                    <span v-else style="color: red;font-weight: 600;">Hủy Sự Kiện</span>
+                </template>
+                <template v-slot:cell(action)="data">
+                    <b-dropdown variant="none" no-caret v-if="data.item.exchangeStatus !== 3">
+                        <template #button-content>
+                            <b-icon icon="three-dots"></b-icon>
+                        </template>
+                        <b-dropdown-item v-if="data.item.exchangeStatus === 1"
+                            @click="showConfirmToExchangeModal(data.item.id)">
+                            Xác nhận
+                        </b-dropdown-item>
+                        <b-dropdown-item v-if="data.item.exchangeStatus !== 5"
+                            @click="showExchangeModal(data.item.id)">
+                            Hủy Yêu cầu
+                        </b-dropdown-item>
+                        <b-dropdown-item @click="showTicketDetail(data.item.id)">Xem chi tiết</b-dropdown-item>
+                    </b-dropdown>
+                </template>
+            </b-table>
+            <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize"
+                aria-controls="table-ticket"></b-pagination>
         </div>
         <div>
             <b-modal v-if="currentTicket !== null" ref="modal-confirm" centered title="Nhập mã xác nhận trả vé">
@@ -79,7 +67,7 @@
                 </template>
             </b-modal>
             <b-modal v-if="currentTicket !== null" ref="modal-exchange" centered title="Xác nhận trả vé">
-                <h4 class="my-4">Bạn có chắc chắn muốn trả lại vé đi xem {{currentTicket.eventName}} không?</h4>
+                <h4 class="my-4">Bạn có chắc chắn muốn hủy việc trả lại vé đi xem {{ currentTicket.eventName }} không?</h4>
                 <template #modal-footer="{ ok, cancel }">
                     <b-button size="lg" variant="success" @click="confirmCancelExchange(currentTicket.id)">
                         OK
@@ -95,6 +83,15 @@
             <div class="d-block text-center">
                 <div style="display: flex;">
                     <div style="width: 100%">
+                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                            <h4>Ngày yêu cầu: {{ formatDate(currentTicket.exchangeDate) }}</h4>
+                            <h4 v-if="currentTicket.exchangeStatus === 1">Trạng thái trả vé: <span
+                                    style="color: blue;">Khởi tạo</span></h4>
+                            <h4 v-if="currentTicket.exchangeStatus === 2">Trạng thái trả vé: <span
+                                    style="color: orange;">Đang xử lý</span></h4>
+                            <h4 v-if="currentTicket.exchangeStatus === 5">Trạng thái trả vé: <span
+                                    style="color: green;">Đã trả vé</span></h4>
+                        </div>
                         <table style="border: none; text-align: left; font-size: 1.2rem;">
                             <tr style="border: none;">
                                 <td class="title-ticket">
@@ -231,10 +228,19 @@ export default {
             noData: false,
             pageSize: 5,
             pageNumber: 1,
-            total: 0,
-            confirmCode:"",
+            totals: 0,
+            pageSizeOption: [5,10,25,50],
+            confirmCode: "",
             tickets: null,
-            currentTicket: null
+            currentTicket: null,
+            orderFields: [
+                { key: 'id', label: 'ID' },
+                { key: 'eventName', label: 'Tên sự kiện' },
+                { key: 'exchangeDate', label: 'Ngày Yêu cầu' },
+                { key: 'ticketEventName', label: 'Hạng vé' },
+                { key: 'exchangeStatus', label: 'Trạng thái' },
+                { key: 'action', label: 'Thao tác' },
+            ]
         }
     },
     methods: {
@@ -300,7 +306,7 @@ export default {
                 throw error;
             }
         },
-        async showConfirmToExchangeModal(id){
+        async showConfirmToExchangeModal(id) {
             try {
                 this.currentTicket = await this.getOrderTicketDetail(id)
                 this.$nextTick(() => {
@@ -311,21 +317,21 @@ export default {
                 console.error("Error fetching ticket details:", error);
             }
         },
-        async confirmExchangeCode(id){
-            try {
-                await axios.put('myticket/api/order/confirm-exchange',
-                    {
-                        id: id,
-                        confirmCode: this.confirmCode
-                    },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    })
+        async confirmExchangeCode(id) {
+            const res = await axios.put('myticket/api/order/confirm-exchange',
+                {
+                    id: id,
+                    confirmCode: this.confirmCode
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+            if (res.data.code === 200) {
                 this.$refs['modal-confirm'].hide(),
-                this.$router.push('/order')
-                this.$toasted.success("Xác nhận yêu cầu trả vé thành công", {
+                    this.$router.push('/order')
+                this.$toasted.success("Xác nhận yêu cầu chuyển nhượng vé thành công", {
                     position: 'top-center',
                     duration: 3000, // Thời gian hiển thị toast (ms)
                     theme: 'outline', // Theme: 'outline', 'bubble'
@@ -335,8 +341,9 @@ export default {
                     containerClass: 'custom-toast-container-class', // Thêm class cho container
                     singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
                 })
-            } catch (error) {
-                this.$toasted.error(error.response.data.error_description, {
+                this.fetchData()
+            } else {
+                this.$toasted.error(res.data.message, {
                     position: 'top-center',
                     duration: 3000, // Thời gian hiển thị toast (ms)
                     theme: 'outline', // Theme: 'outline', 'bubble'
@@ -346,10 +353,8 @@ export default {
                     containerClass: 'custom-toast-container-class', // Thêm class cho container
                     singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
 
-                }),
-                    this.$refs['modal-confirm'].hide()
+                })
             }
-            this.fetchData()
         },
         async getMyOrderInfo() {
             console.log(store.state.accessToken)
@@ -363,7 +368,7 @@ export default {
                         },
                     }
                 )
-                this.total = res.data.data.totalItems
+                this.totals = res.data.data.totalItems
                 return res.data.data.items;
             } catch (error) {
                 console.error('API 1 Error:', error);
@@ -385,7 +390,7 @@ export default {
                 });
             }
         },
-        async confirmCancelExchange(id){
+        async confirmCancelExchange(id) {
             try {
                 await axios.put('myticket/api/order/cancel-exchange',
                     {
@@ -434,6 +439,14 @@ export default {
     },
     mounted() {
         this.fetchData()
+    },
+    watch: {
+        // Fetch data when the pageNumber changes
+        pageNumber(newPage, oldPage) {
+            if (newPage !== oldPage) {
+                this.fetchData();
+            }
+        },
     },
 }
 </script>

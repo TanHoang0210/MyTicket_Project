@@ -124,10 +124,11 @@ namespace MYTICKET.WEB.SERVICE.SystemModule.Implements
         [HangfireLogEverything]
         public async Task CancelOrderExpired(int orderId)
         {
-            var order = await _dbContext.Orders.FirstOrDefaultAsync(s => s.Id == orderId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.OrderNotFound);
+            var order = _dbContext.Orders.FirstOrDefault(s => s.Id == orderId && !s.Deleted) ?? throw new UserFriendlyException(ErrorCode.OrderNotFound);
             if(!new int[] {OrderStatuses.PAYING, OrderStatuses.SUCCESS}.Contains(order.Status))
             {
                 order.Status = OrderStatuses.CANCEL;
+                order.BackgroundJobId = null;
             }
             await _dbContext.SaveChangesAsync();
         }
@@ -196,6 +197,103 @@ namespace MYTICKET.WEB.SERVICE.SystemModule.Implements
                         Console.WriteLine("Failed to send email: " + ex.Message);
                     }
                 }
+            }
+        }
+        [AutomaticRetry(Attempts = 6, DelaysInSeconds = new int[] { 10, 20, 20, 60, 120, 60 })]
+        [HangfireLogEverything]
+        public async Task NotiSuccessTransfer(string buyTicketUserEmail, int ownerUserId)
+        {
+            try
+            {
+                // Lấy dịch vụ sendmailservice
+                MailContent content = new MailContent
+                {
+                    To = buyTicketUserEmail,
+                    Subject = $"[Chúc mừng bạn đã mua lại vé thành công!]",
+                    Body = $@"
+                                <div  style=""background-color: rgb(226, 168, 140);
+                                 width: 50%;flex-direction: column; margin: auto;
+                                 "">
+                                    <h1 style=""font-weight: bold; width: 100%;
+                                    text-align: center;
+                                    background-color:rgb(188, 101, 60) ; 
+                                    color: white;
+                                    padding: 10px 0;
+                                    "">
+                                    MyTicket - Ứng dụng đặt vé số 1 Việt Nam
+                                    </h1>
+                                 <div style="" display: flex; padding: 20px 0;"">
+                                     <div>
+                                         <img style=""width: 200px; height: 200px;"" src=""https://i.postimg.cc/jdzQ25TR/logo-pink-textcolor.png"" alt="""">
+                                     </div>
+                                     <div style=""margin: auto; flex-direction: column; text-align: center; color: #555; font-size:1.3rem;"">
+     
+ 
+                                          <h2>Bạn đã đặt lại vé
+                                             <span style=""color: green;"">
+                                                 thành công!
+                                             </span>
+                                                Vé đã được chuyển vào giỏ vé của bạn. Bạn sẽ không thể trả lại hay chuyển nhượng vé này
+                                         </h2>
+                                          <button style=""background-color: rgb(188, 101, 60);height: 50px; margin: auto;
+                                           font-size: 20px; border-radius: 4px 4px; "">
+                                              <a style=""text-decoration: none; color: white;""  href=""http://localhost:8080/order"">Kiểm tra vé của bạn tại đây</a>
+                                          </button>
+                                     </div>
+                                 </div>
+                                </div>
+                                "
+                };
+                await _mail.SendMail(content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to send email: " + ex.Message);
+            }
+            var ownerUser = _dbContext.Users.FirstOrDefault(s => s.CustomerId == ownerUserId);
+            try
+            {
+                // Lấy dịch vụ sendmailservice
+                MailContent content = new MailContent
+                {
+                    To = ownerUser.Email,
+                    Subject = $"[Vé chuyển nhượng của bạn đã được bán lại thành công]",
+                    Body = $@"
+                                <div  style=""background-color: rgb(226, 168, 140);
+                                 width: 50%;flex-direction: column; margin: auto;
+                                 "">
+                                    <h1 style=""font-weight: bold; width: 100%;
+                                    text-align: center;
+                                    background-color:rgb(188, 101, 60) ; 
+                                    color: white;
+                                    padding: 10px 0;
+                                    "">
+                                    MyTicket - Ứng dụng đặt vé số 1 Việt Nam
+                                    </h1>
+                                 <div style="" display: flex; padding: 20px 0;"">
+                                     <div>
+                                         <img style=""width: 200px; height: 200px;"" src=""https://i.postimg.cc/jdzQ25TR/logo-pink-textcolor.png"" alt="""">
+                                     </div>
+                                     <div style=""margin: auto; flex-direction: column; text-align: center; color: #555; font-size:1.3rem;"">
+     
+ 
+                                          <h2>
+                                                Vé đã được chuyển nhượng thành công. Hệ thống MyTicket sẽ hoàn tiền lại cho bạn trong vòng 1 tuần.
+                                         </h2>
+                                          <button style=""background-color: rgb(188, 101, 60);height: 50px; margin: auto;
+                                           font-size: 20px; border-radius: 4px 4px; "">
+                                              <a style=""text-decoration: none; color: white;""  href=""http://localhost:8080/order"">Kiểm tra vé của bạn tại đây</a>
+                                          </button>
+                                     </div>
+                                 </div>
+                                </div>
+                                "
+                };
+                await _mail.SendMail(content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to send email: " + ex.Message);
             }
         }
 

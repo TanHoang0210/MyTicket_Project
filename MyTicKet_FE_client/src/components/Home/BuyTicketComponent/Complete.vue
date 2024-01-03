@@ -58,7 +58,7 @@ export default {
             const params = this.$route.query;
             if (params.vnp_ResponseCode === '00' && params.vnp_TransactionStatus === '00') {
                 // Giao dịch thành công, bạn có thể xử lý dữ liệu khác từ params nếu cần thiết
-                await this.completedOrder(params.vnp_OrderInfo,params.vnp_TransactionNo,params.vnp_PayDate)
+                await this.completedOrder(params.vnp_OrderInfo,params.vnp_TxnRef,params.vnp_PayDate)
                 this.isComplete = true;
                 this.expression = 'Đơn hàng của bạn đã hoàn thành!<br>Vào mục vé của bạn để xem thông tin vé đã đặt nhé!'
             } else {
@@ -78,13 +78,13 @@ export default {
             }
 
         },
-        async completedOrder(orderId,transactionNo,transDate) {
+        async completedOrder(orderId,txnRef,transDate) {
             try {
                 const res = await axios.put('myticket/api/order/update-order-status',
                     {
                         id: orderId,
                         status: 5,
-                        transactionNo:transactionNo,
+                        transactionNo:txnRef,
                         transDate:transDate
                     })
             } catch (error) {

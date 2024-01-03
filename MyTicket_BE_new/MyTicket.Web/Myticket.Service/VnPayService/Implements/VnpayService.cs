@@ -10,15 +10,21 @@ using MYTICKET.WEB.SERVICE.Common;
 using MYTICKET.WEB.SERVICE.VnPayService.Abstracts;
 using MYTICKET.WEB.SERVICE.VnPayService.Dtos;
 using MYTICKET.WEB.SERVICE.VnPayService.Libraries;
+using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 
 namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
 {
     public class VnpayService : ServiceBase, IVnpayService
     {
+        private IHttpClientFactory _httpClientFactory;
         private readonly IOptions<VNPaySettings> _appSettings;
-        public VnpayService(IOptions<VNPaySettings> appSettings, ILogger<VnpayService> logger, IHttpContextAccessor httpContext) : base(logger, httpContext)
+        public VnpayService(IOptions<VNPaySettings> appSettings, IHttpClientFactory httpClientFactory, ILogger<VnpayService> logger, IHttpContextAccessor httpContext) : base(logger, httpContext)
         {
             _appSettings = appSettings;
+            _httpClientFactory = httpClientFactory;
         }
 
         public string CreatePaymentTransferUrl(TransferPaymentDto model, HttpContext context)
@@ -56,7 +62,7 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
             pay.AddRequestData("vnp_OrderInfo", orderInfo.ToString());
             pay.AddRequestData("vnp_OrderType", transfer.CustomerTransferOwnerId.ToString());
             pay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(5).ToString("yyyyMMddHHmmss"));
-            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8081/transfer/ticket/complete");
+            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8080/transfer/ticket/complete");
             pay.AddRequestData("vnp_TxnRef", tick);
             var paymentUrl =
             pay.CreateRequestUrl("https://sandbox.vnpayment.vn/paymentv2/vpcpay.html", _appSettings.Value.Vnp_SecureHash);
@@ -103,7 +109,7 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
             pay.AddRequestData("vnp_Locale", _appSettings.Value.Vnp_Locale);
             pay.AddRequestData("vnp_OrderInfo", order.Id.ToString());
             pay.AddRequestData("vnp_OrderType", order.OrderType.ToString());
-            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8081/ticket/complete");
+            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8080/ticket/complete");
             pay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(5).ToString("yyyyMMddHHmmss"));
             pay.AddRequestData("vnp_TxnRef", tick);
             var paymentUrl =
@@ -112,7 +118,7 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
             return paymentUrl;
         }
 
-        public string CreateRefundUrl(RefundOrderDto model, HttpContext context)
+        public async Task CreateRefundUrl(RefundOrderDto model, HttpContext context)
         {
             var user = CommonUtils.GetCurrentUserId(_httpContext);
             var tick = DateTime.Now.Ticks.ToString();
@@ -125,54 +131,74 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
                              {
                                  Id = ord.Id,
                                  OrderType = orderDetail.EventDetailId,
-                                 TotalAmount = orderDetail.Price,
+                                 TotalAmount = ord.Total,
+                                 OrderAmount = orderDetail.Price,
                                  OrderDescription = "Hoàn tiền đơn đặt vé My Ticket",
                                  TransactionNo = ord.TransactionNo,
                                  TransactionDate = ord.TransDate
                              }).FirstOrDefault()
                              ?? throw new UserFriendlyException(ErrorCode.OrderNotFound);
-
+            
             var order = new
             {
                 Id = orderTemp.Id,
                 OrderType = orderTemp.OrderType,
                 TotalAmount = orderTemp.TotalAmount,
+                OrderAmount = orderTemp.OrderAmount,
                 OrderDescription = orderTemp.OrderDescription,
                 TransactionNo = orderTemp.TransactionNo,
                 TransactionDate = orderTemp.TransactionDate
             };
+            var vnp_RequestId = DateTime.Now.Ticks.ToString(); //Mã hệ thống merchant tự sinh ứng với mỗi yêu cầu hoàn tiền giao dịch. Mã này là duy nhất dùng để phân biệt các yêu cầu truy vấn giao dịch. Không được trùng lặp trong ngày.
+            var vnp_Version = VnPayLibrary.VERSION; //2.1.0
+            var vnp_Command = "refund";
+            var vnp_TransactionType = order.TotalAmount == order.OrderAmount ?"02":"03";
+            var vnp_Amount = ((long)order.TotalAmount * 100).ToString();
+            var vnp_TxnRef = order.TransactionNo; // Mã giao dịch thanh toán tham chiếu
+            var vnp_OrderInfo = "Hoan tien giao dich:" + order.Id;
+            var vnp_TransactionDate = order.TransactionDate;
+            var vnp_CreateDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+            var vnp_CreateBy = user;
+            var vnp_IpAddr = "127.0.0.1";
 
-            // Create the data string for HMAC-SHA256
-            var data = $"{tick}|{VnPayLibrary.VERSION}|refund|{_appSettings.Value.Vnp_TmnCode}|03|{tick}|{((long)order.TotalAmount * 100)}|{order.TransactionNo}|{order.TransactionDate}|{user}|{DateTime.Now.ToString("yyyyMMddHHmmss")}|127.0.0.1|{order.Id}";
+            var signData = vnp_RequestId + "|" + vnp_Version + "|" + vnp_Command + "|" + _appSettings.Value.Vnp_TmnCode + "|" + vnp_TransactionType + "|" + vnp_TxnRef + "|" + vnp_Amount + "|" + "|" + vnp_TransactionDate + "|" + vnp_CreateBy + "|" + vnp_CreateDate + "|" + vnp_IpAddr + "|" + vnp_OrderInfo;
+            var vnp_SecureHash = Utils.HmacSHA512(_appSettings.Value.Vnp_SecureHash, signData);
 
-            // Compute HMAC-SHA256 hash
-            string vnp_SecureHash = Utils.HmacSHA256(_appSettings.Value.Vnp_SecureHash, data);
+            var rfData = new RefundData
+            {
+                vnp_RequestId = vnp_RequestId,
+                vnp_Version = vnp_Version,
+                vnp_Command = vnp_Command,
+                vnp_TmnCode = _appSettings.Value.Vnp_TmnCode,
+                vnp_TransactionType = vnp_TransactionType,
+                vnp_TxnRef = vnp_TxnRef.ToString(),
+                vnp_Amount = vnp_Amount,
+                vnp_OrderInfo = vnp_OrderInfo,
+                vnp_TransactionDate = vnp_TransactionDate,
+                vnp_CreateBy = vnp_CreateBy.ToString(),
+                vnp_CreateDate = vnp_CreateDate,
+                vnp_IpAddr = vnp_IpAddr,
+                vnp_SecureHash = vnp_SecureHash
+            };
 
-            // Create VnPayLibrary instance
-            var pay = new VnPayLibrary();
+            var httpClient = _httpClientFactory.CreateClient();
+            var apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+            // Chuyển đối tượng thành chuỗi JSON
+            var jsonData = JsonSerializer.Serialize(rfData);
 
-            // Add request data
-            pay.AddRequestData("vnp_RequestId", tick);
-            pay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
-            pay.AddRequestData("vnp_Command", "refund");
-            pay.AddRequestData("vnp_TmnCode", _appSettings.Value.Vnp_TmnCode);
-            pay.AddRequestData("vnp_TransactionType", "03");
-            pay.AddRequestData("vnp_TxnRef", tick);
-            pay.AddRequestData("vnp_Amount", ((long)order.TotalAmount * 100).ToString());
-            pay.AddRequestData("vnp_OrderInfo", order.Id.ToString());
-            pay.AddRequestData("vnp_TransactionNo", order.TransactionNo.ToString());
-            pay.AddRequestData("vnp_TransDate", order.TransactionDate.ToString());
-            pay.AddRequestData("vnp_CreateBy", user.ToString());
-            pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
-            pay.AddRequestData("vnp_IpAddr", "127.0.0.1");
-            pay.AddRequestData("vnp_CurrCode", _appSettings.Value.Vnp_CurrCode);
-            pay.AddRequestData("vnp_Locale", _appSettings.Value.Vnp_Locale);
-            pay.AddRequestData("vnp_ReturnUrl", "http://localhost:8080/#/admin/overview");
+            // Tạo nội dung của yêu cầu
+            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            // Create refund URL
-            var paymentUrl = pay.CreateRefundUrl("https://sandbox.vnpayment.vn/merchant_webapi/merchant.html", vnp_SecureHash);
+            // Thực hiện POST request
+            var response = await httpClient.PostAsync(apiUrl, content);
 
-            return paymentUrl;
+            // Đọc nội dung phản hồi
+            var responseContent = response.Content.ToString();
+            var responseData = JsonSerializer.Deserialize<ResponseRefund>(responseContent);
+            if(responseData.vnp_Message != "00")
+            {
+                throw new Exception(responseData.vnp_Command);
+            }
         }
     }
 }

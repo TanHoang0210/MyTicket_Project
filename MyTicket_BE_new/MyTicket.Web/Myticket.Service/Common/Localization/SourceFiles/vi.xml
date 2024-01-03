@@ -31,6 +31,8 @@
 		<text name="error_OrderDateCannotNull">Vui lòng chọn ngày đặt hàng</text>
 		<text name="error_EmailUsed">Email đã được sử dụng</text>
 		<text name="error_UsernameOrPasswordIncorrect">Tên tài khoản hoặc mật khẩu không đúng</text>
+		<text name="error_ComfirmTransferCodeWrong">Sai mã yêu cầu chuyển nhượng</text>
+		<text name="error_ComfirmExchangeCodeWrong">Sai mã yêu cầu trả vé</text>
 
 
 		<!--Tài liệu lỗi-->

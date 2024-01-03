@@ -63,6 +63,8 @@
         CannotUpdateStatusEvent = 9005,
 
         EmailUsed = 9006,
+        ComfirmTransferCodeWrong = 9007,
+        ComfirmExchangeCodeWrong = 9008,
 
 
     }

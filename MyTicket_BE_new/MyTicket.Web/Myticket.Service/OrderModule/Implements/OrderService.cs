@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Hangfire;
+using MailKit.Search;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -47,7 +48,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             _logger.LogInformation($"{nameof(CreateOrder)}: input = {JsonSerializer.Serialize(input)}, currentUser= {currentUser}");
             decimal totalOrder = 0;
             var orderId = 0;
-            var orderNoPay = _dbContext.Orders.FirstOrDefault(s => s.CustomerId == currentCustomerId && new int[] { OrderStatuses.READY_TO_PAY }.Contains(s.Status) && !s.Deleted);
+            var orderNoPay = _dbContext.Orders.FirstOrDefault(s => s.CustomerId == currentCustomerId && new int[] { OrderStatuses.READY_TO_PAY, OrderStatuses.PAYING }.Contains(s.Status) && !s.Deleted);
             if (orderNoPay != null)
             {
                 if(_dbContext.OrderDetails.Where(s => s.OrderId == orderNoPay.Id && !s.Deleted).Count() >= 10)
@@ -242,7 +243,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                 totalOrder = totalOrder + subTotal2;
                             }
                         }
-                        var jobId = BackgroundJob.Schedule<ISystemService>(x => x.CancelOrderExpired(orderId), TimeSpan.FromMinutes(5));
+                        var jobId = BackgroundJob.Schedule<ISystemService>(x => x.CancelOrderExpired(orderId), TimeSpan.FromSeconds(290));
 
                         orderAdd.Entity.Total = totalOrder;
                         orderAdd.Entity.Status = OrderStatuses.READY_TO_PAY;
@@ -585,7 +586,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             {
                 throw new UserFriendlyException(ErrorCode.OrderNotFound);
             }
-            if (input.Status == OrderStatuses.SUCCESS && order.Status == OrderStatuses.PAYING)
+            if (input.Status == OrderStatuses.SUCCESS)
             {
                 BackgroundJob.Delete(order.BackgroundJobId);
                 order.BackgroundJobId = null;
@@ -1019,6 +1020,10 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                 }
                 await _dbContext.SaveChangesAsync();
             }
+            else
+            {
+                throw new UserFriendlyException(ErrorCode.ComfirmExchangeCodeWrong);
+            }
         }
 
         public async Task ConfirmTransfer(ConfirmExchangeTransferDto input)
@@ -1076,6 +1081,10 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                 }
                 await _dbContext.SaveChangesAsync();
             }
+            else
+            {
+                throw new UserFriendlyException(ErrorCode.ComfirmTransferCodeWrong);
+            }
         }
 
         public async Task UpdateTransferStatus(UpdateTransferStatusDto input)
@@ -1106,98 +1115,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                     Status = orderDetail.Status,
                     CustomerId = currentCustomer.Id
                 });
-                try
-                {
-                    // Lấy dịch vụ sendmailservice
-                    MailContent content = new MailContent
-                    {
-                        To = currentUser.Email,
-                        Subject = $"[Chúc mừng bạn đã mua lại vé thành công!]",
-                        Body = $@"
-                                <div  style=""background-color: rgb(226, 168, 140);
-                                 width: 50%;flex-direction: column; margin: auto;
-                                 "">
-                                    <h1 style=""font-weight: bold; width: 100%;
-                                    text-align: center;
-                                    background-color:rgb(188, 101, 60) ; 
-                                    color: white;
-                                    padding: 10px 0;
-                                    "">
-                                    MyTicket - Ứng dụng đặt vé số 1 Việt Nam
-                                    </h1>
-                                 <div style="" display: flex; padding: 20px 0;"">
-                                     <div>
-                                         <img style=""width: 200px; height: 200px;"" src=""https://i.postimg.cc/jdzQ25TR/logo-pink-textcolor.png"" alt="""">
-                                     </div>
-                                     <div style=""margin: auto; flex-direction: column; text-align: center; color: #555; font-size:1.3rem;"">
-     
- 
-                                          <h2>Bạn đã đặt lại vé
-                                             <span style=""color: green;"">
-                                                 thành công!
-                                             </span>
-                                                Vé đã được chuyển vào giỏ vé của bạn. Bạn sẽ không thể trả lại hay chuyển nhượng vé này
-                                         </h2>
-                                          <button style=""background-color: rgb(188, 101, 60);height: 50px; margin: auto;
-                                           font-size: 20px; border-radius: 4px 4px; "">
-                                              <a style=""text-decoration: none; color: white;""  href=""http://localhost:8080/order"">Kiểm tra vé của bạn tại đây</a>
-                                          </button>
-                                     </div>
-                                 </div>
-                                </div>
-                                "
-                    };
-                    await _mail.SendMail(content);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Failed to send email: " + ex.Message);
-                }
-                var ownerUser = _dbContext.Users.FirstOrDefault(s => s.CustomerId == input.CustomerTransferOwnerId);
-                try
-                {
-                    // Lấy dịch vụ sendmailservice
-                    MailContent content = new MailContent
-                    {
-                        To = ownerUser.Email,
-                        Subject = $"[Vé chuyển nhượng của bạn đã được bán lại thành công]",
-                        Body = $@"
-                                <div  style=""background-color: rgb(226, 168, 140);
-                                 width: 50%;flex-direction: column; margin: auto;
-                                 "">
-                                    <h1 style=""font-weight: bold; width: 100%;
-                                    text-align: center;
-                                    background-color:rgb(188, 101, 60) ; 
-                                    color: white;
-                                    padding: 10px 0;
-                                    "">
-                                    MyTicket - Ứng dụng đặt vé số 1 Việt Nam
-                                    </h1>
-                                 <div style="" display: flex; padding: 20px 0;"">
-                                     <div>
-                                         <img style=""width: 200px; height: 200px;"" src=""https://i.postimg.cc/jdzQ25TR/logo-pink-textcolor.png"" alt="""">
-                                     </div>
-                                     <div style=""margin: auto; flex-direction: column; text-align: center; color: #555; font-size:1.3rem;"">
-     
- 
-                                          <h2>
-                                                Vé đã được chuyển nhượng thành công. Hệ thống MyTicket sẽ hoàn tiền lại cho bạn trong vòng 1 tuần.
-                                         </h2>
-                                          <button style=""background-color: rgb(188, 101, 60);height: 50px; margin: auto;
-                                           font-size: 20px; border-radius: 4px 4px; "">
-                                              <a style=""text-decoration: none; color: white;""  href=""http://localhost:8080/order"">Kiểm tra vé của bạn tại đây</a>
-                                          </button>
-                                     </div>
-                                 </div>
-                                </div>
-                                "
-                    };
-                    await _mail.SendMail(content);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Failed to send email: " + ex.Message);
-                }
+                BackgroundJob.Enqueue<ISystemService>(x => x.NotiSuccessTransfer(currentUser.Email,input.CustomerTransferOwnerId));
             }
             else
             {
@@ -1302,7 +1220,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                     .Include(s => s.Order)
                                                     .Where(s => s.Order.CustomerId == input.CustomerId
                                                     && s.Order.Status == OrderStatuses.SUCCESS
-                                                    && new int[]{ TransferStatuses.TRANSFERING,TransferStatuses.SUCCESS}.Contains(s.TransferStatus!.Value)
+                                                    && s.TransferStatus != TransferStatuses.INIT
                                                     && !s.Deleted && s.IsTransfer != null)
                                                     .Select(s => new TicketTransferDto
                                                     {

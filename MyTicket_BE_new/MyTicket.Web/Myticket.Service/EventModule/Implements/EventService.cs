@@ -215,8 +215,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                               Status = ev.Status, // Assuming Status is a property of EventDetail,
                               Supllier = _dbContext.Suppilers.Where(s => s.Id == ev.SupplierId).Select(s => s.FullName).FirstOrDefault(),
                               SupplierId = ev.SupplierId,
-                              PercentSaleTicket = odDetails.Count() / (_dbContext.Tickets.Include(s => s.TicketEvent).Where(s => s.TicketEvent.EventDetailId == evDetail.Id).Count())
-                          }).OrderByDescending(s => s.PercentSaleTicket).ThenByDescending(s => s.PercentSaleTicket).Take(9).ToList();
+                              PercentSaleTicket = odDetails.Count()
+                          }).OrderByDescending(s => s.PercentSaleTicket).Take(9).ToList();
             return result;
         }
 

@@ -96,6 +96,7 @@ export default {
         this.venues = await this.getVenue();
         this.events = await this.getEvent();
         this.categories = await this.getCategories();
+        this.eventTopSales = await  this.getEventTopSale()
         this.isSuccess = true;
         this.isLoading = false;
       } catch (error) {
@@ -162,6 +163,17 @@ export default {
       try {
         const res = await axios.get(
           "myticket/api/event/find-top-new"
+        )
+        return res.data.data;
+      } catch (error) {
+        console.error('API 1 Error:', error);
+        throw error;
+      }
+    },
+    async getEventTopSale() {
+      try {
+        const res = await axios.get(
+          "myticket/api/event/find-top-sale"
         )
         return res.data.data;
       } catch (error) {

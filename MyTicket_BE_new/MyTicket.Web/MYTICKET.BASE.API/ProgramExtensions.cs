@@ -49,7 +49,7 @@ namespace MYTICKET.BASE.API
             {
                 o.MultipartBodyLengthLimit = int.MaxValue; //tối đa 2GB
             });
-
+            services.AddHttpClient();
             //config file
             services.Configure<FileConfig>(builder.Configuration.GetSection("FileConfig:File"));
 

@@ -5,14 +5,11 @@
         <div class="col-xl-6 col-md-6">
           <stats-card>
             <div slot="header" class="icon-success">
-              <i class="nc-icon nc-light-3 text-success"></i>
+              <i class="nc-icon nc-paper-2 text-success"></i>
             </div>
             <div slot="content">
               <p class="card-category">Số đơn đặt vé hôm nay</p>
               <h4 class="card-title">1,345</h4>
-            </div>
-            <div slot="footer">
-              <i class="fa fa-calendar-o"></i>Last day
             </div>
           </stats-card>
         </div>
@@ -20,14 +17,11 @@
         <div class="col-xl-6 col-md-6">
           <stats-card>
             <div slot="header" class="icon-info">
-              <i class="nc-icon nc-favourite-28 text-primary"></i>
+              <i class="nc-icon nc-single-02 text-primary"></i>
             </div>
             <div slot="content">
               <p class="card-category">Khách hàng hôm nay</p>
               <h4 class="card-title">+45</h4>
-            </div>
-            <div slot="footer">
-              <i class="fa fa-refresh"></i>Updated now
             </div>
           </stats-card>
         </div>

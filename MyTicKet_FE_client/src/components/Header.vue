@@ -192,7 +192,7 @@ export default {
             try {
                 if(store.getters.currentUser != null){
                     const res = await axios.get("myticket/api/order/find-order/for-pay")
-                    if (res.data.status == 1) {
+                    if (res.data.code === 200) {
                         this.totalOrderNotPay = res.data.data.orderDetails.length;
                     }
                     else {

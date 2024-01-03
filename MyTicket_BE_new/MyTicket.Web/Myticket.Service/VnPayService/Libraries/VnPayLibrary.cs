@@ -75,26 +75,27 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Libraries
             return baseUrl;
         }
 
-        public string CreateRefundUrl(string baseUrl, string vnp_HashSecret)
+        public string CreateRefundUrl(string baseUrl, string vnpHashSecret)
         {
-            StringBuilder data = new StringBuilder();
-            foreach (KeyValuePair<string, string> kv in _requestData)
-            {
-                if (!String.IsNullOrEmpty(kv.Value))
-                {
-                    data.Append(WebUtility.UrlEncode(kv.Key) + "=" + WebUtility.UrlEncode(kv.Value) + "&");
-                }
-            }
-            string queryString = data.ToString();
+            var data = new StringBuilder();
 
-            baseUrl += "?" + queryString;
-            String signData = queryString;
+            foreach (var (key, value) in _requestData.Where(kv => !string.IsNullOrEmpty(kv.Value)))
+            {
+                data.Append(WebUtility.UrlEncode(key) + "=" + WebUtility.UrlEncode(value) + "&");
+            }
+
+            var querystring = data.ToString();
+
+            baseUrl += "?" + querystring;
+            var signData = querystring;
             if (signData.Length > 0)
             {
-
                 signData = signData.Remove(data.Length - 1, 1);
             }
-            baseUrl += "vnp_SecureHash=" + vnp_HashSecret;
+
+            var vnpSecureHash = Utils.HmacSHA512(vnpHashSecret, signData);
+            baseUrl += "vnp_SecureHash=" + vnpSecureHash;
+
             return baseUrl;
         }
 
@@ -137,13 +138,52 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Libraries
             return data.ToString();
         }
 
+        public PaymentResponseDto GetFullResponseData(IQueryCollection collection, string hashSecret)
+        {
+            var vnPay = new VnPayLibrary();
+
+            foreach (var (key, value) in collection)
+            {
+                if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
+                {
+                    vnPay.AddResponseData(key, value);
+                }
+            }
+
+            var orderId = Convert.ToInt64(vnPay.GetResponseData("vnp_TxnRef"));
+            var vnPayTranId = Convert.ToInt64(vnPay.GetResponseData("vnp_TransactionNo"));
+            var vnpResponseCode = vnPay.GetResponseData("vnp_ResponseCode");
+            var vnpSecureHash =
+                collection.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value; //hash của dữ liệu trả về
+            var orderInfo = vnPay.GetResponseData("vnp_OrderInfo");
+
+            var checkSignature =
+                vnPay.ValidateSignature(vnpSecureHash, hashSecret); //check Signature
+
+            if (!checkSignature)
+                return new PaymentResponseDto()
+                {
+                    Success = false
+                };
+
+            return new PaymentResponseDto()
+            {
+                Success = true,
+                PaymentMethod = PaymentMethod.VNPAY,
+                OrderInfo = orderInfo,
+                OrderId = orderId.ToString(),
+                PaymentId = vnPayTranId.ToString(),
+                TransactionId = vnPayTranId.ToString(),
+                Token = vnpSecureHash,
+                VnPayResponseCode = vnpResponseCode
+            };
+        }
+
         #endregion
     }
 
     public class Utils
     {
-
-
         public static String HmacSHA512(string key, String inputData)
         {
             var hash = new StringBuilder();

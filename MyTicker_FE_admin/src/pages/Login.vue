@@ -55,6 +55,16 @@ export default {
             refreshIntervalId: null,
         }
     },
+    notifyVue(type, message, verticalAlign, horizontalAlign, color) {
+            this.$notifications.notify(
+                {
+                    message: `<span><b>${type}</b> - ${message}</span>`,
+                    icon: 'nc-icon nc-app',
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: color
+                })
+        },
     methods: {
         async handleSuccessfulLogin(tokenExpiration) {
             // Thời gian giữa mỗi lần làm mới token (1 giờ)
@@ -106,8 +116,9 @@ export default {
             const res = await Login(this.loginForm.username, this.loginForm.password)
 
             if (res.status !== 200) {
-
+                    this.notifyVue('Thất bại', res.response.data.error_description, 'top', 'right', 'danger')
             } else {
+                this.notifyVue('Thành công','Đăng nhập thành công', 'top', 'right', 'success')
                 await this.handleSuccessfulLogin(store.getters.tokenExpiration)
                 await getCurrentUser()
                 const routeInfo = this.$route.query.routeInfo;
@@ -117,7 +128,17 @@ export default {
                     this.$router.push("/");
                 }
             }
-        }
+        },
+        notifyVue(type, message, verticalAlign, horizontalAlign, color) {
+            this.$notifications.notify(
+                {
+                    message: `<span><b>${type}</b> - ${message}</span>`,
+                    icon: 'nc-icon nc-app',
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: color
+                })
+        },
     },
     mounted() {
         this.bannerImage = 'api/file/get?folder=&file=bannerAdmin.webp';

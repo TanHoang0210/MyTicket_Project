@@ -230,9 +230,7 @@ export default {
                 ,{
                     headers: {
                         'Content-Type': 'application/json',
-                    }})
-                    alert(res)
-            
+                    }})   
         },
         async getAllData() {
             try {

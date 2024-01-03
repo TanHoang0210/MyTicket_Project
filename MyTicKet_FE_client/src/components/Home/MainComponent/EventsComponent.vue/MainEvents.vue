@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div style="display: flex;">
-                            <b-button class="btn-event" style="margin: auto;" variant="primary">Đặt vé Ngay</b-button>
+                            <b-button @click="selectTicket(event.id)" class="btn-event" style="margin: auto;" variant="primary">Đặt vé Ngay</b-button>
                         </div>
                     </b-card>
                 </div>
@@ -61,6 +61,9 @@ export default {
             // Chuyển đổi ngày thành định dạng dd/mm/yyyy
             return moment(date).format('hh:mm  DD/MM/YYYY');
         },
+        selectTicket(id){
+            this.$router.push({ name: 'eventDetail', query: { id: id } });
+        }
     }
 }
 </script>

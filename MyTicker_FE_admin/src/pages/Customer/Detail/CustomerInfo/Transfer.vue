@@ -30,7 +30,7 @@
                                     @change="getAllData()" :options="pageSizeOption" size="sm"></b-form-select>
                             </div>
                         </div>
-                        <b-table :current-page="pageNumber" id="table-transfer" striped hover :fields="fields"
+                        <b-table class="custom-table" :current-page="pageNumber" id="table-transfer" striped hover :fields="fields"
                             :items="orders">
                             <template #cell(transferStatus)="data">
                                 <td style="color: blue;font-weight: 600;" v-if="data.item.transferStatus === 1">Khởi tạo
@@ -48,6 +48,11 @@
                                     <b-button @click="showModalTransfer(data.item.id)" class="table-btn" variant="secondary"
                                         title="Xem chi tiết">
                                         <b-icon icon="pencil-square">
+                                        </b-icon>
+                                    </b-button>
+                                    <b-button v-if="data.item.transferRefundRequest" @click="Refund(data.item.id,customerId)" class="table-btn"
+                                        variant="warning" title="Hoàn tiền">
+                                        <b-icon icon="currency-exchange">
                                         </b-icon>
                                     </b-button>
                                 </div>
@@ -155,7 +160,7 @@ export default {
             fields: ['id',
                 { key: 'orderCode', label: 'Mã đơn đặt vé ' },
                 { key: 'orderDate', label: 'Ngày đặt vé' },
-                { key: 'eventName', label: 'Tên sự kiện' },
+                { key: 'eventName', label: 'Tên sự kiện' ,class: 'max-width-column'},
                 { key: 'ticketEventName', label: 'Hạng vé' },
                 { key: 'transferStatus', label: 'Trạng thái' },
                 { key: 'action', label: 'Thao tác' },
@@ -374,6 +379,12 @@ export default {
 <style>
 .table-btn.btn {
     border: none !important;
+}
+.custom-table .max-width-column {
+  /* Set your desired max width */
+  max-width: 200px;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 </style>
     

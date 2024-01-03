@@ -7,60 +7,54 @@
                 <br>
                 Bạn có thể hủy yêu cầu chuyển nhượng vé nếu vé chưa được chuyển nhượng nhé!
             </div>
-            <table class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-                <thead class="tb_head">
-                    <tr>
-                        <th class="text-center firstCol">#ID</th>
-                        <th>Tên Sự Kiện</th>
-                        <th>Hạng vé</th>
-                        <th>Ngày yêu cầu</th>
-                        <th>Trạng thái</th>
-                        <th class="lastCol">Thao Tác</th>
-                    </tr>
-                </thead>
-                <tbody v-if="noData">
-                    <tr>
-                        <td colspan="4" class="text-center">Giỏ vé của bạn hiện đang trống</td>
-                    </tr>
-                </tbody>
-                <tbody v-else>
-                    <tr :style="statusTransfer !== 3 ? { color: 'black' } : { color: 'var(--text-color)' }"
-                        v-for="(item, index) in tickets">
-                        <td class="firstCol text-center ticket-infomation">{{ index + 1 }}</td>
-                        <td class="ticket-infomation">
-                            {{ item.eventName }}
-                        </td>
-                        <td class="ticket-infomation">
-                            {{ item.ticketEventName }}
-                        </td>
-                        <td class="ticket-infomation">
-                            {{ formatDate(item.transferDate) }}
-                        </td>
-                        <td class="ticket-infomation">
-                            <span style="color: blue; font-weight: 600;" v-if="item.transferStatus === 1">
-                                Khởi tạo
-                            </span>
-                            <span style="color: orange; font-weight: 600;" v-if="item.transferStatus === 2 || item.transferStatus === 4">
-                                Đang xử lý
-                            </span>
-                            <span style="color: green; font-weight: 600;" v-if="item.transferStatus === 5">
-                                Đã chuyển nhượng
-                            </span>
-                        </td>
-                        <td class="lastCol ticket-infomation">
-                            <div class="ticket-action " v-if="statusTransfer !== 3">
-                                <b-button v-if="item.transferStatus === 1" id="showTransfer" @click="showConfirmToTranferModal(item.id)" class="btn-myticket"
-                                    variant="success">Xác nhận</b-button>
-                                <b-button v-if="item.transferStatus !== 5" id="showTransfer" @click="showCancelTranferModal(item.id)" class="btn-myticket"
-                                    variant="danger">Hủy Yêu cầu</b-button>
-                                <b-button id="showDetail" @click="showTicketDetail(item.id)" class="btn-myticket"
-                                    variant="secondary">Xem chi
-                                    tiết</b-button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="row">
+                <div class="col-md-10">
+
+                </div>
+                <div class="col-md-2">
+                    <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize" @change="fetchData()"
+                        :options="pageSizeOption" size="sm"></b-form-select>
+                </div>
+            </div>
+            <b-table :current-page="pageNumber" id="table-ticket" class="custom-table" striped hover :fields="orderFields"
+                :items="tickets">
+                <template #cell(id)="data">
+                    {{ data.index + 1 }}
+                </template>
+                <template #cell(transferDate)="data">
+                    {{ formatDate(data.item.transferDate) }}
+                </template>
+                <template #cell(transferStatus)="data">
+                    <div v-if="data.item.eventStatus !== 5">
+                        <span style="color: blue;font-weight: 600;" v-if="data.item.transferStatus === 1">Khởi tạo</span>
+                        <span style="color: orange;font-weight: 600;"
+                            v-if="data.item.transferStatus === 2 || data.item.transferStatus === 4">Đang Xử lý</span>
+                        <span style="color: greenyellow;font-weight: 600;" v-if="data.item.transferStatus === 5">Chuyển
+                            nhượng thành công</span>
+                        <span style="color: green;font-weight: 600;" v-if="data.item.transferStatus === 6">Đã hoàn
+                            tiền</span>
+                    </div>
+                    <span v-else style="color: red;font-weight: 600;">Hủy Sự Kiện</span>
+                </template>
+                <template v-slot:cell(action)="data">
+                    <b-dropdown variant="none" no-caret v-if="data.item.transferStatus !== 3">
+                        <template #button-content>
+                            <b-icon icon="three-dots"></b-icon>
+                        </template>
+                        <b-dropdown-item v-if="data.item.transferStatus === 1"
+                            @click="showConfirmToTranferModal(data.item.id)">
+                            Xác nhận
+                        </b-dropdown-item>
+                        <b-dropdown-item v-if="data.item.transferStatus !== 5"
+                            @click="showCancelTranferModal(data.item.id)">
+                            Hủy Yêu cầu
+                        </b-dropdown-item>
+                        <b-dropdown-item @click="showTicketDetail(data.item.id)">Xem chi tiết</b-dropdown-item>
+                    </b-dropdown>
+                </template>
+            </b-table>
+            <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize"
+                aria-controls="table-ticket"></b-pagination>
         </div>
         <b-modal size="lg" centered v-if="currentTicket !== null" ref="modal-myticket" hide-footer
             title="Thông tin chuyển nhượng">
@@ -212,7 +206,8 @@
                 </template>
             </b-modal>
             <b-modal v-if="currentTicket !== null" ref="modal-confirm" centered title="Nhập mã xác nhận chuyển nhượng vé">
-                <h4 class="my-4">Vui lòng nhập mã chuyển nhượng vé đã được gửi tới email của bạn để xác nhận việc chuyển nhượng!</h4>
+                <h4 class="my-4">Vui lòng nhập mã chuyển nhượng vé đã được gửi tới email của bạn để xác nhận việc chuyển
+                    nhượng!</h4>
                 <b-form-input v-model="confirmCode" type="text"></b-form-input>
                 <template #modal-footer="{ ok, cancel }">
                     <b-button size="lg" variant="success" @click="confirmTransferCode(currentTicket.id)">
@@ -239,10 +234,19 @@ export default {
             noData: false,
             pageSize: 5,
             pageNumber: 1,
-            confirmCode:"",
-            total: 0,
+            confirmCode: "",
+            pageSizeOption: [5, 10, 25, 50],
+            totals: 0,
             tickets: null,
-            currentTicket: null
+            currentTicket: null,
+            orderFields: [
+                { key: 'id', label: 'ID' },
+                { key: 'eventName', label: 'Tên sự kiện' },
+                { key: 'transferDate', label: 'Ngày Yêu cầu' },
+                { key: 'ticketEventName', label: 'Hạng vé' },
+                { key: 'transferStatus', label: 'Trạng thái' },
+                { key: 'action', label: 'Thao tác' },
+            ]
         }
     },
     methods: {
@@ -308,20 +312,20 @@ export default {
                 throw error;
             }
         },
-        async confirmTransferCode(id){
-            try {
-                await axios.put('myticket/api/order/confirm-transfer',
-                    {
-                        id: id,
-                        confirmCode: this.confirmCode
-                    },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    })
+        async confirmTransferCode(id) {
+            const res = await axios.put('myticket/api/order/confirm-transfer',
+                {
+                    id: id,
+                    confirmCode: this.confirmCode
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+            if (res.data.code === 200) {
                 this.$refs['modal-confirm'].hide(),
-                this.$router.push('/order')
+                    this.$router.push('/order')
                 this.$toasted.success("Xác nhận yêu cầu chuyển nhượng vé thành công", {
                     position: 'top-center',
                     duration: 3000, // Thời gian hiển thị toast (ms)
@@ -332,8 +336,9 @@ export default {
                     containerClass: 'custom-toast-container-class', // Thêm class cho container
                     singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
                 })
-            } catch (error) {
-                this.$toasted.error(error.response.data.error_description, {
+                this.fetchData()
+            } else {
+                this.$toasted.error(res.data.message, {
                     position: 'top-center',
                     duration: 3000, // Thời gian hiển thị toast (ms)
                     theme: 'outline', // Theme: 'outline', 'bubble'
@@ -343,12 +348,10 @@ export default {
                     containerClass: 'custom-toast-container-class', // Thêm class cho container
                     singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
 
-                }),
-                    this.$refs['modal-confirm'].hide()
+                })
             }
-            this.fetchData()
         },
-        async showConfirmToTranferModal(id){
+        async showConfirmToTranferModal(id) {
             try {
                 this.currentTicket = await this.getOrderTicketDetail(id)
                 this.$nextTick(() => {
@@ -454,6 +457,14 @@ export default {
         this.fetchData()
         this.handleStatus()
     },
+    watch: {
+        // Fetch data when the pageNumber changes
+        pageNumber(newPage, oldPage) {
+            if (newPage !== oldPage) {
+                this.fetchData();
+            }
+        },
+    },
 }
 </script>
 <style>
@@ -536,5 +547,4 @@ td {
     border-bottom: 1px solid #ccc;
 }
 
-.ticket-infomation {}
-</style>
+.ticket-infomation {}</style>

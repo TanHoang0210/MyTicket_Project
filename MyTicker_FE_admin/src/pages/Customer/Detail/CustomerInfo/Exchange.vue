@@ -35,6 +35,11 @@
                                         <b-icon icon="pencil-square">
                                         </b-icon>
                                     </b-button>
+                                    <b-button v-if="data.item.exchangeRefundRequest" @click="Refund(data.item.id,customerId)" class="table-btn"
+                                        variant="warning" title="Hoàn tiền">
+                                        <b-icon icon="currency-exchange">
+                                        </b-icon>
+                                    </b-button>
                                 </div>
                             </template>
                         </b-table>

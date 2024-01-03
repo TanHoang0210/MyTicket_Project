@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MYTICKET.UTILS;
 using MYTICKET.WEB.SERVICE.VnPayService.Abstracts;
 using MYTICKET.WEB.SERVICE.VnPayService.Dtos;
 
@@ -30,9 +31,10 @@ namespace MYTICKET.WEB.API.Controllers
         }
 
         [HttpPost("refund/payment-vn-pay")]
-        public IActionResult CreateRefundUrl([FromBody] RefundOrderDto input)
+        public async Task<APIResponse> CreateRefundUrl([FromBody] RefundOrderDto input)
         {
-            return Ok(_service.CreateRefundUrl(input, HttpContext));
+            await _service.CreateRefundUrl(input, HttpContext);
+           return new();
         }
     }
 }

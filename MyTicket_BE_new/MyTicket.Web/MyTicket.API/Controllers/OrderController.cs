@@ -1,14 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MYTICKET.BASE.SERVICE.Common;
 using MYTICKET.UTILS;
 using MYTICKET.WEB.SERVICE.OrderModule.Abstracts;
 using MYTICKET.WEB.SERVICE.OrderModule.Dtos;
-using MYTICKET.WEB.SERVICE.VenueModule.Abstracts;
-using MYTICKET.WEB.SERVICE.VenueModule.Dtos;
-using MYTICKET.WEB.SERVICE.VenueModule.Implements;
 
 namespace MYTICKET.WEB.API.Controllers
 {
@@ -64,63 +59,35 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("ticket/delete/{id}")]
-        public async Task<IActionResult> DeleteOrderTicketById(int id)
+        public async Task<APIResponse> DeleteOrderTicketById(int id)
         {
-            try
-            {
-                await _orderService.DeleteOrderDetail(id);
-                return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _orderService.DeleteOrderDetail(id);
+            return new();
         }
         [HttpPut("update-order-status")]
-        public async Task<IActionResult> UpdateStatus([FromBody] UpdateOrderStatusDto input)
+        public async Task<APIResponse> UpdateStatus([FromBody] UpdateOrderStatusDto input)
         {
-            try
-            {
-                await _orderService.UpdateOrderStatus(input);
-                return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            await _orderService.UpdateOrderStatus(input);
+            return new();
+
         }
         [HttpPut("transfer-ticker")]
-        public async Task<IActionResult> TransferTicket([FromBody] TransferTicketDto input)
+        public async Task<APIResponse> TransferTicket([FromBody] TransferTicketDto input)
         {
-            try
-            {
-                await _orderService.TransferTicket(input);
-                return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-
-            }
+            await _orderService.TransferTicket(input);
+            return new();
         }
 
         [HttpPut("exchange-ticker")]
-        public async Task<IActionResult> ExchangeTicket([FromBody] TransferTicketDto input)
+        public async Task<APIResponse> ExchangeTicket([FromBody] TransferTicketDto input)
         {
-            try
-            {
-                await _orderService.ExchangeTicket(input);
-                return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-
-            }
+            await _orderService.ExchangeTicket(input);
+            return new();
         }
         [AllowAnonymous]
         [HttpGet("tess")]
-        public APIResponse<string>geeee(string id)
+        public APIResponse<string> geeee(string id)
        => new(_orderService.QrTest(id));
 
         /// <summary>
@@ -164,17 +131,10 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("cancel-tranfer")]
-        public async Task<IActionResult> CancelTransferTicket([FromBody] TransferTicketDto input)
+        public async Task<APIResponse> CancelTransferTicket([FromBody] TransferTicketDto input)
         {
-            try
-            {
-                await _orderService.CancelTransferTicket(input);
-                return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _orderService.CancelTransferTicket(input);
+            return new();
         }
 
         /// <summary>
@@ -183,18 +143,11 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("cancel-exchange")]
-        public async Task<IActionResult> CancelExchangeTicket([FromBody] TransferTicketDto input)
+        public async Task<APIResponse> CancelExchangeTicket([FromBody] TransferTicketDto input)
         {
-            try
-            {
-                await _orderService.CancelExchangeTicket(input);
-                return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
 
-            }
+            await _orderService.CancelExchangeTicket(input);
+            return new();
         }
 
         /// <summary>
@@ -203,18 +156,11 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("confirm-exchange")]
-        public async Task<IActionResult> ConfirmExchangeTicket([FromBody] ConfirmExchangeTransferDto input)
+        public async Task<APIResponse> ConfirmExchangeTicket([FromBody] ConfirmExchangeTransferDto input)
         {
-            try
-            {
-                await _orderService.ConfirmExchange(input);
-                return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
+            await _orderService.ConfirmExchange(input);
+            return new();
 
-            }
         }
 
         /// <summary>
@@ -223,18 +169,10 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("confirm-transfer")]
-        public async Task<IActionResult> ConfirmTransferTicket([FromBody] ConfirmExchangeTransferDto input)
+        public async Task<APIResponse> ConfirmTransferTicket([FromBody] ConfirmExchangeTransferDto input)
         {
-            try
-            {
-                await _orderService.ConfirmTransfer(input);
-                return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-
-            }
+            await _orderService.ConfirmTransfer(input);
+            return new();
         }
 
         /// <summary>
@@ -243,18 +181,10 @@ namespace MYTICKET.WEB.API.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("transfer/update-status")]
-        public async Task<IActionResult> UpdateTransferStatus([FromBody] UpdateTransferStatusDto input)
+        public async Task<APIResponse> UpdateTransferStatus([FromBody] UpdateTransferStatusDto input)
         {
-            try
-            {
-                await _orderService.UpdateTransferStatus(input);
-                return Ok("Success");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-
-            }
+            await _orderService.UpdateTransferStatus(input);
+            return new();
         }
 
         /// <summary>
