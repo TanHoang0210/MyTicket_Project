@@ -529,6 +529,12 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             {
                 throw new UserFriendlyException(ErrorCode.OrderDetailNotFound);
             }
+            var dateNow = DateTime.Now.Date;
+            var eventDetail = _dbContext.EventDetails.FirstOrDefault(s => s.Id == orderDetail.EventDetailId && !s.Deleted && s.Status != EventDetailStatuses.CANCEL);
+            if (dateNow.AddDays(2) >= eventDetail.OrganizationDay.Date)
+            {
+                throw new UserFriendlyException(ErrorCode.CannotTransfer);
+            }
             orderDetail.IsTransfer = 1;
             orderDetail.TransferStatus = TransferStatuses.INIT;
             orderDetail.TransferCode = GenOrderCode(4);
@@ -919,6 +925,12 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             {
                 throw new UserFriendlyException(ErrorCode.OrderDetailNotFound);
             }
+            var dateNow = DateTime.Now.Date.AddDays(2);
+            var eventDetail = _dbContext.EventDetails.FirstOrDefault(s => s.Id == orderDetail.EventDetailId && !s.Deleted && s.Status != EventDetailStatuses.CANCEL);
+            if (dateNow >= eventDetail.OrganizationDay.Date)
+            {
+                throw new UserFriendlyException(ErrorCode.CannotExchange);
+            }
             orderDetail.IsExchange = 1;
             orderDetail.ExchangeStatus = ExchangeStatuses.INIT;
             orderDetail.ExchangeCode = GenOrderCode(4);
@@ -977,6 +989,12 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             if (orderDetail == null)
             {
                 throw new UserFriendlyException(ErrorCode.OrderDetailNotFound);
+            }
+            var dateNow = DateTime.Now.Date;
+            var eventDetail = _dbContext.EventDetails.FirstOrDefault(s => s.Id == orderDetail.EventDetailId && !s.Deleted && s.Status != EventDetailStatuses.CANCEL);
+            if(dateNow.AddDays(2) >= eventDetail.OrganizationDay.Date)
+            {
+                throw new UserFriendlyException(ErrorCode.CannotExchange);
             }
             if (orderDetail.ExchangeCode.ToLower() == input.ConfirmCode.ToLower())
             {
@@ -1038,6 +1056,12 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             if (orderDetail == null)
             {
                 throw new UserFriendlyException(ErrorCode.OrderDetailNotFound);
+            }
+            var dateNow = DateTime.Now.Date;
+            var eventDetail = _dbContext.EventDetails.FirstOrDefault(s => s.Id == orderDetail.EventDetailId && !s.Deleted && s.Status != EventDetailStatuses.CANCEL);
+            if (dateNow.AddDays(2) >= eventDetail.OrganizationDay.Date)
+            {
+                throw new UserFriendlyException(ErrorCode.CannotTransfer);
             }
             if (orderDetail.TransferCode == input.ConfirmCode)
             {
@@ -1197,6 +1221,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
                                                         TransferStatus = s.TransferStatus,
                                                         TransferCancelDate = s.TransferCancelDate,
                                                         TransferDoneDate = s.TransferDoneDate,
+                                                        RefundRequest = s.RefundRequest,
                                                     });
             result.TotalItems = query.Count();
             query = query.OrderDynamic(input.Sort);

@@ -76,7 +76,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             var query = (from ev in _dbContext.Events
                          join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
                          join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
-                         where (!ev.Deleted
+                         where (!ev.Deleted && ev.Status != EventStatuses.DONE
                                 && (input.Keyword == null || ev.EventName.ToLower().Contains(input.Keyword.ToLower()))
                                 && (input.EventTypeId == null || evType.Id == input.EventTypeId)
                                 && ((input.StartDate == null || evDetails.Any(ed => ed.OrganizationDay.Date >= input.StartDate.Value.Date))
@@ -95,6 +95,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                              Status = ev.Status, // Assuming Status is a property of EventDetail,
                              Supllier = _dbContext.Suppilers.Where(s => s.Id == ev.SupplierId).Select(s => s.FullName).FirstOrDefault(),
                              SupplierId = ev.SupplierId,
+                             IsOutStanding = ev.IsOutStanding
                          });
             result.TotalItems = query.Count();
             query = query.OrderByDescending(s => s.FirstEventDate);
@@ -153,6 +154,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             var result = (from ev in _dbContext.Events
                           join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
                           join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
+                          where !ev.Deleted && ev.Status != EventStatuses.DONE
                           select new EventDto
                           {
                               Id = ev.Id,
@@ -175,7 +177,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             var result = (from ev in _dbContext.Events
                           join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
                           join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
-                          where (!ev.Deleted && ev.IsOutStanding)
+                          where (!ev.Deleted && ev.IsOutStanding && ev.Status != EventStatuses.DONE)
                           select new EventDto
                           {
                               Id = ev.Id,
@@ -197,11 +199,8 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
         {
             var result = (from ev in _dbContext.Events
                           join evType in _dbContext.EventTypes on ev.EventTypeId equals evType.Id
-                          join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId into evDetails
-                          from evDetail in evDetails.DefaultIfEmpty()
-                          join odDetail in _dbContext.OrderDetails on evDetail.Id equals odDetail.EventDetailId into odDetails
-                          from odDetail in odDetails.DefaultIfEmpty()
-                          where (!ev.Deleted)
+                          join evDetail in _dbContext.EventDetails on ev.Id equals evDetail.EventId
+                          where (!ev.Deleted && ev.Status != EventStatuses.DONE)
                           select new EventDto
                           {
                               Id = ev.Id,
@@ -210,12 +209,13 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
                               EventImage = ev.EventImage,
                               EventTypeId = ev.EventTypeId,
                               EventTypeName = evType.Name,
-                              FirstEventDate = evDetails.OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
-                              LastEventDate = evDetails.OrderByDescending(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
+                              FirstEventDate = _dbContext.EventDetails.Where(s => s.EventId == ev.Id && !s.Deleted).OrderBy(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
+                              LastEventDate = _dbContext.EventDetails.Where(s => s.EventId == ev.Id && !s.Deleted).OrderByDescending(o => o.OrganizationDay).Select(s => s.OrganizationDay.Date).FirstOrDefault(),
                               Status = ev.Status, // Assuming Status is a property of EventDetail,
                               Supllier = _dbContext.Suppilers.Where(s => s.Id == ev.SupplierId).Select(s => s.FullName).FirstOrDefault(),
                               SupplierId = ev.SupplierId,
-                              PercentSaleTicket = odDetails.Count()
+                              PercentSaleTicket = _dbContext.OrderDetails.Where(s => s.EventDetailId == evDetail.Id && !s.Deleted &&
+                              s.Status == OrderDetailStatuses.SUCCESS && !(new int[] {ExchangeStatuses.READY_TO_EXCHANGE, ExchangeStatuses.SUCCESS}.Contains(s.ExchangeStatus.Value))).Count()
                           }).OrderByDescending(s => s.PercentSaleTicket).Take(9).ToList();
             return result;
         }
@@ -495,6 +495,13 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Implements
             evntDetail.Status = input.Status;
             _dbContext.SaveChanges();
 
+        }
+
+        public void UpdateEventOutStanding(UpdateEventStatus input)
+        {
+            var evt = _dbContext.Events.FirstOrDefault(s => s.Id == input.Id);
+            evt.IsOutStanding = !evt.IsOutStanding;
+            _dbContext.SaveChanges();
         }
 
         public void UpdateEventStatus(UpdateEventStatus input)

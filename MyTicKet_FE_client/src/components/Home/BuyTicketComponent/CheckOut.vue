@@ -130,7 +130,7 @@
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12 text-center mgt-16">
                     <b-button @click="cancelOrder()" class="action-btn" variant="outline-secondary">Hủy Đơn Hàng</b-button>
-                    <b-button class="action-btn" variant="outline-secondary">Tiếp Tục Đặt Vé</b-button>
+                    <b-button @click="continueOrder()" class="action-btn" variant="outline-secondary">Tiếp Tục Đặt Vé</b-button>
                     <b-button @click="gotoPay()" class="action-btn" type="button" id="submitButton"
                         variant="outline-success">
                         <i class="fa fa-check"></i>
@@ -201,6 +201,9 @@ export default {
                 console.error('API 1 Error:', error);
                 throw error;
             }
+        },
+        continueOrder(){
+            this.$router.push("/event")
         },
         async gotoPay() {
             try {

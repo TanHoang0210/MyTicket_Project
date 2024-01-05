@@ -18,6 +18,8 @@ using MYTICKET.WEB.SERVICE.FileModule.Abstracts;
 using MYTICKET.WEB.SERVICE.FileModule.Implements;
 using MYTICKET.WEB.SERVICE.MailService.Abstracts;
 using MYTICKET.WEB.SERVICE.MailService.Implements;
+using MYTICKET.WEB.SERVICE.NotificationModule.Abstracts;
+using MYTICKET.WEB.SERVICE.NotificationModule.Implements;
 using MYTICKET.WEB.SERVICE.OrderModule.Abstracts;
 using MYTICKET.WEB.SERVICE.OrderModule.Implements;
 using MYTICKET.WEB.SERVICE.Shared.Authorization;
@@ -67,20 +69,26 @@ namespace MyTicket.API
             builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
             builder.Services.AddScoped<ITicketService, TicketService>();
             builder.Services.AddScoped<ISystemService, SystemService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
 
 
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
             {
                 var backgroundJobService = scope.ServiceProvider.GetRequiredService<ISystemService>();
-                //Chúc sinh nhật
+                //Chúc sinh nhật 11h15
                 RecurringJob.AddOrUpdate("happy-birth-day-customer", () => backgroundJobService.HappyBirthDayCustomerNotification(), "15 3 * * *");
+                // nhắc hoàn tiền 10h45
+                RecurringJob.AddOrUpdate("not-refund-order", () => backgroundJobService.NotRefundNotificationForAdmin(), "45 2 * * *");
+                //nhắc hoàn tiền chuyển nhượng 10h30
+                RecurringJob.AddOrUpdate("not-refund-transfer", () => backgroundJobService.NotRefundTransferNotificationForAdmin(), "30 2 * * *");
+                //nhắc hoàn tiền trả vé 10h15
+                RecurringJob.AddOrUpdate("not-refund-exchange", () => backgroundJobService.NotRefundExchangeNotificationForAdmin(), "15 2 * * *");
+                // tự động hủy chuyển nhượng vé 9h30p
+                RecurringJob.AddOrUpdate("cancel-transfer", () => backgroundJobService.CancelAllTransfer(), "30 1 * * *");
+                // tự động hủy trả vé 9h15p
+                RecurringJob.AddOrUpdate("cancel-exchange", () => backgroundJobService.CancelAllExchange(), "15 1 * * *");
 
-                //RecurringJob.AddOrUpdate("not-refund-order", () => backgroundJobService.NotRefundNotificationForAdmin(), "0 8 * * *");
-
-                //RecurringJob.AddOrUpdate("not-refund-transfer", () => backgroundJobService.NotRefundTransferNotificationForAdmin(), "0 9 * * *");
-
-                //RecurringJob.AddOrUpdate("not-refund-exchange", () => backgroundJobService.NotRefundExchangeNotificationForAdmin(), "0 10 * * *");
 
             }
             app.Configure();

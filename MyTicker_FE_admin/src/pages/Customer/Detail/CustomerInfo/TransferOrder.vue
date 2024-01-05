@@ -35,19 +35,25 @@
                             <template #cell(transferStatus)="data">
                                 <td style="color: blue;font-weight: 600;" v-if="data.item.transferStatus === 1">Khởi tạo
                                 </td>
-                                <td style="color: green;font-weight: 600;" v-if="data.item.transferStatus === 2">Đã xác nhận
+                                <td style="color: greenyellow;font-weight: 600;" v-if="data.item.transferStatus === 2">Đã xác nhận
                                 </td>
                                 <td style="color: #888;font-weight: 600;" v-if="data.item.transferStatus === 3">Đã hủy</td>
                                 <td style="color: yellow;font-weight: 600;" v-if="data.item.transferStatus === 4">Đang thanh
                                     toán</td>
                                 <td style="color: orange;font-weight: 600;" v-if="data.item.transferStatus === 5">Đã chuyển
                                     nhượng</td>
+                                    <td style="color: green;font-weight: 600;" v-if="data.item.transferStatus === 6">Đã nhận vé</td>
                             </template>
                             <template #cell(action)="data">
                                 <div style="font-size: 1.2rem; !important">
                                     <b-button @click="showModalTransfer(data.item.id)" class="table-btn" variant="secondary"
                                         title="Xem chi tiết">
                                         <b-icon icon="pencil-square">
+                                        </b-icon>
+                                    </b-button>
+                                    <b-button v-if="data.item.refundRequest" @click="Refund(data.item.id,customerId)" class="table-btn"
+                                        variant="warning" title="Hoàn tiền">
+                                        <b-icon icon="currency-exchange">
                                         </b-icon>
                                     </b-button>
                                 </div>
@@ -78,15 +84,13 @@
                                     </base-input>
                                     <label for="status">Trạng thái</label>
                                     <br>
-                                    <div v-if="transfer.status !== 6">
                                         <span style="color: yellow;font-weight: 600;" v-if="transfer.transferStatus === 4">Đang
                                             thanh
                                             toán</span>
                                         <span style="color: orange;font-weight: 600;" v-if="transfer.transferStatus === 5">Đã
                                             chuyển
                                             nhượng</span>
-                                    </div>
-                                        <span style="color: green;font-weight: 600;" v-else>Đã
+                                        <span style="color: green;font-weight: 600;" v-if="transfer.transferStatus === 6">Đã
                                         nhận vé</span>
                                 </div>
                                 <div class="col-md-6">
@@ -150,6 +154,7 @@ export default {
                 { key: 'transferStatus', label: 'Trạng thái' },
                 { key: 'action', label: 'Thao tác' },
             ],
+            customerId:0,
             transfer: {
                 id: 0,
                 orderId: 0,
@@ -165,7 +170,6 @@ export default {
                 ticketCode: "string",
                 seatCode: "string",
                 price: 0,
-                transferStatus: 0,
                 transferDate: "2023-12-24T15:35:00.181Z",
                 transferDoneDate: "2023-12-24T15:35:00.181Z",
                 transferCancelDate: "2023-12-24T15:35:00.181Z"
@@ -197,6 +201,24 @@ export default {
         handleFileChange(event) {
             // Update the 'file' data property when the file input changes
             this.imageUpload = event.target.files[0];
+        },
+        async Refund(orderDetailId, customerId) {
+            const res = await axios.post('api/Vnpay/refund/transfer/payment-vn-pay',
+                {
+                    orderDetail: orderDetailId,
+                    customerId: customerId
+                }
+                , {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                if(res.data.code === 200){
+                    this.notifyVue('Thành công', 'Hoàn tiền thành công', 'top', 'right', 'success')
+                }else{
+                    this.notifyVue('Thất bại', res.data.message, 'top', 'right', 'danger')
+                }
+                this.getAllData();
         },
         async uploadImageType() {
             const formData = new FormData();
@@ -349,6 +371,7 @@ export default {
     },
     mounted() {
         this.getAllData();
+        this.customerId = this.$route.query.id
     },
     computed: {
     },

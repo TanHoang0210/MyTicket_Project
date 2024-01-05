@@ -38,8 +38,8 @@
               </div>
               <div class="col-md-2">
                 <label for="per-page-select" style="text-align: end;">Số bản ghi</label>
-                <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize" @change="getAllData()" :options="pageSizeOption"
-                size="sm"></b-form-select>
+                <b-form-select style="width:50% right:0" id="per-page-select" v-model="pageSize" @change="getAllData()"
+                  :options="pageSizeOption" size="sm"></b-form-select>
               </div>
             </div>
             <b-table :current-page="pageNumber" id="table-event" striped hover :fields="eventFields" :items="events">
@@ -58,9 +58,15 @@
                   <b-icon icon="pencil-square">
                   </b-icon>
                 </router-link>
+                <b-button @click="UpdateOutstanding(data.item.id)" :style="{ border: 'none' }">
+                  <b-icon variant="danger" v-if="data.item.isOutStanding" icon="star-fill"
+                    title="Hủy đánh dấu nổi bật"></b-icon>
+                  <b-icon v-else icon="star" title="Đánh dấu nổi bật"></b-icon>
+                </b-button>
               </template>
             </b-table>
-            <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize" aria-controls="table-event"></b-pagination>
+            <b-pagination v-model="pageNumber" :total-rows="totals" :per-page="pageSize"
+              aria-controls="table-event"></b-pagination>
           </card>
         </div>
       </div>
@@ -118,7 +124,7 @@ export default {
       id: 1,
       pageSizeOption: [5, 10, 25, 50, 100],
       pageSize: 10,
-      totals:0,
+      totals: 0,
       pageNumber: 1,
       events: [],
       eventFields: [
@@ -184,6 +190,33 @@ export default {
         default:
           return { status, statusColor };
       }
+    },
+    notifyVue(type, message, verticalAlign, horizontalAlign, color) {
+            this.$notifications.notify(
+                {
+                    message: `<span><b>${type}</b> - ${message}</span>`,
+                    icon: 'nc-icon nc-app',
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: color
+                })
+        },
+    async UpdateOutstanding(id) {
+      const response = await axios.put('myticket/api/event/update-out-standing', {
+        id:id
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any other headers if needed
+        },
+      });
+      if (response.data.code === 200) {
+        this.notifyVue('Thành công', 'Thêm mới sự kiện thành công', 'top', 'right', "success")
+        // Return the response or do further processing if needed
+      } else {
+        this.notifyVue('Thất bại', 'Thêm mới sự kiện thất bại', 'top', 'right', "danger")
+      }
+    this.getAllData();
     }
   },
   mounted() {

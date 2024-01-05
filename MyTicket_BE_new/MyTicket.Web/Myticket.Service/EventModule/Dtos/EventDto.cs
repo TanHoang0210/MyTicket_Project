@@ -67,5 +67,7 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Dtos
         public double? PercentSaleTicket {get;set;}
 
         public bool IsExchange { get; set; }
+
+        public bool IsOutStanding { get; set; }
     }
 }

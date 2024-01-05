@@ -37,5 +37,18 @@ namespace MYTICKET.WEB.SERVICE.TicketModule.Abstracts
         /// <param name="id"></param>
         /// <returns></returns>
         TicketEventDto GetTicketById(int id);
+
+        /// <summary>
+        /// Cập nhật trạng thái loại vé
+        /// </summary>
+        /// <param name="input"></param>
+        void UpdateTicketStatus(UpdateTicketStatusDto input);
+
+        /// <summary>
+        /// Danh sachs vé của loại
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        List<TicketDto> GetAllTicketByType(int id);
     }
 }

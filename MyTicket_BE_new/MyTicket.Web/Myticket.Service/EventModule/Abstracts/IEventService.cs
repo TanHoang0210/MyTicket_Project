@@ -98,5 +98,12 @@ namespace MYTICKET.WEB.SERVICE.EventModule.Abstracts
         /// <returns></returns>
         PagingResult<EventDto> FindAllEventBySupplier(FilterEventDto input);
 
+
+        /// <summary>
+        /// trạng thái nổi bật
+        /// </summary>
+        /// <param name="input"></param>
+        void UpdateEventOutStanding(UpdateEventStatus input);
+
     }
 }

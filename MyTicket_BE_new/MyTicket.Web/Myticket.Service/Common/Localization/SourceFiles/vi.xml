@@ -34,6 +34,10 @@
 		<text name="error_ComfirmTransferCodeWrong">Sai mã yêu cầu chuyển nhượng</text>
 		<text name="error_ComfirmExchangeCodeWrong">Sai mã yêu cầu trả vé</text>
 
+		<text name="error_CannotExchange">Không thể trả vé</text>
+		<text name="error_CannotTransfer">Không thể chuyền nhượng vé</text>
+
+
 
 		<!--Tài liệu lỗi-->
 		<text name="error_DocumentNotFound">Không tìm thấy tài liệu</text>

@@ -141,22 +141,19 @@ export default {
     },
     methods: {
         async createEvent() {
-            try {
                 const response = await axios.post('myticket/api/event/create', this.eventInfo, {
                     headers: {
                         'Content-Type': 'application/json',
                         // Add any other headers if needed
                     },
                 });
-                helpService.notifyVue ('Thành công','Thêm mới sự kiện thành công','top', 'right',2)
-                // Return the response or do further processing if needed
-                this.$router.push('/event')
-            } catch (error) {
-                // Handle errors
-                helpService.notifyVue ('Thất bại','Thêm mới sự kiện thất bại','top', 'right',4)
-                // Throw the error or return an error object if needed
-                throw error;
-            }
+                if(response.data.code === 200){
+                    this.notifyVue ('Thành công','Thêm mới sự kiện thành công','top', 'right',"success")
+                    // Return the response or do further processing if needed
+                    this.$router.push('')
+                }else{
+                    this.notifyVue ('Thất bại','Thêm mới sự kiện thất bại','top', 'right',"danger")
+                }
         },
         async uploadImage() {
             const formData = new FormData();
@@ -214,6 +211,16 @@ export default {
                 console.error('API 1 Error:', error);
                 throw error;
             }
+        },
+        notifyVue(type, message, verticalAlign, horizontalAlign, color) {
+            this.$notifications.notify(
+                {
+                    message: `<span><b>${type}</b> - ${message}</span>`,
+                    icon: 'nc-icon nc-app',
+                    horizontalAlign: horizontalAlign,
+                    verticalAlign: verticalAlign,
+                    type: color
+                })
         },
     }, mounted() {
         this.fetchData();

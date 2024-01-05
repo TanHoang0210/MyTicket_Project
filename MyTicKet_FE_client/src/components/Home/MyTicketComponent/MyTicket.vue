@@ -39,7 +39,7 @@
                     <span v-else style="color: red;font-weight: 600;">Hủy Sự Kiện</span>
                 </template>
                 <template v-slot:cell(action)="data">
-                    <b-dropdown variant="none" no-caret>
+                    <b-dropdown  v-if="data.item.eventStatus !== 5" variant="none" no-caret>
                         <template #button-content>
                             <b-icon icon="three-dots"></b-icon>
                         </template>
@@ -289,7 +289,7 @@ export default {
             }
         },
         async confirmTransferTicket(id) {
-            await axios.put('myticket/api/order/transfer-ticker',
+            const res = await axios.put('myticket/api/order/transfer-ticker',
                 {
                     orderDetailId: id
                 },
@@ -297,7 +297,8 @@ export default {
                     headers: {
                         'Content-Type': 'application/json',
                     }
-                }).then(res =>
+                })
+                if(res.data.code === 200){
                     this.$refs['modal-transfer'].hide(),
                     this.$router.push('/transfer'),
                     this.$toasted.success("Yêu cầu chuyển nhượng vé thành công", {
@@ -310,8 +311,9 @@ export default {
                         containerClass: 'custom-toast-container-class', // Thêm class cho container
                         singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
                     })
-                ).catch(err =>
-                    this.$toasted.error(err.response.data.error_description, {
+                }else{
+                    this.$refs['modal-transfer'].hide(),
+                    this.$toasted.error(res.data.message, {
                         position: 'top-center',
                         duration: 3000, // Thời gian hiển thị toast (ms)
                         theme: 'outline', // Theme: 'outline', 'bubble'
@@ -321,9 +323,9 @@ export default {
                         containerClass: 'custom-toast-container-class', // Thêm class cho container
                         singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
 
-                    }),
+                    })
+                }
                     this.$refs['modal-transfer'].hide()
-                )
             this.fetchData()
         },
         async showExchangeModal(id) {
@@ -363,7 +365,7 @@ export default {
                 this.fetchData()
 
             } else {
-                this.$toasted.error(err.response.data.error_description, {
+                this.$toasted.error(res.data.message, {
                     position: 'top-center',
                     duration: 3000, // Thời gian hiển thị toast (ms)
                     theme: 'outline', // Theme: 'outline', 'bubble'

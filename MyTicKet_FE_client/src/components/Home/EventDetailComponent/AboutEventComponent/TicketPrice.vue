@@ -13,7 +13,7 @@
                                     <span style="color: var(--primary-color-hover-bold);">
                                         THÔNG TIN MỞ BÁN VÉ Ngày {{ index + 1 }}
                                     </span>
-                                    <div v-if="currentUser !== null" style="display: flex;">
+                                    <div v-if="currentUser !== null && detail.status !== 5" style="display: flex;">
                                         <button @click="showTicketTransferEvent(detail.id)"
                                             class="btn btn-outline-primary w-20 mb-3 action-btn viewmap-btn">
                                             Danh sách vé đươc chuyển nhượng</button>

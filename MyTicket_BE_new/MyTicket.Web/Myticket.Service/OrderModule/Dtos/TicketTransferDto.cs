@@ -41,5 +41,6 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Dtos
         public DateTime? TransferDoneDate { get; set; }
         public DateTime? TransferCancelDate { get; set; }
         public bool TransferRefundRequest { get; set; }
+        public bool RefundRequest { get; set; }
     }
 }

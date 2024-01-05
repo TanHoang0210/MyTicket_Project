@@ -22,5 +22,11 @@ namespace MYTICKET.WEB.SERVICE.NotificationModule.Abstracts
         /// <param name="input"></param>
         /// <returns></returns>
         PagingResult<NotificationDto> GetAllNotifications(FilterNotificationDto input);
+
+        /// <summary>
+        /// cập nhật trạng thái
+        /// </summary>
+        /// <param name="id"></param>
+        void UpdateStatusNoti(int id);
     }
 }

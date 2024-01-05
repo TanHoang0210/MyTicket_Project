@@ -9,5 +9,6 @@ namespace MYTICKET.WEB.SERVICE.NotificationModule.Dtos
 {
     public class FilterNotificationDto : PagingRequestBaseDto
     {
+        public bool? IsSeen { get; set; }
     }
 }

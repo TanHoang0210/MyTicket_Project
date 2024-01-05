@@ -26,7 +26,7 @@
                                 <td style="color:orange;font-weight: 600;" v-if="data.item.exchangeStatus === 2">Đã xác nhận</td>
                                 <td style="color: #888;font-weight: 600;" v-if="data.item.exchangeStatus === 3">Đã hủy
                                 </td>
-                                <td style="color: green;font-weight: 600;" v-if="data.item.exchangeStatus === 4">Trả vé thành công</td>
+                                <td style="color: green;font-weight: 600;" v-if="data.item.exchangeStatus === 4">Đã hoàn tiền trả vé</td>
                             </template>
                             <template #cell(action)="data">
                                 <div style="font-size: 1.2rem; !important">
@@ -95,10 +95,10 @@
                                     <br>
                                     <span style="color: blue;font-weight: 600;" v-if="exchange.exchangeStatus === 1">Khởi tạo
                                 </span>
-                                <span style="color: green;font-weight: 600;" v-if="exchange.exchangeStatus === 2">Đã xác nhận
+                                <span style="color: orange;font-weight: 600;" v-if="exchange.exchangeStatus === 2">Đã xác nhận
                                 </span>
                                 <span style="color: #888;font-weight: 600;" v-if="exchange.exchangeStatus === 3">Đã hủy</span>
-                                <span style="color: yellow;font-weight: 600;" v-if="exchange.exchangeStatus === 4">Trả vé thành công</span>
+                                <span style="color: green;font-weight: 600;" v-if="exchange.exchangeStatus === 4">Đã hoàn tiền trả vé</span>
                                 </div>
                             </div>
                         </form>
@@ -133,6 +133,7 @@ export default {
                 status: null
             },
             id: 0,
+            customerId:0,
             isUpdate: false,
             pageSize: 100,
             pageNumber: 1,
@@ -215,6 +216,24 @@ export default {
                 throw error;
             }
         },
+        async Refund(orderDetailId, customerId) {
+            const res = await axios.post('api/Vnpay/exchange/payment-vn-pay',
+                {
+                    orderDetail: orderDetailId,
+                    customerId: customerId
+                }
+                , {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                if(res.data.code === 200){
+                    this.notifyVue('Thành công', 'Hoàn tiền trả vé thành công', 'top', 'right', 'success')
+                }else{
+                    this.notifyVue('Thất bại', res.data.message, 'top', 'right', 'danger')
+                }
+                this.getAllData();
+        },
         notifyVue(type, message, verticalAlign, horizontalAlign, color) {
             this.$notifications.notify(
                 {
@@ -247,6 +266,7 @@ export default {
     },
     mounted() {
         this.getAllData();
+        this.customerId = this.$route.query.id;
     },
     computed: {
     }

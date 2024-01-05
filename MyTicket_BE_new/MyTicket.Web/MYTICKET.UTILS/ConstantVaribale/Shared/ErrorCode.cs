@@ -65,6 +65,8 @@
         EmailUsed = 9006,
         ComfirmTransferCodeWrong = 9007,
         ComfirmExchangeCodeWrong = 9008,
+        CannotExchange = 9009,
+        CannotTransfer = 9010,
 
 
     }

@@ -115,6 +115,10 @@
                                 <template #row-details="data">
                                     <b-card>
                                         <b-table striped hover :fields="ticketField" :items="data.item.ticketEvents">
+                                            <template #cell(status)="ticket">
+                                                <span v-if="ticket.item.status === 1">Mở bán vé</span>
+                                                <span v-if="ticket.item.status === 2">Ngừng bán vé</span>
+                                            </template>
                                             <template #cell(action)="ticket">
                                                 <div style="font-size: 1.2rem; !important">
                                                     <b-button class="table-btn" @click="deleteTicket()" variant="danger"
@@ -127,11 +131,18 @@
                                                         <b-icon icon="pencil-square">
                                                         </b-icon>
                                                     </b-button>
-                                                    <b-button v-if="ticket.item.status === 2" class="btn btn-warning"
+                                                    <b-button @click.prevent="showModalTicketList(ticket.item.id)"
+                                                        title="Danh sách vé" class="btn btn-info" :style="{ border: 'none' }">
+                                                        <b-icon icon="list">
+                                                        </b-icon>
+                                                    </b-button>
+                                                    <b-button @click="updateStatusTicket(ticket.item.id, 2)"
+                                                        v-if="ticket.item.status === 1" class="btn btn-warning"
                                                         :style="{ border: 'none' }" title="Ngừng bán vé">
                                                         <b-icon icon="lock"></b-icon>
                                                     </b-button>
-                                                    <b-button v-if="ticket.item.status === 3 || 1" class="btn btn-warning"
+                                                    <b-button @click="updateStatusTicket(ticket.item.id, 1)"
+                                                        v-if="ticket.item.status === 2" class="btn btn-success"
                                                         :style="{ border: 'none' }" title="Mở bán vé">
                                                         <b-icon icon="unlock"></b-icon>
                                                     </b-button>
@@ -368,6 +379,22 @@
                     </div>
                 </template>
             </b-modal>
+            <b-modal id="modal-list-ticket" ref="modal-list-ticket" size="lg" title="Danh sách vé">
+                    <b-table responsive striped hover :fields="ticketListField" :items="myListTicket">
+                                    <template #cell(status)="data">
+                                        <td style="color: green;font-weight: 600;" v-if="data.item.status === 1">Sẵn sàng</td>
+                                        <td style="color: #555;font-weight: 600;" v-if="data.item.status === 2">Đã bán
+                                        </td>
+                                    </template>
+                                </b-table>
+                <template #modal-footer="{cancel }">
+                    <div style="margin: auto; width: 30%;">
+                        <b-button class="buttonModal" size="lg" variant="secondary" @click="cancel()">
+                            Cancel
+                        </b-button>
+                    </div>
+                </template>
+            </b-modal>
         </div>
     </div>
 </template>
@@ -390,6 +417,7 @@ export default {
             },
             disabledIndices: [],
             isUpdate: false,
+            myListTicket:[],
             listType: [
                 {
 
@@ -417,6 +445,12 @@ export default {
                 { key: 'intQuantity', label: 'Số lượng' },
                 { key: 'quantity', label: 'Số lượng còn lại' },
                 { key: 'action', label: 'Thao tác' },
+            ],
+            ticketListField:[
+                'id',
+                { key: 'ticketCode', label: 'Mã vé' },
+                { key: 'seatCode', label: 'Mã chỗ ngồi' },
+                { key: 'status', label: 'Trạng thái' },
             ],
             detailEventField: [
                 { key: 'id' },
@@ -515,7 +549,13 @@ export default {
         }
     },
     methods: {
-
+        async showModalTicketList(id){
+            this.myListTicket = await this.getlistTicketByType(id);
+            this.$nextTick(() => {
+                    // Using $nextTick to ensure the modal component is updated
+                    this.$refs['modal-list-ticket'].show();
+                });
+        },
         async updateProfile() {
             this.updateEvent.eventName = this.eventInfo.eventName
             this.updateEvent.eventTypeId = this.eventInfo.eventTypeId
@@ -574,6 +614,20 @@ export default {
                     "/myticket/api/event/admin/find-by-id", {
                     params: {
                         id: this.$route.query.id
+                    }
+                })
+                return res.data.data
+            } catch (error) {
+                console.error('API 1 Error:', error);
+                throw error;
+            }
+        },
+        async getlistTicketByType(id) {
+            try {
+                const res = await axios.get(
+                    "/myticket/api/ticket/list/find-all", {
+                    params: {
+                        id: id
                     }
                 })
                 return res.data.data
@@ -874,6 +928,36 @@ export default {
 
             this.fetchData();
         },
+        async updateStatusTicket(id, status) {
+            let message = "message"; // Initialize with a default value
+
+            switch (status) {
+                case 1:
+                    message = "Mở bán vé";
+                    break;
+                case 2:
+                    message = "Ngừng bán vé";
+                    break;
+                default:
+                    break;
+            }
+            const response = await axios.put('myticket/api/ticket/update-status', {
+                id: id,
+                status: status
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (response.data.code === 200) {
+                this.notifyVue('Thành công', `${message} thành công`, 'top', 'right', 'success');
+            } else {
+                this.notifyVue('Thất bại', `${message} thất bại`, 'top', 'right', 'danger');
+            }
+
+            this.fetchData();
+        },
         async updateEventStatus(id, status) {
             let message = "message"; // Initialize with a default value
 
@@ -915,6 +999,12 @@ export default {
 
 </script>
 <style>
+#modal-list-ticket___BV_modal_content_{
+    height: 500px !important;
+}
+#modal-list-ticket___BV_modal_body_{
+    overflow: scroll !important;
+}
 .select-form {
     width: 100%;
     height: 40px;
@@ -924,7 +1014,9 @@ export default {
     color: #565656;
     font-size: 1rem;
 }
-
+#modal-list-ticket{
+    top: -150px !important;
+}
 .buttonModal {
     margin: 0 5px !important;
 }
@@ -941,7 +1033,7 @@ export default {
     font-size: 1.6rem !important;
 }
 
-<style>.sub-table {
+.sub-table {
     width: 100%;
     margin-top: 10px;
     /* Adjust the margin as needed */

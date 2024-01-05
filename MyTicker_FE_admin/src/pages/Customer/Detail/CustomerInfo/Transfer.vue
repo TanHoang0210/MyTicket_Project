@@ -42,6 +42,7 @@
                                     toán</td>
                                 <td style="color: orange;font-weight: 600;" v-if="data.item.transferStatus === 5">Đã chuyển
                                     nhượng</td>
+                                    <td style="color: orangered;font-weight: 600;" v-if="data.item.transferStatus === 6">Đã hoàn tiền</td>
                             </template>
                             <template #cell(action)="data">
                                 <div style="font-size: 1.2rem; !important">
@@ -116,6 +117,8 @@
                                     <span style="color: orange;font-weight: 600;" v-if="transfer.transferStatus === 5">Đã
                                         chuyển
                                         nhượng</span>
+                                        <span style="color: orangered;font-weight: 600;" v-if="transfer.transferStatus === 6">Đã
+                                        hoàn tiền</span>
                                 </div>
                             </div>
                         </form>
@@ -152,6 +155,7 @@ export default {
             totals: 0,
             pageSizeOption: [5, 10, 25, 50, 100],
             id: 0,
+            customerId:0,
             isUpdate: false,
             pageSize: 100,
             pageNumber: 1,
@@ -208,6 +212,24 @@ export default {
                 console.error('API Error:', error);
                 throw error;
             }
+        },
+        async Refund(orderDetailId, customerId) {
+            const res = await axios.post('api/Vnpay/refund/transfer-order/payment-vn-pay',
+                {
+                    orderDetail: orderDetailId,
+                    customerId: customerId
+                }
+                , {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                if(res.data.code === 200){
+                    this.notifyVue('Thành công', 'Hoàn tiền thành công', 'top', 'right', 'success')
+                }else{
+                    this.notifyVue('Thất bại', res.data.message, 'top', 'right', 'danger')
+                }
+                this.getAllData();
         },
         handleFileChange(event) {
             // Update the 'file' data property when the file input changes
@@ -362,6 +384,7 @@ export default {
     },
     mounted() {
         this.getAllData();
+        this.customerId = this.$route.query.id;
     },
     computed: {
     },

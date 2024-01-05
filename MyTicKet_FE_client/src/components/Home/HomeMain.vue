@@ -8,6 +8,7 @@
                  :categories="categories"
                  :venues="venues"
                  :eventNews="eventNews"
+                 :eventTopSales="eventTopSales"
                 ></events>
             </div>
         </div>
@@ -17,7 +18,7 @@
 import Events from "@/components/Home/MainComponent/Events.vue"
 import SlideShow from "@/components/Home/MainComponent/SlideShow.vue"
 export default{
-    props:['categories','events','venues','eventNews'],
+    props:['categories','events','venues','eventNews','eventTopSales'],
     components:{SlideShow,Events},
     name:'HomeMain'
 }

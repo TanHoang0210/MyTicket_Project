@@ -45,6 +45,9 @@
       <sidebar-link to="/admin/report">
         <i class="nc-icon nc-bell-55"></i>
         <p>Thông báo</p>
+        <div class="cart-notification">
+          <span>{{ count }}</span>
+        </div>
       </sidebar-link>
     </side-bar>
     <div class="main-panel">
@@ -59,29 +62,74 @@
   </div>
 </template>
 <style lang="scss">
-.sidebar-wrapper{
+.sidebar-wrapper {
   background-color: var(--primary-color-bold) !important;
 }
 </style>
 <script>
-  import TopNavbar from './TopNavbar.vue'
-  import ContentFooter from './ContentFooter.vue'
-  import DashboardContent from './Content.vue'
-  import MobileMenu from './MobileMenu.vue'
-  export default {
-    components: {
-      TopNavbar,
-      ContentFooter,
-      DashboardContent,
-      MobileMenu
-    },
-    methods: {
-      toggleSidebar () {
-        if (this.$sidebar.showSidebar) {
-          this.$sidebar.displaySidebar(false)
-        }
+import TopNavbar from './TopNavbar.vue'
+import ContentFooter from './ContentFooter.vue'
+import DashboardContent from './Content.vue'
+import MobileMenu from './MobileMenu.vue'
+import axios from 'axios'
+export default {
+  components: {
+    TopNavbar,
+    ContentFooter,
+    DashboardContent,
+    MobileMenu
+  },
+  data(){
+      return{
+        count:0,
       }
-    }
+    },
+  methods: {
+    toggleSidebar() {
+      if (this.$sidebar.showSidebar) {
+        this.$sidebar.displaySidebar(false)
+      }
+    },
+    async countNotification() {
+      const res = await axios.get(
+        "myticket/api/notification/count",
+        {
+        }
+      )
+      if (res.data.code === 200) {
+        this.count = res.data.data
+      } else {
+        this.notifyVue('Thất bại', res.data.message, 'top', 'right', 'danger')
+
+      }
+    },
+    notifyVue(type, message, verticalAlign, horizontalAlign, color) {
+      this.$notifications.notify(
+        {
+          message: `<span><b>${type}</b> - ${message}</span>`,
+          icon: 'nc-icon nc-app',
+          horizontalAlign: horizontalAlign,
+          verticalAlign: verticalAlign,
+          type: color
+        })
+    },
+  },
+  mounted(){
+    this.countNotification();
   }
+}
 
 </script>
+<style>
+.cart-notification {
+  width: 20px;
+  border-radius: 20px 20px;
+  text-align: center;
+  font-size: 0.8rem;
+  top: 60%;
+  right: 75%;
+  position: absolute;
+  background-color: red;
+  color: #fff;
+}
+</style>

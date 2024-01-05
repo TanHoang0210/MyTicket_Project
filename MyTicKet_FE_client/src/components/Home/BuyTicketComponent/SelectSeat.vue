@@ -75,33 +75,10 @@
                                                     </b-button>
                                                 </b-input-group-append>
                                             </b-input-group>
-                                            <!-- <b-input-group v-if="ticketnow.status === 1">
-                                                <b-input-group-prepend>
-                                                    <b-button variant="outline-secondary">
-                                                        <b-icon  icon="dash-lg"></b-icon>
-                                                    </b-button>
-                                                </b-input-group-prepend>
-
-                                                <b-form-input type="number" class="text-center" style="font-size: 1.2rem;"
-                                                 :min="0" :max="ticketnow.quantity"></b-form-input>
-                                                <b-input-group-append>
-                                                    <b-button variant="outline-success">
-                                                        <b-icon  icon="plus-lg"></b-icon>
-                                                    </b-button>
-                                                </b-input-group-append>
-                                            </b-input-group> -->
-                                            <!-- <select style="width: 200px; height: 65px; margin: auto;"
-                                                v-if="ticketnow.status === 1" @change="handleOrder($event, index)"
-                                                id="TicketForm_ticketPrice_001" class="w100 form-select"
-                                                name="TicketForm[ticketPrice][001]">
-                                                <option value="0">Chọn số lượng
-                                                </option>
-                                                <option v-for="(i, index) in ticketnow.quantity + 1" :value="index">{{ index
-                                                }}
-                                                </option>
-                                            </select> -->
                                             <img style="width: 200px; margin: auto;" v-else-if="ticketnow.status === 3"
                                                 :src="$fileUrl + soldOutImg" alt="">
+                                                <b-button v-else-if="ticketnow.status === 2"
+                                                style="width: 200px; margin: auto;" variant="danger" disabled>Ngừng bán vé</b-button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -160,18 +137,10 @@
                                                     </b-button>
                                                 </b-input-group-append>
                                             </b-input-group>
-                                            <!-- <select style="width: 200px; height: 65px; margin: auto;"
-                                                v-if="ticketnow.status === 1" @change="handleOrder($event, index)"
-                                                id="TicketForm_ticketPrice_001" class="w100 form-select"
-                                                name="TicketForm[ticketPrice][001]">
-                                                <option value="0">Chọn số lượng
-                                                </option>
-                                                <option v-for="(i, index) in ticketnow.quantity + 1" :value="index">{{ index
-                                                }}
-                                                </option>
-                                            </select> -->
                                             <img style="width: 200px; margin: auto;" v-else-if="ticketnow.status === 3"
                                                 :src="$fileUrl + soldOutImg" alt="">
+                                                <b-button v-else-if="ticketnow.status === 2"
+                                                style="width: 200px; margin: auto;" variant="danger" disabled>Ngừng bán vé</b-button>
                                         </td>
                                     </tr>
                                 </tbody>

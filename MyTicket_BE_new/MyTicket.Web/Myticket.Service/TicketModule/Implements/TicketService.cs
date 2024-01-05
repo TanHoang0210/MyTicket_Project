@@ -73,6 +73,22 @@ namespace MYTICKET.WEB.SERVICE.TicketModule.Implements
             return ticketEvents;
         }
 
+        public List<TicketDto> GetAllTicketByType(int id)
+        {
+            var tickets = _dbContext.Tickets.Where(s => s.TicketEventId == id)
+                                           .Select(s => new TicketDto
+                                           {
+                                               Id = s.Id,
+                                               SeatCode = s.SeatCode,
+                                               TicketCode = s.TicketCode,
+                                               Status = !(_dbContext.OrderDetails.Any(x => x.TicketId == s.Id
+                                               && x.Status == OrderStatuses.SUCCESS 
+                                               && x.ExchangeStatus != ExchangeStatuses.SUCCESS
+                                               && !x.Deleted)) ? 1 : 2
+                                           }).ToList();
+            return tickets;
+        }
+
         public PagingResult<TicketEventTransferDto> GetAllTicketTransfer(FilterTicketDto input)
         {
             var currentUserId = CommonUtils.GetCurrentUserId(_httpContext);
@@ -125,6 +141,16 @@ namespace MYTICKET.WEB.SERVICE.TicketModule.Implements
                 var orderQuantity = _dbContext.OrderDetails.Include(s => s.Order).Include(s => s.Order).Where(s => s.Ticket.TicketEventId == result.Id && s.Order.Status == OrderStatuses.SUCCESS && !s.Deleted && !s.Order.Deleted).Count();
             result.Quantity = result.IntQuantity - orderQuantity;
             return result;
+        }
+
+        public void UpdateTicketStatus(UpdateTicketStatusDto input)
+        {
+            var ticket = _dbContext.TicketEvents.FirstOrDefault(s => s.Id == input.Id && !s.Deleted);
+            if (ticket != null) 
+            {
+                ticket.Status = input.Status;
+            }
+            _dbContext.SaveChanges();
         }
 
         private string GenerateCode(int length)

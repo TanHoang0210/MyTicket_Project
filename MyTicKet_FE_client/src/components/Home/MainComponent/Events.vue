@@ -37,7 +37,7 @@
                   Các sự kiện bán chạy 
                 </h1>
         <div class="event__list row">
-            <div class="event__item--inner col-sm-12 col-xl-4 col-lg-6" v-for="event in eventNews">
+            <div class="event__item--inner col-sm-12 col-xl-4 col-lg-6" v-for="event in eventTopSales">
                 <div class="event__item">
                     <b-card class="mb-3 event__item--info">
                         <div class="event__item--img" style="position: relative;">
@@ -83,7 +83,7 @@ import Banner from "@/components/Home/MainComponent/EventsComponent.vue/Banner.v
 import Categories from "@/components/Home/MainComponent/Categories.vue"
 import Venues from "@/components/Home/MainComponent/Venues.vue"
 export default {
-    props:['events','categories','venues','eventNews'],
+    props:['events','categories','venues','eventNews','eventTopSales'],
     components:{MainEvent,Banner,Categories,Venues},
     name:"events",
     methods: {

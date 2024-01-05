@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div>
+            <Header :isLogin="!isLogin"></Header>
+        </div>
         <div v-if="isLoading">
             <div style="width:100%;height:0px;position:relative;padding-bottom:100.000%;">
                 <iframe src="https://streamable.com/e/70ps50?autoplay=1&nocontrols=1" frameborder="0" width="100%"
@@ -27,17 +30,19 @@
                 <b-button @click="letgo()" style="width: 20%; margin: auto;" variant="secondary">Về trang chủ</b-button>
             </div>
         </div>
+        <home-footer :categories="categories"></home-footer>
     </div>
 </template>
 <script>
 import LoadPage from "@/views/LoadPage.vue"
 import Header from "@/components/Header.vue";
+import HomeFooter from "../HomeFooter.vue";
 import { BIcon } from 'bootstrap-vue';
 import axios from "axios";
 export default {
     name: 'BuyTicketView',
     components: {
-        LoadPage, Header
+        LoadPage, Header,HomeFooter
     },
     data() {
         return {
@@ -49,6 +54,28 @@ export default {
             borderWidth: 0,
             throbAnimation: 'throb',
             expression: "",
+            categories: [
+                {
+                    id: 1,
+                    img: "https://www.ticketmaster.com/s3images/discovery/Concerts.jpg",
+                    name: "Buổi hòa nhạc",
+                },
+                {
+                    id: 2,
+                    img: "https://www.ticketmaster.com/s3images/discovery/Sports.jpg",
+                    name: "Thể thao",
+                },
+                {
+                    id: 3,
+                    img: "https://www.ticketmaster.com/s3images/discovery/Arts.jpg",
+                    name: "Sân khấu",
+                },
+                {
+                    id: 4,
+                    img: "https://www.ticketmaster.com/s3images/discovery/Family.jpg",
+                    name: "Giải trí",
+                }
+            ],
         }
     },
     mounted() {

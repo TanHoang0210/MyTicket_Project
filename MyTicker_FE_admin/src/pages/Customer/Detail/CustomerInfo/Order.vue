@@ -55,8 +55,8 @@
                                         <b-icon icon="pencil-square">
                                         </b-icon>
                                     </b-button>
-                                    <b-button v-if="data.item.refundRequest" @click="Refund(data.item.id,customerId)" class="table-btn"
-                                        variant="warning" title="Hoàn tiền">
+                                    <b-button v-if="data.item.refundRequest" @click="Refund(data.item.id, customerId)"
+                                        class="table-btn" variant="warning" title="Hoàn tiền">
                                         <b-icon icon="currency-exchange">
                                         </b-icon>
                                     </b-button>
@@ -138,7 +138,7 @@ export default {
                 status: null
             },
             id: 0,
-            customerId:0,
+            customerId: 0,
             isUpdate: false,
             pageSize: 100,
             pageNumber: 1,
@@ -222,15 +222,22 @@ export default {
             }
         },
         async Refund(orderDetailId, customerId) {
-                const res = await axios.post('api/Vnpay/refund/payment-vn-pay', 
+            const res = await axios.post('api/Vnpay/refund/payment-vn-pay',
                 {
                     orderDetail: orderDetailId,
                     customerId: customerId
                 }
-                ,{
+                , {
                     headers: {
                         'Content-Type': 'application/json',
-                    }})   
+                    }
+                })
+                if(res.data.code === 200){
+                    this.notifyVue('Thành công', 'Hoàn tiền thành công', 'top', 'right', 'success')
+                }else{
+                    this.notifyVue('Thất bại', res.data.message, 'top', 'right', 'danger')
+                }
+                this.getAllData();
         },
         async getAllData() {
             try {

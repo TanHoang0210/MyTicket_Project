@@ -159,5 +159,18 @@ namespace MYTICKET.WEB.API.Controllers
         [HttpGet("find-by-supplier")]
         public APIResponse<PagingResult<EventDto>> FindAllEventSupplier([FromQuery] FilterEventDto input)
                => new(_eventService.FindAllEventBySupplier(input));
+
+        /// <summary>
+        /// cap nhat trang thai noi bat su kien
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut("update-out-standing")]
+        public APIResponse UpdateEventOutStandingStatus([FromBody] UpdateEventStatus input)
+        {
+            _eventService.UpdateEventOutStanding(input);
+            return new();
+        }
     }
 }

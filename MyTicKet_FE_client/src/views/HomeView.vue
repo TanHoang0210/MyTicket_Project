@@ -128,7 +128,7 @@ export default {
     async getEvent() {
       try {
         const res = await axios.get(
-          "myticket/api/event/find",
+          "myticket/api/event/find-top-standing",
           {
             params: {
               pageSize: 9,
@@ -136,24 +136,7 @@ export default {
             },
           }
         )
-        return res.data.data.items;
-      } catch (error) {
-        console.error('API 1 Error:', error);
-        throw error;
-      }
-    },
-    async getEventTopSale() {
-      try {
-        const res = await axios.get(
-          "myticket/api/event/find",
-          {
-            params: {
-              pageSize: 9,
-              pageNumber: 1,
-            },
-          }
-        )
-        return res.data.data.items;
+        return res.data.data;
       } catch (error) {
         console.error('API 1 Error:', error);
         throw error;
@@ -209,7 +192,7 @@ export default {
     <div v-if="isSuccess" style="overflow: hidden;">
       <Header :isLogin="!isLogin"></Header>
       <div>
-        <home-main :categories="categories" :venues="venues" :events="events" :eventNews="eventNews">
+        <home-main :categories="categories" :venues="venues" :events="events" :eventNews="eventNews" :eventTopSales="eventTopSales">
         </home-main>
       </div>
       <div>

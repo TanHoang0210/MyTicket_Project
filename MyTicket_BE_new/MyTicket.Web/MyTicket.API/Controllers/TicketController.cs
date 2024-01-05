@@ -64,5 +64,30 @@ namespace MYTICKET.WEB.API.Controllers
         [HttpGet("find-by-id")]
         public APIResponse<TicketEventDto> FindTicketById([FromQuery] int id)
                => new(_ticketService.GetTicketById(id));
+
+        /// <summary>
+        /// Cập nhật trạng thái loại vé sự kiện
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut("update-status")]
+        public APIResponse UpdateTicketStatus([FromBody] UpdateTicketStatusDto input)
+        {
+            _ticketService.UpdateTicketStatus(input);
+            return new();
+        }
+
+        /// <summary>
+        /// Danh sasch ve theo loai
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("list/find-all")]
+        public APIResponse<List<TicketDto>> GetListTicketByType([FromQuery] int id)
+        {
+            return new(_ticketService.GetAllTicketByType(id));
+        }
     }
 }
