@@ -10,7 +10,7 @@ namespace MYTICKET.WEB.SERVICE.Common.Localization
 {
     public class JVFLocalization : LocalizationBase
     {
-        public JVFLocalization(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor, "STE.Application.Common.Localization.SourceFiles")
+        public JVFLocalization(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor, "MYTICKET.WEB.SERVICE.Common.Localization.SourceFiles")
         {
         }
     }

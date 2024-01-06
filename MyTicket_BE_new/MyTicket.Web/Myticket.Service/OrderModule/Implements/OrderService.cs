@@ -410,7 +410,7 @@ namespace MYTICKET.WEB.SERVICE.OrderModule.Implements
             var listTransfer = _dbContext.OrderDetails.Include(s => s.EventDetail)
                                                     .Include(s => s.Ticket)
                                                     .Include(s => s.Order)
-                                                    .Where(s => s.IsTransfer != null && s.TransferStatus == TransferStatuses.SUCCESS && s.CustomerTransfer == currentCustomerId)
+                                                    .Where(s => s.IsTransfer != null && new int[] { TransferStatuses.SUCCESS,TransferStatuses.REFUNDED}.Contains(s.TransferStatus.Value)  && s.CustomerTransfer == currentCustomerId)
                                                     .Select(s => new OrderDetailDto
                                                     {
                                                         Id = s.Id,

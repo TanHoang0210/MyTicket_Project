@@ -49,18 +49,17 @@ export default {
     },
     methods: {
         async orderTicket() {
-            try {
                 console.log(store.getters.orderFormData)
                 const res = await axios.post('myticket/api/order/create', store.getters.orderFormData, {
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 });
-                if (res.data.status == 1) {
+                if (res.data.code === 200) {
                     this.$router.push({ name: 'checkout', params: { type: 'checkout', id: res.data.data.id } });
                 } else {
                     window.history.back()
-                    this.$toasted.error(res.response.data.error_description, {
+                    this.$toasted.error(res.data.message, {
                         position: 'top-center',
                         duration: 3000, // Thời gian hiển thị toast (ms)
                         theme: 'outline', // Theme: 'outline', 'bubble'
@@ -71,19 +70,6 @@ export default {
                         singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
                     });
                 }
-            } catch (error) {
-                this.$toasted.error(res.response.data.error_description, {
-                    position: 'top-center',
-                    duration: 3000, // Thời gian hiển thị toast (ms)
-                    theme: 'outline', // Theme: 'outline', 'bubble'
-                    iconPack: 'fontawesome', // Icon pack: 'fontawesome', 'mdi'
-                    icon: 'time', // Tên icon, ví dụ: 'check' (cho fontawesome)
-                    iconColor: 'white', // Màu của icon
-                    containerClass: 'custom-toast-container-class', // Thêm class cho container
-                    singleton: true, // Hiển thị toast duy nhất, không hiển thị toast mới nếu toast trước chưa biến mất
-                });
-                window.history.back()
-            }
         },
         async postOrder() {
             this.orderInfo = await this.orderTicket();
