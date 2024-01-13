@@ -34,6 +34,9 @@
 		<text name="error_ComfirmTransferCodeWrong">Sai mã yêu cầu chuyển nhượng</text>
 		<text name="error_ComfirmExchangeCodeWrong">Sai mã yêu cầu trả vé</text>
 
+		<text name="error_VNPayError">Hệ thống hoàn tiền đang lỗi! Vui lòng thử lại sau</text>
+
+
 		<text name="error_CannotExchange">Không thể trả vé</text>
 		<text name="error_CannotTransfer">Không thể chuyển nhượng vé</text>
 		<text name="error_OrderIsFullNow">Đơn hàng hiện tại đã quá 10 vé không thể mua thêm</text>

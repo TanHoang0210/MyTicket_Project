@@ -413,7 +413,7 @@ export default {
                         },
                     }
                 )
-                this.total = res.data.data.totalItems
+                this.totals = res.data.data.totalItems
                 return res.data.data.items;
             } catch (error) {
                 console.error('API 1 Error:', error);

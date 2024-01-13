@@ -223,9 +223,14 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
                     (x => x.ReceiveRefundNotification("Thông báo hoàn tiền thành công!", "Đơn đặt vé", orderTemp.CustomerMail, orderTemp.TicketType, orderTemp.TicketCode, orderTemp.SeatCode, orderTemp.EventName, orderTemp.OrganDay));
                 await _dbContext.SaveChangesAsync();
             }
+            else if (responseData.vnp_ResponseCode == "99")
+            {
+                throw new UserFriendlyException(ErrorCode.VNPayError);
+            }
             else
             {
                 throw new Exception(responseData.vnp_Message);
+
             }
         }
 
@@ -333,9 +338,14 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
                     (x => x.ReceiveRefundNotification("Thông báo hoàn tiền chuyển nhượng vé thành công!", "Đơn chuyển nhượng vé", orderTemp.CustomerMail, orderTemp.TicketType, orderTemp.TicketCode, orderTemp.SeatCode, orderTemp.EventName, orderTemp.OrganDay));
                 await _dbContext.SaveChangesAsync();
             }
+            else if (responseData.vnp_ResponseCode == "99")
+            {
+                throw new UserFriendlyException(ErrorCode.VNPayError);
+            }
             else
             {
                 throw new Exception(responseData.vnp_Message);
+
             }
         }
 
@@ -443,9 +453,14 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
                     (x => x.ReceiveRefundNotification("Thông báo hoàn tiền trả vé thành công!","Đơn trả vé",orderTemp.CustomerMail,orderTemp.TicketType,orderTemp.TicketCode, orderTemp.SeatCode,orderTemp.EventName,orderTemp.OrganDay));
                 await _dbContext.SaveChangesAsync();
             }
+            else if (responseData.vnp_ResponseCode == "99")
+            {
+                throw new UserFriendlyException(ErrorCode.VNPayError);
+            }
             else
             {
                 throw new Exception(responseData.vnp_Message);
+
             }
         }
 
@@ -551,9 +566,14 @@ namespace MYTICKET.WEB.SERVICE.VnPayService.Implements
                     (x => x.ReceiveRefundNotification("Thông báo hoàn tiền đơn đặt vé thành công do hủy sự kiện!", "Đơn đặt vé", orderTemp.CustomerMail, orderTemp.TicketType, orderTemp.TicketCode, orderTemp.SeatCode, orderTemp.EventName, orderTemp.OrganDay));
                 await _dbContext.SaveChangesAsync();
             }
+            else if (responseData.vnp_ResponseCode == "99")
+            {
+                throw new UserFriendlyException(ErrorCode.VNPayError);
+            }
             else
             {
                 throw new Exception(responseData.vnp_Message);
+
             }
         }
     }

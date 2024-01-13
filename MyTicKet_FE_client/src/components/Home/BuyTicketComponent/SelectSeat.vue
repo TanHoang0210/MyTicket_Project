@@ -367,17 +367,20 @@ export default {
                         countTicket += quantity;
                     }
                 });
-                if (countTicket > 10) {
-                    this.isValueSelected = false;
-                    this.validate = "Đơn hàng của bạn chỉ được chọn tối đa 10 vé";
-                } else if(countTicket <= 0){
-                    this.isValueSelected = false;
-                    this.validate = "Chọn ít nhất 1 vé";
-                }
-                else{
-                    await store.commit('setOrderData', this.order);
-                    const routeInfo = { name: 'orderTicket', params: { type: 'order' } };
-                    this.$router.push({ name: 'orderTicket', params: { type: 'order' }, query: { routeInfo } });
+                if(store.getters.currentUser !== null){
+                    if (countTicket > 10) {
+                        this.isValueSelected = false;
+                        this.validate = "Đơn hàng của bạn chỉ được chọn tối đa 10 vé";
+                    } else if(countTicket <= 0){
+                        this.isValueSelected = false;
+                        this.validate = "Chọn ít nhất 1 vé";
+                    }
+                    else{
+                        await store.commit('setOrderData', this.order);
+                        this.$router.push({ name: 'orderTicket', params: { type: 'order' }});
+                    }
+                }else{
+                    this.$router.push('/login');
                 }
         },
         formatDate(date) {

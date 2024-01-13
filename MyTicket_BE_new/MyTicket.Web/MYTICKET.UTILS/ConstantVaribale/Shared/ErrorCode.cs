@@ -68,6 +68,9 @@
         CannotExchange = 9009,
         CannotTransfer = 9010,
 
+        VNPayError = 9011,
+
+
 
     }
 }
