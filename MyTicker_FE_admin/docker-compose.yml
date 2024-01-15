@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+    frontend:
+      image: myticketcms
+      build:
+        context: .
+        dockerfile: Dockerfile
+      ports:
+       - 4200:80

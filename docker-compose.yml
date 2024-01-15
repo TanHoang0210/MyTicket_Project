@@ -1,0 +1,53 @@
+version: '3.4'
+services:
+  backend:
+    container_name: backend
+    image: ${DOCKER_REGISTRY-}myticketwebsitebe
+    build:
+      context: /MyTicket_BE_new/MyTicket.Web
+      dockerfile: /MyTicket.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings_DefaultConnection=Server=localhost,21143;Initial Catalog=myticket.db;User Id=SA;Password=T@n021001;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - myticket-db
+
+  myticket-db:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - "21143:1433"
+    container_name: myticket-db
+    volumes:
+      - ./data:/var/opt/mssql/data
+      - ./log:/var/opt/mssql/log
+      - ./secrets:/var/opt/mssql/secrets
+    environment:
+      - ACCEPT_EULA=y
+      - SA_PASSWORD=T@n021001
+
+  frontend-client:
+    image: myticketapp
+    build:
+      context: /MyTicket_FE_client
+      dockerfile: /Dockerfile
+    ports:
+      - "4201:80"  # Change the host port for frontend-client
+    depends_on:
+      - backend
+
+  # frontend-admin:
+  #   image: myticketcms
+  #   build:
+  #     context: /MyTicker_FE_admin
+  #     dockerfile: /Dockerfile
+  #   ports:
+  #     - "4202:80"  # Change the host port for frontend-admin
+  #   depends_on:
+  #     - backend
